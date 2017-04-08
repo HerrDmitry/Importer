@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
+
 namespace TestConsoleApp.Interfaces
 {
 	public interface IPipe
 	{
-        void AddParser(IParser parser);
-
+	    void Configure(List<IParser> parsers);
+	    void Input();
 	}
 }
