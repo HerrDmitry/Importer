@@ -1,5 +1,5 @@
 ﻿using System;
-namespace TestConsoleApp.Interfaces
+namespace Importer.Interfaces
 {
     public interface IParser
     {
