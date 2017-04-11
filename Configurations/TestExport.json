@@ -1,0 +1,27 @@
+{
+  "reader": {
+    "type": "CSV",
+    "columns": [
+      { "HistoryId": "integer" },
+      { "ApplicationId": "integer" },
+      { "OperationId": "integer" },
+      { "IntakeId": "integer" },
+      { "PremisesIdNumber": "string" },
+      { "PremisesIdNumberOmittedExplanation": "string" },
+      { "ProjectTitle": "string" },
+      { "ProjectDescription": "string" },
+      { "LargeProjectDescription": "string" },
+      { "SummaryDescription": "string" }
+    ],
+    "delimiter": ",",
+    "textQualifier": "\"",
+    "header": 1,
+    "footer": null
+  },
+  "writer": {
+    "type": "CSV",
+    "columns": [
+      { "HistoryId": "integer" }
+    ]
+  }
+}
