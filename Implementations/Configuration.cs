@@ -7,10 +7,16 @@ namespace Importer.Implementations
 {
     public class Configuration
     {
-        public void Load(string filePath)
+        public Configuration(string filePath)
         {
         }
 
-        public IReader
+        public Dictionary<string, IReader> GetReaders()
+        {
+        }
+
+        public Dictionary<string, IWriter> GetWriters()
+        {
+        }
     }
 }

@@ -1,27 +1,30 @@
 {
-  "reader": {
-    "type": "CSV",
-    "columns": [
-      { "HistoryId": "integer" },
-      { "ApplicationId": "integer" },
-      { "OperationId": "integer" },
-      { "IntakeId": "integer" },
-      { "PremisesIdNumber": "string" },
-      { "PremisesIdNumberOmittedExplanation": "string" },
-      { "ProjectTitle": "string" },
-      { "ProjectDescription": "string" },
-      { "LargeProjectDescription": "string" },
-      { "SummaryDescription": "string" }
-    ],
-    "delimiter": ",",
-    "textQualifier": "\"",
-    "header": 1,
-    "footer": null
-  },
+  "readers": [
+    {
+      "name": "Applications",
+      "type": "CSV",
+      "columns": [
+        { "name": "HistoryId", "type": "integer" },
+        { "name": "ApplicationId", "type": "integer" },
+        { "name": "OperationId", "type": "integer" },
+        { "name": "IntakeId", "type": "integer" },
+        { "name": "PremisesIdNumber", "type": "string" },
+        { "name": "PremisesIdNumberOmittedExplanation", "type": "string" },
+        { "name": "ProjectTitle", "type": "string" },
+        { "name": "ProjectDescription", "type": "string" },
+        { "name": "LargeProjectDescription", "type": "string" },
+        { "name": "SummaryDescription", "type": "string" }
+      ],
+      "delimiter": ",",
+      "textQualifier": "\"",
+      "header": 1,
+      "footer": null
+    }
+  ],
   "writer": {
     "type": "CSV",
     "columns": [
-      { "HistoryId": "integer" }
+      { "source": "Applications.HistoryId", "name": "HistoryId", "type": "integer" }
     ]
   }
 }
