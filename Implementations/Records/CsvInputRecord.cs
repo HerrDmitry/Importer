@@ -18,7 +18,7 @@ namespace Importer.Implementations.Records
 
         public IEnumerable<IParser> GetValues()
         {
-            yield return this.GetNext();
+            return null;//yield return this.GetNext();
         }
 
         private string GetNext()

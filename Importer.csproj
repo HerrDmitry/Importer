@@ -9,6 +9,9 @@
     <Folder Include="Implementations\Readers\" />
     <Folder Include="Implementations\Records\" />
   </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="10.0.2" />
+  </ItemGroup>
   <ProjectExtensions>
     <MonoDevelop>
       <Properties>
