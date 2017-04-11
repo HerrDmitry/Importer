@@ -6,6 +6,6 @@ namespace Importer.Interfaces
 {
     public interface IInputRecord
     {
-        IEnumerable<string> GetValues();
+        IEnumerable<IParser> GetValues();
     }
 }

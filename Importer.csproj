@@ -5,6 +5,11 @@
     <TargetFramework>netcoreapp1.1</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Folder Include="Implementations\" />
+    <Folder Include="Implementations\Readers\" />
+    <Folder Include="Implementations\Records\" />
+  </ItemGroup>
   <ProjectExtensions>
     <MonoDevelop>
       <Properties>
