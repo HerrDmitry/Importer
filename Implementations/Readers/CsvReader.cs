@@ -5,11 +5,10 @@ using Importer.Interfaces;
 
 namespace Importer.Implementations.Readers
 {
-    public class CsvReader : ReaderBase,IReader
+    public class CsvReader : IReader
     {
-        public CsvReader(Stream source)
+        public CsvReader(string configuration)
         {
-            this.source = new StreamReader(source);
         }
 
         public IEnumerable<IInputRecord> Read()
