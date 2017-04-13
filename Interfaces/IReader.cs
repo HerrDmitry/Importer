@@ -6,7 +6,6 @@ namespace Importer.Interfaces
 {
     public interface IReader
     {
-        IInputRecord ReadNext();
-        IEnumerable<IInputRecord> Read();
+        IEnumerable<IInputRecord> ReadFromStream(Stream stream);
     }
 }

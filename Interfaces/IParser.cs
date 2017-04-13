@@ -3,6 +3,6 @@ namespace Importer.Interfaces
 {
     public interface IParser
     {
-        string Parse(string input);
+        string Parse();
     }
 }

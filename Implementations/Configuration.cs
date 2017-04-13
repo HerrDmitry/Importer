@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -7,6 +9,7 @@ using System.Text;
 using Importer.Implementations.Readers;
 using Importer.Interfaces;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace Importer.Implementations
 {
@@ -17,22 +20,24 @@ namespace Importer.Implementations
             var configurationJson = File.OpenText(filePath).ReadToEnd();
             var configurationData = JsonConvert.DeserializeObject<ConfigurationData>(configurationJson);
             var testData = JsonConvert.DeserializeObject<TestData>(configurationJson);
-            this.readers=new Dictionary<string, IReader>();
+            this.readers = new Dictionary<string, IReader>();
             configurationData?.Readers?.ForEach(x =>
             {
-                switch (x.Type.ToUpper())
+                var baseConfig = ParseConfiguration<ReaderConfiguration>(x);
+                switch (baseConfig.Type.ToUpper())
                 {
                     case "CSV":
-                        this.readers[x.Name] = new CsvReader("");
+                        this.readers[baseConfig.Name] = new CsvReader(x);
                         break;
                 }
             });
         }
 
-        private Dictionary<string, IReader> readers;
-        public Dictionary<string, IReader> GetReaders()
+        private readonly Dictionary<string, IReader> readers;
+
+        public ImmutableDictionary<string, IReader> GetReaders()
         {
-            return null;
+            return this.readers.ToImmutableDictionary();
         }
 
         public Dictionary<string, IWriter> GetWriters()
@@ -43,24 +48,38 @@ namespace Importer.Implementations
         public class TestData
         {
             [JsonProperty("readers")]
-            public List<> Readers { get; set; }
+            public List<JObject> Readers { get; set; }
         }
 
         public class ConfigurationData
         {
             [JsonProperty("readers")]
-            public List<Reader> Readers { get; set; }
+            public List<JObject> Readers { get; set; }
+        }
 
-            public class Reader
-            {
-                [JsonProperty("name")]
-                public string Name { get; set; }
+        public static T ParseConfiguration<T>(JObject config) where T : ReaderConfiguration
+        {
+            return config.ToObject<T>();
+        }
 
-                [JsonProperty("type")]
-                public string Type { get; set; }
+        [DebuggerDisplay("{Name} - {Type}")]
+        public class ReaderConfiguration
+        {
+            [JsonProperty("name")]
+            public string Name { get; set; }
 
-                
-            }
+            [JsonProperty("type")]
+            public string Type { get; set; }
+        }
+
+        [DebuggerDisplay("{Name} - {Type}")]
+        public class Column
+        {
+            [JsonProperty("name")]
+            public string Name { get; set; }
+
+            [JsonProperty("type")]
+            public string Type { get; set; }
         }
     }
 }

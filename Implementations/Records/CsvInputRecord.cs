@@ -1,24 +1,37 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Importer.Implementations.Parsers;
 using Importer.Interfaces;
 
 namespace Importer.Implementations.Records
 {
     public class CsvInputRecord : IInputRecord
     {
-        public CsvInputRecord(string source, char delimiter=',', char textQualifier=(char)0)
+        public CsvInputRecord(List<CsvColumn> columns, string source, char delimiter=',', char textQualifier=default(char))
         {
             this.source = source;
             this.textQualifier = textQualifier;
             this.index = 0;
             this.delimiter = delimiter;
             this.length = this.source.Length;
+            this.columns = columns;
         }
 
         public IEnumerable<IParser> GetValues()
         {
-            return null;//yield return this.GetNext();
+            var columnIdx = 0;
+            while (true)
+            {
+                if (columns.Count <= columnIdx)
+                {
+                    yield break;
+                }
+
+                var data = this.GetNext();
+                var column = columns[columnIdx++];
+                yield return Parser.GetParser(column.Type, data);
+            }
         }
 
         private string GetNext()
@@ -76,5 +89,10 @@ namespace Importer.Implementations.Records
         private char textQualifier;
         private char delimiter;
         private int length;
+        private List<CsvColumn> columns;
+
+        public class CsvColumn : Configuration.Column
+        {
+        }
     }
 }
