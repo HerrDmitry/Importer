@@ -24,18 +24,18 @@ namespace Importer.Implementations.Readers
         public IEnumerable<IInputRecord> ReadFromStream(Stream stream)
         {
             var sr=new StreamReader(stream);
+            var qualifier = this.configuration.TextQualifierChar;
             while (!sr.EndOfStream)
             {
                 var sourceLine=new StringBuilder();
                 var qualifierCount = 0;
-                var qualifier = this.configuration.TextQualifierChar;
-                while (qualifierCount == 0 || qualifierCount % 2 == 0)
+                while (qualifierCount == 0 || qualifierCount % 2 != 0)
                 {
                     var line = sr.ReadLine();
                     sourceLine.Append(line);
-                    foreach (var c in line)
+                    for (var i = 0; i < line.Length; i++)
                     {
-                        if (c == qualifier)
+                        if (line[i] == qualifier)
                         {
                             qualifierCount++;
                         }

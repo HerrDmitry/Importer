@@ -1,4 +1,4 @@
-{
+﻿{
   "readers": [
     {
       "name": "Applications",
@@ -16,7 +16,7 @@
         { "name": "SummaryDescription", "type": "string" }
       ],
       "delimiter": ",",
-      "textQualifier": "\"",
+      "textQualifier": "Я",
       "header": 1,
       "footer": null
     }
