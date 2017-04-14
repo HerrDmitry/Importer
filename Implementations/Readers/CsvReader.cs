@@ -33,6 +33,7 @@ namespace Importer.Implementations.Readers
                 {
                     var line = sr.ReadLine();
                     sourceLine.Append(line);
+
                     for (var i = 0; i < line.Length; i++)
                     {
                         if (line[i] == qualifier)
@@ -46,7 +47,6 @@ namespace Importer.Implementations.Readers
                         break;
                     }
                 }
-
 
                 yield return new CsvInputRecord(this.configuration.Columns, sourceLine.ToString(), this.configuration.Delimiter[0],
                     this.configuration.TextQualifierChar);
