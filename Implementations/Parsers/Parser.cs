@@ -22,6 +22,10 @@ namespace Importer.Implementations.Parsers
                     return new StringParser() {input = input};
                 case "INTEGER":
                     return new IntegerParser() {input = input};
+                case "DATE":
+                    return new DateParser() {input = input};
+                case "FLOAT":
+                    return new FloatParser() {input = input};
             }
 
             throw new NotSupportedException($"Type {type} is not supported");

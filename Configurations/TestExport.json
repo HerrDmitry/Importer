@@ -66,5 +66,8 @@
     "columns": [
       { "source": "Application.HistoryId", "name": "HistoryId", "type": "integer" }
     ]
+  },
+  "log": {
+    "level": "debug"
   }
 }
