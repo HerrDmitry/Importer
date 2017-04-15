@@ -43,7 +43,12 @@ namespace Importer.Implementations.Records
 
             var next = new StringBuilder();
             var expected = this.delimiter;
-            if (source[this.index] == this.textQualifier)
+            if (this.source[this.index] == this.delimiter)
+            {
+                this.index++;
+                return "";
+            }
+            if (this.source[this.index] == this.textQualifier)
             {
                 expected = this.textQualifier;
             }
@@ -76,6 +81,11 @@ namespace Importer.Implementations.Records
                         } else{
                             throw new FormatException("Row in incorrect format");
                         }
+                    }
+                    else
+                    {
+                        done = true;
+                        this.index++;
                     }
                 } else{
                     done = true;

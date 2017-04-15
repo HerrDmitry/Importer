@@ -7,13 +7,29 @@ namespace Importer
 {
     class Program
     {
-        static void Main(string[] args)
+        static int Main(string[] args)
         {
             Console.WriteLine("Hello World!");
-            var config=new Configuration("Configurations\\TestExport.json");
+            var configPath = args.FirstOrDefault(x => x.ToUpper().StartsWith("/C:"))?.Substring(3);
+            if (string.IsNullOrEmpty(configPath))
+            {
+                PrintUsage();
+                return -1;
+            }
+
+            var config=new Configuration(configPath);
             var reader = config.GetReaders().First().Value;
-            var data = reader.ReadFromStream(File.OpenRead("C:\\Users\\Dmitry\\Source\\export.csv"))
+            var data = reader.ReadFromStream(File.OpenRead("C:\\Users\\Dmitry\\Source\\apps.csv"))
                 .Select(x => new {Values = x.GetValues().ToList()}).ToList();
+
+            return 0;
+        }
+
+        private static void PrintUsage()
+        {
+            Console.WriteLine("Usage:");
+            Console.Write("/c:{configuration file path} ");
+            Console.WriteLine("[/f:{TableName}:{source file name} ...]");
         }
     }
 }

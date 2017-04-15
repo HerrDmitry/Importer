@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 using Importer.Interfaces;
 
 namespace Importer.Implementations.Parsers
 {
+    [DebuggerDisplay("{" + nameof(input) + "}")]
     public abstract class Parser:IParser
     {
         public virtual string Parse()

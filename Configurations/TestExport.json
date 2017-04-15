@@ -1,13 +1,13 @@
 ﻿{
   "readers": [
     {
-      "name": "Applications",
+      "name": "Application",
       "type": "CSV",
       "columns": [
         { "name": "HistoryId", "type": "integer" },
         { "name": "ApplicationId", "type": "integer" },
         { "name": "OperationId", "type": "integer" },
-        { "name": "IntakeId", "type": "integer" },
+        { "name": "IntakeId", "type": "integer", "reference": "Intake.IntakeId" },
         { "name": "PremisesIdNumber", "type": "string" },
         { "name": "PremisesIdNumberOmittedExplanation", "type": "string" },
         { "name": "ProjectTitle", "type": "string" },
@@ -16,7 +16,47 @@
         { "name": "SummaryDescription", "type": "string" }
       ],
       "delimiter": ",",
-      "textQualifier": "Я",
+      "textQualifier": "\"",
+      "header": 1,
+      "footer": null
+    },
+    {
+      "name": "Intake",
+      "type": "CSV",
+      "columns": [
+        { "name": "IntakeId","type": "integer" },
+        { "name": "ApplicationTypeId", "type": "integer", "reference": "ApplicationType.ApplicationTypeId" },
+        { "name": "FiscalYearId", "type": "integer" },
+        { "name": "Description", "type": "string" },
+        { "name": "DateStart", "type": "date" },
+        { "name": "DateEnd", "type": "date" },
+        { "name": "DateEndMDE", "type": "date" },
+        { "name": "FundingCapAmount", "type": "float" },
+        { "name": "DateCreated", "type": "date" }
+      ],
+      "delimiter": ",",
+      "textQualifier": "\"",
+      "header": 1,
+      "footer": null
+    },
+    {
+      "name": "ApplicationType",
+      "type": "CSV",
+      "columns": [
+        { "name": "ApplicationTypeId", "type": "integer" },
+        { "name": "ProgramId", "type": "integer" },
+        { "name": "Description", "type": "string" },
+        { "name": "ChequePrintBatchTypeId", "type": "integer" },
+        { "name": "IsIncludedInProgramCap", "type": "boolean" },
+        { "name": "OperationCapGroup", "type": "float" },
+        { "name": "WatershedId", "type": "integer" },
+        { "name": "IsProposalCapOnClaimEditable", "type": "boolean" },
+        { "name": "SortOrder", "type": "integer" },
+        { "name": "IsActive", "type": "boolean" },
+        { "name": "DateCreated", "type": "date" }
+      ],
+      "delimiter": ",",
+      "textQualifier": "\"",
       "header": 1,
       "footer": null
     }
@@ -24,7 +64,7 @@
   "writer": {
     "type": "CSV",
     "columns": [
-      { "source": "Applications.HistoryId", "name": "HistoryId", "type": "integer" }
+      { "source": "Application.HistoryId", "name": "HistoryId", "type": "integer" }
     ]
   }
 }
