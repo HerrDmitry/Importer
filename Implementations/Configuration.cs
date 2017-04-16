@@ -98,6 +98,9 @@ namespace Importer.Implementations
 
             [JsonProperty("type")]
             public string Type { get; set; }
+
+            [JsonProperty("reference")]
+            public string Reference { get; set; }
         }
     }
 }

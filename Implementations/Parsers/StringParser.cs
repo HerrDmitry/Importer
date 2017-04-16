@@ -4,11 +4,8 @@ using System.Text;
 
 namespace Importer.Implementations.Parsers
 {
-    public class StringParser : Parser
+    public class StringParser : Parser<string>
     {
-        public override string Parse()
-        {
-            return base.Parse();
-        }
+        public override string Value => this.Parse();
     }
 }

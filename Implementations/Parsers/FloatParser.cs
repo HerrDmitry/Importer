@@ -4,7 +4,8 @@ using System.Text;
 
 namespace Importer.Implementations.Parsers
 {
-    public class FloatParser : Parser
+    public class FloatParser : Parser<float>
     {
+        public override float Value => float.Parse(this.input);
     }
 }

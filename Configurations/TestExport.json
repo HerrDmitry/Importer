@@ -64,8 +64,11 @@
   "writer": {
     "type": "CSV",
     "columns": [
-      { "source": "Application.HistoryId", "name": "HistoryId", "type": "integer" }
-    ]
+      { "source": "Application.HistoryId", "name": "HistoryId", "type": "integer" },
+      { "source": "ApplicationType.Description", "name": "ApplicationType", "type": "string" }
+    ],
+    "delimiter": ",",
+    "textQualifier": "\""
   },
   "log": {
     "level": "debug"

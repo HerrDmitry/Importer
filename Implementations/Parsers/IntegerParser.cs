@@ -4,7 +4,8 @@ using System.Text;
 
 namespace Importer.Implementations.Parsers
 {
-    public class IntegerParser:Parser
+    public class IntegerParser:Parser<int>
     {
+        public override int Value => int.Parse(this.input);
     }
 }
