@@ -55,7 +55,7 @@ namespace Importer.Implementations.Readers
 
         private readonly CsvReaderConfiguration configuration;
 
-        public class CsvReaderConfiguration:Configuration.ReaderConfiguration
+        public class CsvReaderConfiguration:Configuration.ReaderConfiguration<CsvInputRecord.CsvColumn>
         {
             [JsonProperty("delimiter")]
             public string Delimiter { get; set; }
@@ -71,9 +71,6 @@ namespace Importer.Implementations.Readers
 
             [JsonProperty("header")]
             public int? Header { get; set; }
-
-            [JsonProperty("columns")]
-            public List<CsvInputRecord.CsvColumn> Columns { get; set; }
         }
     }
 }

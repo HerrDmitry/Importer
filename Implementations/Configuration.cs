@@ -38,7 +38,7 @@ namespace Importer.Implementations
             this.readers = new Dictionary<string, IReader>();
             configurationData?.Readers?.ForEach(x =>
             {
-                var baseConfig = ParseConfiguration<ReaderConfiguration>(x);
+                var baseConfig = ParseConfiguration<ReaderConfiguration<Column>>(x);
                 switch (baseConfig.Type.ToUpper())
                 {
                     case "CSV":
@@ -69,7 +69,7 @@ namespace Importer.Implementations
             public LoggerConfiguration Log { get; set; }
         }
 
-        public static T ParseConfiguration<T>(JObject config) where T : ReaderConfiguration
+        public static T ParseConfiguration<T>(JObject config)
         {
             return config.ToObject<T>();
         }
@@ -81,13 +81,16 @@ namespace Importer.Implementations
         }
 
         [DebuggerDisplay("{Name} - {Type}")]
-        public class ReaderConfiguration
+        public class ReaderConfiguration<T> where T:Column
         {
             [JsonProperty("name")]
             public string Name { get; set; }
 
             [JsonProperty("type")]
             public string Type { get; set; }
+
+            [JsonProperty("columns")]
+            public List<T> Columns { get; set; }
         }
 
         [DebuggerDisplay("{Name} - {Type}")]

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using Importer.Implementations.Parsers;
 using Importer.Interfaces;
@@ -19,6 +20,13 @@ namespace Importer.Implementations.Records
         }
 
         public IEnumerable<IParser> GetValues()
+        {
+            return this.values ?? (this.values = this.GetValuesInternal().ToList());
+        }
+
+        private List<IParser> values=null;
+
+        private IEnumerable<IParser> GetValuesInternal()
         {
             var columnIdx = 0;
             while (true)
