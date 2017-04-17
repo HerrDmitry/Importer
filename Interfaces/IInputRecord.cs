@@ -7,5 +7,7 @@ namespace Importer.Interfaces
     public interface IInputRecord
     {
         IEnumerable<IParser> GetValues();
+
+        IParser this[string columnName] { get; }
     }
 }

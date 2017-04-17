@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Text;
 using Importer.Implementations.Parsers;
@@ -21,25 +22,14 @@ namespace Importer.Implementations.Records
 
         public IEnumerable<IParser> GetValues()
         {
-            return this.values ?? (this.values = this.GetValuesInternal().ToList());
+            return (this.values ?? (this.values = this.GetValuesInternal())).Values.ToList();
         }
 
-        private List<IParser> values=null;
+        private ImmutableDictionary<string,IParser> values=null;
 
-        private IEnumerable<IParser> GetValuesInternal()
+        private ImmutableDictionary<string,IParser> GetValuesInternal()
         {
-            var columnIdx = 0;
-            while (true)
-            {
-                if (columns.Count <= columnIdx)
-                {
-                    yield break;
-                }
-
-                var data = this.GetNext();
-                var column = columns[columnIdx++];
-                yield return Parser.GetParser(column.Type, data);
-            }
+            return columns.ToImmutableDictionary(x => x.Name, x => (IParser)Parser.GetParser(x.Name, x.Type, this.GetNext()));
         }
 
         private string GetNext()

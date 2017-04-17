@@ -14,18 +14,20 @@ namespace Importer.Implementations.Parsers
             return input;
         }
 
-        public static Parser GetParser(string type, string input)
+        public string ColumnName { get; private set; }
+
+        public static Parser GetParser(string name, string type, string input)
         {
             switch (type.ToUpper())
             {
                 case "STRING":
-                    return new StringParser() { input = input };
+                    return new StringParser() { ColumnName = name, input = input };
                 case "INTEGER":
-                    return new IntegerParser() { input = input };
+                    return new IntegerParser() { ColumnName = name, input = input };
                 case "DATE":
-                    return new DateParser() { input = input };
+                    return new DateParser() { ColumnName = name, input = input };
                 case "FLOAT":
-                    return new FloatParser() { input = input };
+                    return new FloatParser() { ColumnName = name, input = input };
             }
 
             throw new NotSupportedException($"Type {type} is not supported");
