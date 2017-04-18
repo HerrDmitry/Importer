@@ -22,14 +22,18 @@ namespace Importer.Implementations.Records
 
         public IEnumerable<IParser> GetValues()
         {
-            return (this.values ?? (this.values = this.GetValuesInternal())).Values.ToList();
+            return this.GetValuesInternal().Values.ToList();
         }
+
+        public IParser this[string columnName] => this.GetValuesInternal()[columnName];
 
         private ImmutableDictionary<string,IParser> values=null;
 
         private ImmutableDictionary<string,IParser> GetValuesInternal()
         {
-            return columns.ToImmutableDictionary(x => x.Name, x => (IParser)Parser.GetParser(x.Name, x.Type, this.GetNext()));
+            return this.values ?? (this.values =
+                       columns.ToImmutableDictionary(x => x.Name,
+                           x => (IParser) Parser.GetParser(x.Name, x.Type, this.GetNext())));
         }
 
         private string GetNext()
