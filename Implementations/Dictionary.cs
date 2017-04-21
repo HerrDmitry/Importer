@@ -16,10 +16,11 @@ namespace Importer.Implementations
 
             foreach (var inputRecord in records)
             {
-                inputRecord.GetValues()
+                var key = inputRecord[keyColumnName].Parse();
+                dictionary[key] = inputRecord;
             }
 
-            this.DictionaryItems=new ImmutableDictionary<string, IInputRecord>(null);
+            this.DictionaryItems = dictionary.ToImmutableDictionary();
         }
 
         public IImmutableDictionary<string, IInputRecord> DictionaryItems;
