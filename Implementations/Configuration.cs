@@ -46,9 +46,18 @@ namespace Importer.Implementations
                         break;
                 }
             });
+
+            var fls = new Dictionary<string, string>();
+            foreach (var file in configurationData?.Files){
+                fls[file.Key] = file.Value?.ToString();
+            }
+
+            this.Files = fls.ToImmutableDictionary();
         }
 
         private readonly Dictionary<string, IReader> readers;
+
+        public ImmutableDictionary<string, string> Files { get; private set; }
 
         public ImmutableDictionary<string, IReader> GetReaders()
         {
@@ -67,6 +76,9 @@ namespace Importer.Implementations
 
             [JsonProperty("log")]
             public LoggerConfiguration Log { get; set; }
+
+            [JsonProperty("files")]
+            public JObject Files { get; set; }
         }
 
         public static T ParseConfiguration<T>(JObject config)
