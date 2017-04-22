@@ -22,35 +22,39 @@ namespace Importer
 
             var config=new Configuration(configPath);
             bool hasError = false;
-            foreach (var a in args)
+            var files = new System.Collections.Generic.Dictionary<string, string>(config.Files);
+            try
             {
-                try
+                foreach (var a in args)
                 {
                     if (ExtractFile(a, out Tuple<string, string> file))
                     {
-                        IReader reader;
-                        if (config.GetReaders().TryGetValue(file.Item1, out reader))
-                        {
-                            if (!File.Exists(file.Item2))
-                            {
-                                Logger.GetLogger().ErrorAsync($"Source file \"{file.Item2}\" not found");
-                                hasError = true;
-                            }
-                            reader.ReadFromStream(File.OpenRead(file.Item2));
-                        }
-                        else
-                        {
-                            Logger.GetLogger().ErrorAsync(
-                                $"There is no definition for \"{file.Item1}\" in configuration file \"{configPath}\"");
-                            hasError = true;
-                        }
+                        files[file.Item1] = file.Item2;
                     }
                 }
-                catch (Exception ex)
+                foreach (var file in files)
                 {
-                    Logger.GetLogger().ErrorAsync(ex.Message);
-                    hasError = true;
+                    if (config.GetReaders().TryGetValue(file.Key, out IReader reader))
+                    {
+                        if (!File.Exists(file.Value))
+                        {
+                            Logger.GetLogger().ErrorAsync($"Source file \"{file.Value}\" not found");
+                            hasError = true;
+                        }
+                        reader.SetDataSource(File.OpenRead(file.Value));
+                    }
+                    else
+                    {
+                        Logger.GetLogger().ErrorAsync(
+                            $"There is no definition for \"{file.Key}\" in configuration file \"{configPath}\"");
+                        hasError = true;
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                Logger.GetLogger().ErrorAsync(ex.Message);
+                hasError = true;
             }
             var result = 0;
             if (hasError)

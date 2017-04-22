@@ -74,8 +74,8 @@
     "level": "debug"
   },
   "files": {
-    "Application": "../../data/Application.csv",
-    "Intake": "../../data/Intake.csv",
-    "ApplicationType": "../../data/ApplicationType.csv"
+    "Application": "../data/Application.csv",
+    "Intake": "../data/Intake.csv",
+    "ApplicationType": "../data/ApplicationType.csv"
   }
 }

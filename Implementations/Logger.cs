@@ -103,8 +103,10 @@ namespace Importer.Implementations
             lock (instance)
             {
                 Debug.WriteLine(message.Message);
+                var color = Console.ForegroundColor;
                 Console.ForegroundColor = message.Color;
                 Console.WriteLine(message.Message);
+                Console.ForegroundColor = color;
             }
         }
 

@@ -12,6 +12,8 @@ namespace Importer.Implementations.Readers
 {
     public class CsvReader : IReader
     {
+        private Stream dataSource;
+
         public CsvReader(JObject configuration)
         {
             this.configuration = Configuration.ParseConfiguration<CsvReaderConfiguration>(configuration);
@@ -21,9 +23,13 @@ namespace Importer.Implementations.Readers
             }
         }
 
-        public IEnumerable<IInputRecord> ReadFromStream(Stream stream)
+        public void SetDataSource(Stream source){
+            this.dataSource = source;
+        }
+
+        public IEnumerable<IInputRecord> ReadData()
         {
-            var sr=new StreamReader(stream);
+            var sr=new StreamReader(this.dataSource);
             var qualifier = this.configuration.TextQualifierChar;
             while (!sr.EndOfStream)
             {
