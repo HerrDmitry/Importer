@@ -64,6 +64,10 @@ namespace Importer.Implementations
             return this.readers.ToImmutableDictionary();
         }
 
+        public IReader GetReader(string readerName){
+            return this.readers.TryGetValue(readerName, out IReader reader) ? reader : null;
+        }
+
         public Dictionary<string, IWriter> GetWriters()
         {
             return null;

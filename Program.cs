@@ -50,6 +50,9 @@ namespace Importer
                         hasError = true;
                     }
                 }
+
+                var processor = new Processor(config);
+                processor.ProcessAsync().Wait();
             }
             catch (Exception ex)
             {

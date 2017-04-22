@@ -7,6 +7,7 @@
 
   <ItemGroup>
     <Folder Include="Implementations\Readers\" />
+    <Folder Include="Implementations\Writers\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="10.0.2" />
