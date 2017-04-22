@@ -4,7 +4,6 @@
       "name": "Application",
       "type": "CSV",
       "columns": [
-        { "name": "HistoryId", "type": "integer" },
         { "name": "ApplicationId", "type": "integer" },
         { "name": "OperationId", "type": "integer" },
         { "name": "IntakeId", "type": "integer", "reference": "Intake.IntakeId" },
@@ -62,10 +61,19 @@
     }
   ],
   "writer": {
+    "name": "ApplicationCombined",
     "type": "CSV",
     "columns": [
-      { "source": "Application.HistoryId", "name": "HistoryId", "type": "integer" },
-      { "source": "ApplicationType.Description", "name": "ApplicationType", "type": "string" }
+      {
+        "source": "Application.ApplicationId",
+        "name": "ApplicationId",
+        "type": "integer"
+      },
+      {
+        "source": "ApplicationType.Description",
+        "name": "ApplicationType",
+        "type": "string"
+      }
     ],
     "delimiter": ",",
     "textQualifier": "\""
