@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Importer.Implementations
@@ -16,6 +17,7 @@ namespace Importer.Implementations
         public async Task<int> ProcessAsync()
         {
             this.FindAndLoadDictionaries();
+            Thread.Sleep(2000);
             return await Task.FromResult(-1);
         }
 
@@ -34,7 +36,7 @@ namespace Importer.Implementations
                         Logger.GetLogger().ErrorAsync(message);
                         throw new ArgumentException(message);
                     }
-                    DataDictionary.GetDictionary(referenceParts[1], reader.ReadData());
+                    DataDictionary.GetDictionary(reference, reader.ReadData());
                 }
             }
         }

@@ -28,6 +28,8 @@ namespace Importer.Implementations.Parsers
                     return new DateParser() { ColumnName = name, input = input };
                 case "FLOAT":
                     return new FloatParser() { ColumnName = name, input = input };
+                    case "BOOLEAN":
+                    return new BooleanParser() { ColumnName = name, input = input };
             }
 
             throw new NotSupportedException($"Type {type} is not supported");

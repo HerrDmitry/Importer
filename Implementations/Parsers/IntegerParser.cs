@@ -6,6 +6,6 @@ namespace Importer.Implementations.Parsers
 {
     public class IntegerParser:Parser<int>
     {
-        public override int Value => int.Parse(this.input);
+        public override int Value => int.Parse(this.Parse());
     }
 }
