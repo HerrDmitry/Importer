@@ -67,7 +67,7 @@
       {
         "source": "Application.ApplicationId",
         "name": "ApplicationId",
-        "type": "integer"
+        "type": "integer" 
       },
       {
         "source": "ApplicationType.Description",
