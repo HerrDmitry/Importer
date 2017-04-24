@@ -16,7 +16,7 @@ namespace Importer
             if (string.IsNullOrEmpty(configPath))
             {
                 PrintUsage();
-                Logger.GetLogger().Flush();
+                Logger.GetLogger().Flush(); 
                 return -1;
             }
 
