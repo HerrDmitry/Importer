@@ -36,6 +36,7 @@ namespace Importer.Implementations
                         Logger.GetLogger().ErrorAsync(message);
                         throw new ArgumentException(message);
                     }
+
                     DataDictionary.GetDictionary(reference, reader.ReadData());
                 }
             }
