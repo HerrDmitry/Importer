@@ -17,6 +17,10 @@ namespace Importer.Implementations
     {
         public Configuration(string filePath)
         {
+            if(!File.Exists(filePath)){
+                var message=$"Configuration file \"{filePath}\" not found";
+                throw new FileNotFoundException(message);
+            }
             var configurationJson = File.OpenText(filePath).ReadToEnd();
             var configurationData = JsonConvert.DeserializeObject<ConfigurationData>(configurationJson);
             if (configurationData.Log != null)

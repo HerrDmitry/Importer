@@ -11,20 +11,20 @@ namespace Importer
     {
         static int Main(string[] args)
         {
-            Logger.GetLogger().MessageAsync("Hello world");
-            var configPath = args.FirstOrDefault(x => x.ToUpper().StartsWith("/C:"))?.Substring(3);
-            if (string.IsNullOrEmpty(configPath))
-            {
-                PrintUsage();
-                Logger.GetLogger().Flush(); 
-                return -1;
-            }
-
-            var config=new Configuration(configPath);
             bool hasError = false;
-            var files = new System.Collections.Generic.Dictionary<string, string>(config.Files);
             try
             {
+                Logger.GetLogger().MessageAsync("Hello world");
+                var configPath = args.FirstOrDefault(x => x.ToUpper().StartsWith("/C:"))?.Substring(3);
+                if (string.IsNullOrEmpty(configPath))
+                {
+                    PrintUsage();
+                    Logger.GetLogger().Flush(); 
+                    return -1;
+                }
+
+                var config=new Configuration(configPath);
+                var files = new System.Collections.Generic.Dictionary<string, string>(config.Files);
                 foreach (var a in args)
                 {
                     if (ExtractFile(a, out Tuple<string, string> file))
