@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Importer.Interfaces
 {
-    public interface IInputRecord
+    public interface IRecord
     {
         IEnumerable<IParser> GetValues();
 

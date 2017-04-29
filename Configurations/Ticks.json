@@ -1,0 +1,18 @@
+﻿{
+  "readers": [
+    {
+      "name": "Ticks",
+      "type": "CSV",
+      "columns": [
+        {"name": "SymbolId", "type": "integer"},
+        {"name": "TickSizeId", "type": "integer"},
+        {"name": "Timestamp", "type": "date", "format": "yyyy-MM-dd hh:mm:ss" },
+        {"name": "Index", "type": "integer"},
+        {"name": "PriceOpen", "type": "double"},
+        {"name": "PriceClose", "type": "double" },
+        {"name": "PriceLow", "type": "double"},
+        {"name": "PriceHigh","type": "double"},
+        {"name": "Volume", "type": "integer"}
+      ]
+    }]
+}

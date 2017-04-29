@@ -14,7 +14,7 @@ namespace Importer.Implementations
     {
         private static Dictionary<string, DataDictionary> dictionaries = new Dictionary<string, DataDictionary>();
 
-        public static DataDictionary GetDictionary(string referencePath, IEnumerable<IInputRecord> records)
+        public static DataDictionary GetDictionary(string referencePath, IEnumerable<IRecord> records)
         {
             lock (dictionaries)
             {
@@ -39,13 +39,13 @@ namespace Importer.Implementations
             return dictionaries.TryGetValue(referencePath, out DataDictionary dict) ? dict : null;
         }
 
-        private DataDictionary(string referencePath, IEnumerable<IInputRecord> records)
+        private DataDictionary(string referencePath, IEnumerable<IRecord> records)
         {
             this.referencePath = referencePath;
             this.records = records;
         }
 
-        public IImmutableDictionary<string, IInputRecord> Items
+        public IImmutableDictionary<string, IRecord> Items
         {
             get
             {
@@ -61,11 +61,11 @@ namespace Importer.Implementations
             }
         }
 
-        public IInputRecord this[string key] => this.Items[key];
+        public IRecord this[string key] => this.Items[key];
 
-        public IInputRecord TryGetValueDefault(string key, IInputRecord defaultValue = null)
+        public IRecord TryGetValueDefault(string key, IRecord defaultValue = null)
         {
-            return this.Items.TryGetValue(key, out IInputRecord value) ? value : defaultValue;
+            return this.Items.TryGetValue(key, out IRecord value) ? value : defaultValue;
         }
 
         private async Task LoadItems()
@@ -75,11 +75,11 @@ namespace Importer.Implementations
                   try
                   {
                       var stopwatch = Stopwatch.StartNew();
-                      var dictionary = new Dictionary<string, IInputRecord>();
+                      var dictionary = new Dictionary<string, IRecord>();
                       var referenceParts = referencePath.Split(".".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
                       if (referenceParts.Length != 2)
                       {
-                          this.dictionaryItems = new Dictionary<string, IInputRecord>().ToImmutableDictionary();
+                          this.dictionaryItems = new Dictionary<string, IRecord>().ToImmutableDictionary();
                           var message = $"Dictionary reference \"{this.referencePath}\" is in incorrect format.";
                           Logger.GetLogger().ErrorAsync(message);
                           throw new FormatException(message);
@@ -105,9 +105,9 @@ namespace Importer.Implementations
             await task;
         }
 
-        private ImmutableDictionary<string, IInputRecord> dictionaryItems;
+        private ImmutableDictionary<string, IRecord> dictionaryItems;
         private string referencePath;
-        private IEnumerable<IInputRecord> records;
+        private IEnumerable<IRecord> records;
         private object locker = new object();
     }
 }

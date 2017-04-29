@@ -27,7 +27,7 @@ namespace Importer.Implementations.Readers
             this.dataSource = source;
         }
 
-        public IEnumerable<IInputRecord> ReadData()
+        public IEnumerable<IRecord> ReadData()
         {
             var sr=new StreamReader(this.dataSource);
             var qualifier = this.configuration.TextQualifierChar;
@@ -54,7 +54,7 @@ namespace Importer.Implementations.Readers
                     }
                 }
 
-                yield return new CsvInputRecord(this.configuration.Columns, sourceLine.ToString(), this.configuration.Delimiter[0],
+                yield return new CsvRecord(this.configuration.Columns, sourceLine.ToString(), this.configuration.Delimiter[0],
                     this.configuration.TextQualifierChar);
             }
         }
@@ -63,7 +63,7 @@ namespace Importer.Implementations.Readers
 
         private readonly CsvReaderConfiguration configuration;
 
-        public class CsvReaderConfiguration:Configuration.ReaderConfiguration<CsvInputRecord.CsvColumn>
+        public class CsvReaderConfiguration:Configuration.ReaderConfiguration<CsvRecord.CsvColumn>
         {
             [JsonProperty("delimiter")]
             public string Delimiter { get; set; }

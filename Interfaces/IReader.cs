@@ -8,7 +8,7 @@ namespace Importer.Interfaces
     public interface IReader
     {
         void SetDataSource(Stream stream);
-        IEnumerable<IInputRecord> ReadData();
+        IEnumerable<IRecord> ReadData();
 
         List<Configuration.Column> Columns { get; }
     }

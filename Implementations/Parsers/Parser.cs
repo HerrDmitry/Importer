@@ -28,11 +28,11 @@ namespace Importer.Implementations.Parsers
                     return new DateParser() { ColumnName = name, input = input };
                 case "FLOAT":
                     return new FloatParser() { ColumnName = name, input = input };
-                    case "BOOLEAN":
+                case "BOOLEAN":
                     return new BooleanParser() { ColumnName = name, input = input };
+                default:
+                    throw new NotSupportedException($"Type {type} is not supported");
             }
-
-            throw new NotSupportedException($"Type {type} is not supported");
         }
 
         protected string input;
@@ -41,5 +41,12 @@ namespace Importer.Implementations.Parsers
     public abstract class Parser<T>:Parser
     {
         public abstract T Value { get; }
+
+        public new abstract string ToString();
+
+        public virtual string ToString(string format)
+        {
+            return this.ToString();
+        }
     }
 }

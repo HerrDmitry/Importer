@@ -8,9 +8,9 @@ using Importer.Interfaces;
 
 namespace Importer.Implementations.Records
 {
-    public class CsvInputRecord : IInputRecord
+    public class CsvRecord : IRecord
     {
-        public CsvInputRecord(List<CsvColumn> columns, string source, char delimiter=',', char textQualifier=default(char))
+        public CsvRecord(List<CsvColumn> columns, string source, char delimiter=',', char textQualifier=default(char))
         {
             this.source = source;
             this.textQualifier = textQualifier;

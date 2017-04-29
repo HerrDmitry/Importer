@@ -20,7 +20,7 @@ namespace Writers
             throw new NotImplementedException();
         }
 
-        public void Write(IOutputRecord record)
+        public void Write(IRecord record)
         {
             ///TODO: do something
         }

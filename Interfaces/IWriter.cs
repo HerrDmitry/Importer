@@ -6,7 +6,7 @@ namespace Importer.Interfaces
     {
         void SetDataDestination(Stream stream);
 
-        void Write(IOutputRecord record);
+        void Write(IRecord record);
 
         void Flush();
     }
