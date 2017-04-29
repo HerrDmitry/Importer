@@ -6,7 +6,11 @@ namespace Importer.Implementations.Parsers
 {
     public class StringParser : Parser<string>
     {
-        public override string Value => this.Parse();
+        protected override string Parse(out bool isFailed){
+            isFailed = false;
+            return this.input;
+        }
+
         public override string ToString()
         {
             return this.Value;

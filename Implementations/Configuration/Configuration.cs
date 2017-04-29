@@ -11,7 +11,7 @@ using Importer.Interfaces;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace Importer.Implementations
+namespace Importer.Implementations.Configuration
 {
     public class Configuration
     {
@@ -92,38 +92,6 @@ namespace Importer.Implementations
         public static T ParseConfiguration<T>(JObject config)
         {
             return config.ToObject<T>();
-        }
-
-        public class LoggerConfiguration
-        {
-            [JsonProperty("level")]
-            public string Level { get; set; }
-        }
-
-        [DebuggerDisplay("{Name} - {Type}")]
-        public class ReaderConfiguration<T> where T:Column
-        {
-            [JsonProperty("name")]
-            public string Name { get; set; }
-
-            [JsonProperty("type")]
-            public string Type { get; set; }
-
-            [JsonProperty("columns")]
-            public List<T> Columns { get; set; }
-        }
-
-        [DebuggerDisplay("{Name} - {Type}")]
-        public class Column
-        {
-            [JsonProperty("name")]
-            public string Name { get; set; }
-
-            [JsonProperty("type")]
-            public string Type { get; set; }
-
-            [JsonProperty("reference")]
-            public string Reference { get; set; }
         }
     }
 }

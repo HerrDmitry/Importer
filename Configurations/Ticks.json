@@ -1,7 +1,7 @@
 ﻿{
   "readers": [
     {
-      "name": "Ticks",
+      "name": "Tick",
       "type": "CSV",
       "columns": [
         {"name": "SymbolId", "type": "integer"},
@@ -13,6 +13,32 @@
         {"name": "PriceLow", "type": "double"},
         {"name": "PriceHigh","type": "double"},
         {"name": "Volume", "type": "integer"}
-      ]
-    }]
+      ],
+      "delimiter": ",",
+      "textQualifier": "\"
+    }],
+  "log": {
+    "level": "debug"
+  },
+  "files": {
+    "Ticks": "../data/Ticks.csv"
+  },
+  "writers": [
+    { "name": "TicksOutput",
+      "columns": [
+        {"name": "Tick.SymbolId", "type": "integer"},
+        {"name": "Tick.TickSizeId", "type": "integer"},
+        {"name": "Tick.Timestamp", "type": "date", "format": "hh:mm dd MMMM yyyy" },
+        {"name": "Tick.Index", "type": "integer"},
+        {"name": "Tick.PriceOpen", "type": "double"},
+        {"name": "Tick.PriceClose", "type": "double" },
+        {"name": "Tick.PriceLow", "type": "double"},
+        {"name": "Tick.PriceHigh","type": "double"},
+        {"name": "Tick.Volume", "type": "integer"}
+      ],
+      "type": "CSV",
+      "delimiter": ",",
+      "textQualifier": "\""
+    }
+  ]
 }

@@ -6,7 +6,11 @@ namespace Importer.Implementations.Parsers
 {
     public class IntegerParser:Parser<int>
     {
-        public override int Value => int.Parse(this.Parse());
+        protected override int Parse(out bool isFailed){
+            isFailed=!int.TryParse(this.input, out int parsedValue);
+            return parsedValue;
+        }
+
         public override string ToString()
         {
             return this.Value.ToString();

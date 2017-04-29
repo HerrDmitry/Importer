@@ -8,6 +8,7 @@
   <ItemGroup>
     <Folder Include="Implementations\Readers\" />
     <Folder Include="Implementations\Writers\" />
+    <Folder Include="Implementations\Configuration\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="10.0.2" />
@@ -16,7 +17,10 @@
     <MonoDevelop>
       <Properties>
         <Policies>
-          <DotNetNamingPolicy ResourceNamePolicy="FileFormatDefault" DirectoryNamespaceAssociation="Flat" />
+          <DotNetNamingPolicy ResourceNamePolicy="FileFormatDefault" DirectoryNamespaceAssociation="Flat">
+            <inheritsSet />
+            <inheritsScope />
+          </DotNetNamingPolicy>
         </Policies>
       </Properties>
     </MonoDevelop>

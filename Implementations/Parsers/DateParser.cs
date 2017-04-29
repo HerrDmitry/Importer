@@ -6,7 +6,11 @@ namespace Importer.Implementations.Parsers
 {
     public class DateParser : Parser<DateTime>
     {
-        public override DateTime Value => DateTime.Parse(this.Parse());
+        protected override DateTime Parse(out bool isFailed){
+            isFailed=!DateTime.TryParse(this.input, out DateTime parsedValue);
+            return parsedValue;
+        }
+
         public override string ToString()
         {
             return this.Value.ToString();

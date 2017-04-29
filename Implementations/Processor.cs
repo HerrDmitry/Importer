@@ -9,7 +9,7 @@ namespace Importer.Implementations
 {
     public class Processor
     {
-        public Processor(Configuration config)
+        public Processor(Importer.Implementations.Configuration.Configuration config)
         {
             this.config = config;
         }
@@ -42,6 +42,6 @@ namespace Importer.Implementations
             }
         }
 
-        private Configuration config;
+        private Importer.Implementations.Configuration.Configuration config;
     }
 }

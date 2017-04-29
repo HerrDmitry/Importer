@@ -6,7 +6,11 @@ namespace Importer.Implementations.Parsers
 {
     public class FloatParser : Parser<float>
     {
-        public override float Value => float.Parse(this.Parse());
+        protected override float Parse(out bool isFailed){
+            isFailed=!float.TryParse(this.input, out float parsedValue);
+            return parsedValue;
+        }
+
         public override string ToString()
         {
             return this.Value.ToString();

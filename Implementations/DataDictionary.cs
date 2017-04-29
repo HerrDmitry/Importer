@@ -87,8 +87,12 @@ namespace Importer.Implementations
                       Logger.GetLogger().InfoAsync($"Loading dictionary {referenceParts[0]}...");
                       foreach (var inputRecord in records)
                       {
-                          var key = inputRecord[referenceParts[1]].Parse();
-                          dictionary[key] = inputRecord;
+                        
+                        var key = inputRecord[referenceParts[1]];
+                          if (!key.IsFailed)
+                          {
+                            dictionary[key.ToString()] = inputRecord;
+                          }
                       }
                       Logger.GetLogger().InfoAsync($"Loaded dictionary {referenceParts[0]} - {dictionary.Count()} records.");
 

@@ -60,24 +60,26 @@
       "footer": null
     }
   ],
-  "writer": {
-    "name": "ApplicationCombined",
-    "type": "CSV",
-    "columns": [
-      {
-        "source": "Application.ApplicationId",
-        "name": "ApplicationId",
-        "type": "integer" 
-      },
-      {
-        "source": "ApplicationType.Description",
-        "name": "ApplicationType",
-        "type": "string"
-      }
-    ],
-    "delimiter": ",",
-    "textQualifier": "\""
-  },
+  "writers": [
+    {
+      "name": "ApplicationCombined",
+      "type": "CSV",
+      "columns": [
+        {
+          "source": "Application.ApplicationId",
+          "name": "ApplicationId",
+          "type": "integer"
+        },
+        {
+          "source": "ApplicationType.Description",
+          "name": "ApplicationType",
+          "type": "string"
+        }
+      ],
+      "delimiter": ",",
+      "textQualifier": "\""
+    }
+  ],
   "log": {
     "level": "debug"
   },

@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using Importer.Implementations;
+using Importer.Implementations.Configuration;
 using Importer.Interfaces;
 
 namespace Importer

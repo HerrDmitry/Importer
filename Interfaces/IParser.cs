@@ -3,8 +3,8 @@ namespace Importer.Interfaces
 {
     public interface IParser
     {
-        string Parse();
-
         string ColumnName { get; }
+
+        bool IsFailed { get; }
     }
 }

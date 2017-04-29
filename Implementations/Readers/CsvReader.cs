@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using Importer.Implementations.Records;
+using Importer.Implementations.Configuration;
 using Importer.Interfaces;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -16,7 +17,7 @@ namespace Importer.Implementations.Readers
 
         public CsvReader(JObject configuration)
         {
-            this.configuration = Configuration.ParseConfiguration<CsvReaderConfiguration>(configuration);
+            this.configuration = Importer.Implementations.Configuration.Configuration.ParseConfiguration<CsvReaderConfiguration>(configuration);
             if (string.IsNullOrEmpty(this.configuration.Delimiter))
             {
                 this.configuration.Delimiter = ",";
