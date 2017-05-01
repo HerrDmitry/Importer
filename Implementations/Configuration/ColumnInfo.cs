@@ -6,7 +6,7 @@ using System.Diagnostics;
 namespace Importer.Implementations.Configuration
 {
     [DebuggerDisplay("{Name} - {Type}")]
-    public class Column
+    public class ColumnInfo
     {
         [JsonProperty("name")]
         public string Name { get; set; }

@@ -7,7 +7,7 @@ using System.Collections.Generic;
 namespace Importer.Implementations.Configuration
 {
     [DebuggerDisplay("{Name} - {Type}")]
-    public class ReaderConfiguration<T> where T : Column
+    public class ReaderConfiguration<T> where T : ColumnInfo
     {
         [JsonProperty("name")]
         public string Name { get; set; }

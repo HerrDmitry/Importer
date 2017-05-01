@@ -42,7 +42,7 @@ namespace Importer.Implementations.Configuration
             this.readers = new Dictionary<string, IReader>();
             configurationData?.Readers?.ForEach(x =>
             {
-                var baseConfig = ParseConfiguration<ReaderConfiguration<Column>>(x);
+                var baseConfig = ParseConfiguration<ReaderConfiguration<ColumnInfo>>(x);
                 switch (baseConfig.Type.ToUpper())
                 {
                     case "CSV":

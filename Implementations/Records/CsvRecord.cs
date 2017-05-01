@@ -33,7 +33,7 @@ namespace Importer.Implementations.Records
         {
             return this.values ?? (this.values =
                        columns.ToImmutableDictionary(x => x.Name,
-                           x => (IParser) Parser.GetParser(x.Name, x.Type, this.GetNext())));
+                           x => (IParser) Parser.GetParser(x, this.GetNext())));
         }
 
         private string GetNext()
@@ -103,7 +103,7 @@ namespace Importer.Implementations.Records
         private int length;
         private List<CsvColumn> columns;
 
-        public class CsvColumn : Configuration.Column
+        public class CsvColumn : Configuration.ColumnInfo
         {
         }
     }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
+using Importer.Implementations.Configuration;
 using Importer.Interfaces;
 
 namespace Importer.Implementations.Parsers
@@ -9,26 +10,26 @@ namespace Importer.Implementations.Parsers
     [DebuggerDisplay("{" + nameof(input) + "}")]
     public abstract class Parser : IParser
     {
-        public string ColumnName { get; private set; }
+        public ColumnInfo Column { get; private set; }
 
         public abstract bool IsFailed { get; }
 
-        public static Parser GetParser(string name, string type, string input)
+        public static Parser GetParser(ColumnInfo column, string input)
         {
-            switch (type.ToUpper())
+            switch (column.Type.ToUpper())
             {
                 case "STRING":
-                    return new StringParser() { ColumnName = name, input = input };
+                    return new StringParser() { Column = column, input = input };
                 case "INTEGER":
-                    return new IntegerParser() { ColumnName = name, input = input };
+                    return new IntegerParser() { Column = column, input = input };
                 case "DATE":
-                    return new DateParser() { ColumnName = name, input = input };
+                    return new DateParser() { Column = column, input = input };
                 case "FLOAT":
-                    return new FloatParser() { ColumnName = name, input = input };
+                    return new FloatParser() { Column = column, input = input };
                 case "BOOLEAN":
-                    return new BooleanParser() { ColumnName = name, input = input };
+                    return new BooleanParser() { Column = column, input = input };
                 default:
-                    throw new NotSupportedException($"Type {type} is not supported");
+                    throw new NotSupportedException($"Type {column.Type} is not supported");
             }
         }
 

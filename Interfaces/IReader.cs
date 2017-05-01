@@ -10,6 +10,6 @@ namespace Importer.Interfaces
         void SetDataSource(Stream stream);
         IEnumerable<IRecord> ReadData();
 
-        List<Importer.Implementations.Configuration.Column> Columns { get; }
+        List<Importer.Implementations.Configuration.ColumnInfo> Columns { get; }
     }
 }

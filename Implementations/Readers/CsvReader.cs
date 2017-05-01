@@ -60,7 +60,7 @@ namespace Importer.Implementations.Readers
             }
         }
 
-        public List<Configuration.Column> Columns => new List<Configuration.Column>(this.configuration.Columns);
+        public List<Configuration.ColumnInfo> Columns => new List<Configuration.ColumnInfo>(this.configuration.Columns);
 
         private readonly CsvReaderConfiguration configuration;
 
