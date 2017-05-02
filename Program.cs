@@ -32,9 +32,11 @@ namespace Importer
                         files[file.Item1] = file.Item2;
                     }
                 }
+                var readers = config.GetReaders();
+                var writers = config.GetWriters();
                 foreach (var file in files)
                 {
-                    if (config.GetReaders().TryGetValue(file.Key, out IReader reader))
+                    if (readers.TryGetValue(file.Key, out IReader reader))
                     {
                         if (!File.Exists(file.Value))
                         {
@@ -42,6 +44,11 @@ namespace Importer
                             hasError = true;
                         }
                         reader.SetDataSource(File.OpenRead(file.Value));
+                    }else if(writers.TryGetValue(file.Key, out IWriter writer)){
+                        if(File.Exists(file.Value)){
+                            File.Delete(file.Value);
+                        }
+                        writer.SetDataDestination(File.OpenWrite(file.Value));
                     }
                     else
                     {

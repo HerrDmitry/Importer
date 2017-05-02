@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Text;
 using System.Threading.Tasks;
 using Importer.Configuration;
 using Importer.Interfaces;
@@ -32,11 +33,36 @@ namespace Importer.Writers
 
         public async Task WriteAsync(IRecord record)
         {
+            var qualifier = this.configuration.TextQualifierChar.ToString();
+            var delimiter = this.configuration.DelimiterChar;
+            var builder = new StringBuilder();
+            for (var i = 0; i < this.configuration.Columns.Count;i++){
+                var columnInfo = this.configuration.Columns[i];
+                var column = record[columnInfo.Source];
+                if(column.IsFailed){
+                    this.HandleException(record);
+                    return;
+                }
+                var tb = new StringBuilder(column.ToString(columnInfo.Format));
+                var length = tb.Length;
+                tb.Replace(qualifier, qualifier + qualifier);
+                if(tb.Length>length){
+                    tb.Insert(0, qualifier).Append(qualifier);
+                }
 
-            await this.writer.WriteLineAsync();
+                if(builder.Length>0){
+                    builder.Append(delimiter);
+                }
+                builder.Append(tb);
+            }
+            await this.writer.WriteLineAsync(builder.ToString());
         }
 
         public void Close(){
+            
+        }
+
+        private void HandleException(IRecord record){
             
         }
 

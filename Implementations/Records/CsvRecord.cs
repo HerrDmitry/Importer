@@ -9,7 +9,7 @@ using static Importer.Readers.CsvReader;
 
 namespace Importer.Records
 {
-    public class CsvRecord : IRecord
+    public class CsvRecord : Record
     {
         public CsvRecord(CsvReaderConfiguration config, string source)
         {
@@ -19,19 +19,12 @@ namespace Importer.Records
             this.config = config;
         }
 
-        public IEnumerable<IParser> GetValues()
-        {
-            return this.GetValuesInternal().Values.ToList();
-        }
-
-        public IParser this[string columnName] => this.GetValuesInternal()[columnName];
-
         private ImmutableDictionary<string,IParser> values=null;
 
-        private ImmutableDictionary<string,IParser> GetValuesInternal()
+        protected override ImmutableDictionary<string,IParser> GetValuesInternal()
         {
             return this.values ?? (this.values =
-                                   this.config.Columns.ToImmutableDictionary(x => x.Name,
+                                   this.config.Columns.ToImmutableDictionary(x => string.Concat(this.config.Name, ".", x.Name),
                                                                              x => (IParser)Parser.GetParser(this.config.Name, x, this.GetNext())));
         }
 

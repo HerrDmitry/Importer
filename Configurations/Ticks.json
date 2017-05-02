@@ -8,11 +8,11 @@
         {"name": "TickSizeId", "type": "integer"},
         {"name": "Timestamp", "type": "date", "format": "yyyy-MM-dd hh:mm:ss" },
         {"name": "Index", "type": "integer"},
-        {"name": "PriceOpen", "type": "double"},
-        {"name": "PriceClose", "type": "double" },
-        {"name": "PriceLow", "type": "double"},
-        {"name": "PriceHigh","type": "double"},
-        {"name": "Volume", "type": "integer"}
+        {"name": "PriceOpen", "type": "float"},
+        {"name": "PriceClose", "type": "float" },
+        {"name": "PriceLow", "type": "float"},
+        {"name": "PriceHigh","type": "float"},
+        {"name": "Volume", "type": "float"}
       ],
       "delimiter": ",",
       "textQualifier": "\""
@@ -21,10 +21,11 @@
     "level": "debug"
   },
   "files": {
-    "Ticks": "../data/Ticks.csv"
+    "Tick": "../data/Ticks.csv",
+    "TickOutput": "../data/TicksOutput.csv"
   },
   "writers": [
-    { "name": "TicksOutput",
+    { "name": "TickOutput",
       "columns": [
         {"name": "SymbolId", "source": "Tick.SymbolId"},
         {"name": "TickSizeId", "source": "Tick.TickSizeId"},

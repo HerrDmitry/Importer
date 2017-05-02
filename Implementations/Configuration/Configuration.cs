@@ -10,6 +10,7 @@ using Importer.Readers;
 using Importer.Interfaces;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Importer.Writers;
 
 namespace Importer.Configuration
 {
@@ -51,6 +52,17 @@ namespace Importer.Configuration
                 }
             });
 
+            this.writers = new Dictionary<string, IWriter>();
+            configurationData?.Writers?.ForEach(x => {
+                var baseConfig = ParseConfiguration<FileConfiguration<ColumnInfo>>(x);
+                switch(baseConfig.Type.ToUpper()){
+                    case "CSV":
+                        this.writers[baseConfig.Name] = new CsvWriter(x);
+                        break;
+                }
+
+            });
+
             var fls = new Dictionary<string, string>();
             foreach (var file in configurationData?.Files){
                 fls[file.Key] = file.Value?.ToString();
@@ -72,9 +84,10 @@ namespace Importer.Configuration
             return this.readers.TryGetValue(readerName, out IReader reader) ? reader : null;
         }
 
-        public Dictionary<string, IWriter> GetWriters()
+        private readonly Dictionary<string, IWriter> writers;
+        public ImmutableDictionary<string, IWriter> GetWriters()
         {
-            return null;
+            return this.writers.ToImmutableDictionary();
         }
 
         public class ConfigurationData
@@ -87,6 +100,9 @@ namespace Importer.Configuration
 
             [JsonProperty("files")]
             public JObject Files { get; set; }
+
+            [JsonProperty("writers")]
+            public List<JObject> Writers { get; set; }
         }
 
         public static T ParseConfiguration<T>(JObject config)

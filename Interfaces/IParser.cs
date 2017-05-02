@@ -9,5 +9,7 @@ namespace Importer.Interfaces
         ColumnInfo Column { get; }
 
         bool IsFailed { get; }
+
+        string ToString(string format);
     }
 }

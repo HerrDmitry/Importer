@@ -15,5 +15,10 @@ namespace Importer.Implementations.Parsers
         {
             return this.Value.ToString();
         }
+
+        public override string ToString(string format)
+        {
+            return this.Value.ToString(format);
+        }
     }
 }

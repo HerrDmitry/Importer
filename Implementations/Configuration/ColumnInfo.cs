@@ -16,5 +16,8 @@ namespace Importer.Configuration
 
         [JsonProperty("reference")]
         public string Reference { get; set; }
+
+        [JsonProperty("format")]
+        public string Format { get; set; }
     }
 }

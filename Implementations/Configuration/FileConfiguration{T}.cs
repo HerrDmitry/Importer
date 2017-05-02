@@ -7,7 +7,7 @@ using System.Collections.Generic;
 namespace Importer.Configuration
 {
     [DebuggerDisplay("{Name} - {Type}")]
-    public abstract class FileConfiguration<T> where T : ColumnInfo
+    public class FileConfiguration<T> where T : ColumnInfo
     {
         [JsonProperty("name")]
         public string Name { get; set; }

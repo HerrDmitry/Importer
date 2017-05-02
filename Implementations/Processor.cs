@@ -17,7 +17,13 @@ namespace Importer
         public async Task<int> ProcessAsync()
         {
             this.FindAndLoadDictionaries();
-            Thread.Sleep(2000);
+            var writers = this.config.GetWriters().ToList();
+            Parallel.ForEach(this.config.GetReaders().First().Value.ReadData(), r =>
+            {
+                writers.ForEach( w => w.Value.WriteAsync(r));
+            });
+            writers.ForEach(x => x.Value.FlushAsync());
+            writers.ForEach(x => x.Value.Close());
             return await Task.FromResult(-1);
         }
 
