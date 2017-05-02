@@ -2,8 +2,8 @@
   "profiles": {
     "Importer": {
       "commandName": "Project",
-      "commandLineArgs": "/c:configurations\\TestExport.json",
-      "workingDirectory": "C:\\Users\\dmitr\\Source\\Repos\\Importer"
+      "commandLineArgs": "/c:configurations\\apps.json",
+      "workingDirectory": "C:\\temp\\Repos\\Importer"
     }
   }
 }

@@ -26,29 +26,33 @@ namespace Importer.Readers
 
         public IEnumerable<IRecord> ReadData()
         {
-            var sr=new StreamReader(this.dataSource);
+            var sr = new StreamReader(this.dataSource);
             var qualifier = this.configuration.TextQualifierChar;
             while (!sr.EndOfStream)
             {
-                var sourceLine=new StringBuilder();
-                var qualifierCount = 0;
-                while (qualifierCount == 0 || qualifierCount % 2 != 0)
+                var sourceLine = new StringBuilder();
+                lock (this.dataSource)
                 {
-                    var line = sr.ReadLine();
-                    sourceLine.Append(line);
-
-                    for (var i = 0; i < line.Length; i++)
+                    var qualifierCount = 0;
+                    while (qualifierCount == 0 || qualifierCount % 2 != 0)
                     {
-                        if (line[i] == qualifier)
+                        var line = sr.ReadLine();
+                        sourceLine.Append(line);
+
+                        for (var i = 0; i < line.Length; i++)
                         {
-                            qualifierCount++;
+                            if (line[i] == qualifier)
+                            {
+                                qualifierCount++;
+                            }
+                        }
+
+                        if (qualifierCount == 0)
+                        {
+                            break;
                         }
                     }
 
-                    if (qualifierCount == 0)
-                    {
-                        break;
-                    }
                 }
 
                 yield return new CsvRecord(this.configuration, sourceLine.ToString());

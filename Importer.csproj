@@ -7,7 +7,6 @@
 
   <ItemGroup>
     <Folder Include="Implementations\Readers\" />
-    <Folder Include="Implementations\Writers\" />
     <Folder Include="Implementations\Configuration\" />
   </ItemGroup>
   <ItemGroup>

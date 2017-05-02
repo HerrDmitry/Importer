@@ -9,7 +9,7 @@ using Newtonsoft.Json.Linq;
 
 namespace Importer.Writers
 {
-    public class CsvWriter:IWriter
+    public class CsvWriter:FileWriter, IWriter
     {
         public CsvWriter(JObject configuration)
         {
@@ -21,20 +21,11 @@ namespace Importer.Writers
             this.SetDataDestination(stream);
         }
 
-        public async Task FlushAsync()
-        {
-            await this.writer.FlushAsync();
-        }
-
-        public void SetDataDestination(Stream stream)
-        {
-            this.writer = new StreamWriter(stream);
-        }
-
         public async Task WriteAsync(IRecord record)
         {
             var qualifier = this.configuration.TextQualifierChar.ToString();
             var delimiter = this.configuration.DelimiterChar;
+            var delimiterS = delimiter.ToString();
             var builder = new StringBuilder();
             for (var i = 0; i < this.configuration.Columns.Count;i++){
                 var columnInfo = this.configuration.Columns[i];
@@ -43,10 +34,11 @@ namespace Importer.Writers
                     this.HandleException(record);
                     return;
                 }
-                var tb = new StringBuilder(column.ToString(columnInfo.Format));
+                var s = column.ToString(columnInfo.Format);
+                var tb = new StringBuilder(s);
                 var length = tb.Length;
                 tb.Replace(qualifier, qualifier + qualifier);
-                if(tb.Length>length){
+                if(tb.Length>length || s.Contains(delimiterS)){
                     tb.Insert(0, qualifier).Append(qualifier);
                 }
 
@@ -58,15 +50,10 @@ namespace Importer.Writers
             await this.writer.WriteLineAsync(builder.ToString());
         }
 
-        public void Close(){
-            
-        }
-
         private void HandleException(IRecord record){
             
         }
 
-        private TextWriter writer;
         private CsvWriterConfiguration configuration;
 
         public class CsvWriterConfiguration:Importer.Configuration.CsvFileConfiguration<CsvWriterColumn>

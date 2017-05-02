@@ -1,0 +1,49 @@
+﻿{
+  "readers": [
+    {
+      "name": "Application",
+      "type": "CSV",
+      "columns": [
+        { "name": "ApplicationId", "type": "integer" },
+        { "name": "OperationId", "type": "integer" },
+        { "name": "IntakeId", "type": "integer" },
+        { "name": "PremisesIdNumber", "type": "string" },
+        { "name": "PremisesIdNumberOmittedExplanation", "type": "string" },
+        { "name": "ProjectTitle", "type": "string" },
+        { "name": "ProjectDescription", "type": "string" },
+        { "name": "LargeProjectDescription", "type": "string" },
+        { "name": "SummaryDescription", "type": "string" }
+      ],
+      "delimiter": ",",
+      "textQualifier": "\"",
+      "header": 1,
+      "footer": null
+    }
+  ],
+  "writers": [
+    {
+      "name": "ApplicationOutput",
+      "type": "CSV",
+      "columns": [
+        {"source": "Application.ApplicationId"},
+        {"source": "Application.OperationId"},
+        {"source": "Application.IntakeId"},
+        {"source": "Application.PremisesIdNumber"},
+        {"source": "Application.PremisesIdNumberOmittedExplanation"},
+        {"source": "Application.ProjectTitle"},
+        {"source": "Application.ProjectDescription"},
+        {"source": "Application.LargeProjectDescription"},
+        {"source": "Application.SummaryDescription"}
+      ],
+      "delimiter": ",",
+      "textQualifier": "\""
+    }
+  ],
+  "log": {
+    "level": "debug"
+  },
+  "files": {
+    "Application": "../../apps.csv",
+    "ApplicationOutput": "../../appsout.csv"
+  }
+}

@@ -18,10 +18,10 @@ namespace Importer
         {
             this.FindAndLoadDictionaries();
             var writers = this.config.GetWriters().ToList();
-            Parallel.ForEach(this.config.GetReaders().First().Value.ReadData(), r =>
+            foreach(var r in this.config.GetReaders().First().Value.ReadData())
             {
                 writers.ForEach( w => w.Value.WriteAsync(r));
-            });
+            }
             writers.ForEach(x => x.Value.FlushAsync());
             writers.ForEach(x => x.Value.Close());
             return await Task.FromResult(-1);
