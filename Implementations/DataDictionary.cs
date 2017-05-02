@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using Importer.Implementations.Parsers;
 using Importer.Interfaces;
 
-namespace Importer.Implementations
+namespace Importer
 {
     public class DataDictionary
     {

@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Threading.Tasks;
 
 namespace Importer.Interfaces
 {
@@ -6,8 +7,10 @@ namespace Importer.Interfaces
     {
         void SetDataDestination(Stream stream);
 
-        void Write(IRecord record);
+        Task WriteAsync(IRecord record);
 
-        void Flush();
+        Task FlushAsync();
+
+        void Close();
     }
 }

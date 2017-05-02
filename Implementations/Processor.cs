@@ -5,11 +5,11 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Importer.Implementations
+namespace Importer
 {
     public class Processor
     {
-        public Processor(Importer.Implementations.Configuration.Configuration config)
+        public Processor(Importer.Configuration.Configuration config)
         {
             this.config = config;
         }
@@ -42,6 +42,6 @@ namespace Importer.Implementations
             }
         }
 
-        private Importer.Implementations.Configuration.Configuration config;
+        private Importer.Configuration.Configuration config;
     }
 }

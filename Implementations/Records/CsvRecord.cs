@@ -5,19 +5,18 @@ using System.Linq;
 using System.Text;
 using Importer.Implementations.Parsers;
 using Importer.Interfaces;
+using static Importer.Readers.CsvReader;
 
-namespace Importer.Implementations.Records
+namespace Importer.Records
 {
     public class CsvRecord : IRecord
     {
-        public CsvRecord(List<CsvColumn> columns, string source, char delimiter=',', char textQualifier=default(char))
+        public CsvRecord(CsvReaderConfiguration config, string source)
         {
             this.source = source;
-            this.textQualifier = textQualifier;
             this.index = 0;
-            this.delimiter = delimiter;
             this.length = this.source.Length;
-            this.columns = columns;
+            this.config = config;
         }
 
         public IEnumerable<IParser> GetValues()
@@ -32,8 +31,8 @@ namespace Importer.Implementations.Records
         private ImmutableDictionary<string,IParser> GetValuesInternal()
         {
             return this.values ?? (this.values =
-                       columns.ToImmutableDictionary(x => x.Name,
-                           x => (IParser) Parser.GetParser(x, this.GetNext())));
+                                   this.config.Columns.ToImmutableDictionary(x => x.Name,
+                                                                             x => (IParser)Parser.GetParser(this.config.Name, x, this.GetNext())));
         }
 
         private string GetNext()
@@ -44,15 +43,15 @@ namespace Importer.Implementations.Records
             }
 
             var next = new StringBuilder();
-            var expected = this.delimiter;
-            if (this.source[this.index] == this.delimiter)
+            var expected = this.config.DelimiterChar;
+            if (this.source[this.index] == this.config.DelimiterChar)
             {
                 this.index++;
                 return "";
             }
-            if (this.source[this.index] == this.textQualifier)
+            if (this.source[this.index] == this.config.TextQualifierChar)
             {
-                expected = this.textQualifier;
+                expected = this.config.TextQualifierChar;
             }
             else
             {
@@ -70,13 +69,13 @@ namespace Importer.Implementations.Records
                 }
                 if (this.index < this.length)
                 {
-                    if (this.index<this.length-1 && this.source[this.index]==this.textQualifier){
-                        if (this.source[this.index + 1] == this.textQualifier)
+                    if (this.index<this.length-1 && this.source[this.index]==this.config.TextQualifierChar){
+                        if (this.source[this.index + 1] == this.config.TextQualifierChar)
                         {
-                            next.Append(this.textQualifier);
+                            next.Append(this.config.TextQualifierChar);
                             this.index++;
                             continue;
-                        } else if(this.source[this.index+1]==this.delimiter){
+                        } else if(this.source[this.index+1]==this.config.DelimiterChar){
                             this.index++;
                             this.index++;
                             done=true;
@@ -98,13 +97,7 @@ namespace Importer.Implementations.Records
 
         private string source;
         private int index;
-        private char textQualifier;
-        private char delimiter;
         private int length;
-        private List<CsvColumn> columns;
-
-        public class CsvColumn : Configuration.ColumnInfo
-        {
-        }
+        private CsvReaderConfiguration config;
     }
 }

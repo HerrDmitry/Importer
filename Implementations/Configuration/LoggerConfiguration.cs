@@ -2,7 +2,7 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace Importer.Implementations.Configuration
+namespace Importer.Configuration
 {
     public class LoggerConfiguration
     {

@@ -2,8 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Threading;
-using Importer.Implementations;
-using Importer.Implementations.Configuration;
+using Importer.Configuration;
 using Importer.Interfaces;
 
 namespace Importer
@@ -24,7 +23,7 @@ namespace Importer
                     return -1;
                 }
 
-                var config=new Configuration(configPath);
+                var config=new Configuration.Configuration(configPath);
                 var files = new System.Collections.Generic.Dictionary<string, string>(config.Files);
                 foreach (var a in args)
                 {

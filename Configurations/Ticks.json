@@ -15,7 +15,7 @@
         {"name": "Volume", "type": "integer"}
       ],
       "delimiter": ",",
-      "textQualifier": "\"
+      "textQualifier": "\""
     }],
   "log": {
     "level": "debug"
@@ -26,15 +26,15 @@
   "writers": [
     { "name": "TicksOutput",
       "columns": [
-        {"name": "Tick.SymbolId", "type": "integer"},
-        {"name": "Tick.TickSizeId", "type": "integer"},
-        {"name": "Tick.Timestamp", "type": "date", "format": "hh:mm dd MMMM yyyy" },
-        {"name": "Tick.Index", "type": "integer"},
-        {"name": "Tick.PriceOpen", "type": "double"},
-        {"name": "Tick.PriceClose", "type": "double" },
-        {"name": "Tick.PriceLow", "type": "double"},
-        {"name": "Tick.PriceHigh","type": "double"},
-        {"name": "Tick.Volume", "type": "integer"}
+        {"name": "SymbolId", "source": "Tick.SymbolId"},
+        {"name": "TickSizeId", "source": "Tick.TickSizeId"},
+        {"name": "Timestamp", "source": "Tick.Timestamp", "format": "hh:mm dd MMMM yyyy" },
+        {"name": "Index", "source": "Tick.Index"},
+        {"source": "Tick.PriceOpen"},
+        {"source": "Tick.PriceClose" },
+        {"source": "Tick.PriceLow"},
+        {"source": "Tick.PriceHigh"},
+        {"source": "Tick.Volume"}
       ],
       "type": "CSV",
       "delimiter": ",",

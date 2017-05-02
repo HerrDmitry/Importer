@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Importer.Implementations
+namespace Importer
 {
     public class Logger
     {

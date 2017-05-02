@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Diagnostics;
 
-namespace Importer.Implementations.Configuration
+namespace Importer.Configuration
 {
     [DebuggerDisplay("{Name} - {Type}")]
     public class ColumnInfo

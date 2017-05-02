@@ -4,10 +4,10 @@ using Newtonsoft.Json.Linq;
 using System.Diagnostics;
 using System.Collections.Generic;
 
-namespace Importer.Implementations.Configuration
+namespace Importer.Configuration
 {
     [DebuggerDisplay("{Name} - {Type}")]
-    public class ReaderConfiguration<T> where T : ColumnInfo
+    public abstract class FileConfiguration<T> where T : ColumnInfo
     {
         [JsonProperty("name")]
         public string Name { get; set; }

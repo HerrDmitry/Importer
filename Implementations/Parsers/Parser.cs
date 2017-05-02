@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
-using Importer.Implementations.Configuration;
+using Importer.Configuration;
 using Importer.Interfaces;
 
 namespace Importer.Implementations.Parsers
@@ -12,22 +12,24 @@ namespace Importer.Implementations.Parsers
     {
         public ColumnInfo Column { get; private set; }
 
+        public string SourceName { get; private set; }
+
         public abstract bool IsFailed { get; }
 
-        public static Parser GetParser(ColumnInfo column, string input)
+        public static Parser GetParser(string sourceName, ColumnInfo column, string input)
         {
             switch (column.Type.ToUpper())
             {
                 case "STRING":
-                    return new StringParser() { Column = column, input = input };
+                    return new StringParser() { SourceName=sourceName, Column = column, input = input };
                 case "INTEGER":
-                    return new IntegerParser() { Column = column, input = input };
+                    return new IntegerParser() { SourceName=sourceName, Column = column, input = input };
                 case "DATE":
-                    return new DateParser() { Column = column, input = input };
+                    return new DateParser() { SourceName=sourceName, Column = column, input = input };
                 case "FLOAT":
-                    return new FloatParser() { Column = column, input = input };
+                    return new FloatParser() { SourceName=sourceName, Column = column, input = input };
                 case "BOOLEAN":
-                    return new BooleanParser() { Column = column, input = input };
+                    return new BooleanParser() { SourceName=sourceName, Column = column, input = input };
                 default:
                     throw new NotSupportedException($"Type {column.Type} is not supported");
             }

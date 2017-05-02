@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using Importer.Implementations.Records;
-using Importer.Implementations.Configuration;
+using Importer.Records;
+using Importer.Configuration;
 using Importer.Interfaces;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
 
-namespace Importer.Implementations.Readers
+namespace Importer.Readers
 {
     public class CsvReader : IReader
     {
@@ -17,11 +17,7 @@ namespace Importer.Implementations.Readers
 
         public CsvReader(JObject configuration)
         {
-            this.configuration = Importer.Implementations.Configuration.Configuration.ParseConfiguration<CsvReaderConfiguration>(configuration);
-            if (string.IsNullOrEmpty(this.configuration.Delimiter))
-            {
-                this.configuration.Delimiter = ",";
-            }
+            this.configuration = Configuration.Configuration.ParseConfiguration<CsvReaderConfiguration>(configuration);
         }
 
         public void SetDataSource(Stream source){
@@ -55,8 +51,7 @@ namespace Importer.Implementations.Readers
                     }
                 }
 
-                yield return new CsvRecord(this.configuration.Columns, sourceLine.ToString(), this.configuration.Delimiter[0],
-                    this.configuration.TextQualifierChar);
+                yield return new CsvRecord(this.configuration, sourceLine.ToString());
             }
         }
 
@@ -64,22 +59,6 @@ namespace Importer.Implementations.Readers
 
         private readonly CsvReaderConfiguration configuration;
 
-        public class CsvReaderConfiguration:Configuration.ReaderConfiguration<CsvRecord.CsvColumn>
-        {
-            [JsonProperty("delimiter")]
-            public string Delimiter { get; set; }
-
-            [JsonProperty("textQualifier")]
-            public string TextQualifier { get; set; }
-
-            [JsonIgnore]
-            public char TextQualifierChar => !string.IsNullOrEmpty(this.TextQualifier) ? this.TextQualifier[0] : default(char);
-
-            [JsonProperty("footer")]
-            public int? Footer { get; set; }
-
-            [JsonProperty("header")]
-            public int? Header { get; set; }
-        }
+        public class CsvReaderConfiguration:Importer.Configuration.CsvFileConfiguration<ColumnInfo>{}
     }
 }

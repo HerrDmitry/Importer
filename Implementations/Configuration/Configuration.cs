@@ -6,12 +6,12 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
-using Importer.Implementations.Readers;
+using Importer.Readers;
 using Importer.Interfaces;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace Importer.Implementations.Configuration
+namespace Importer.Configuration
 {
     public class Configuration
     {
@@ -42,7 +42,7 @@ namespace Importer.Implementations.Configuration
             this.readers = new Dictionary<string, IReader>();
             configurationData?.Readers?.ForEach(x =>
             {
-                var baseConfig = ParseConfiguration<ReaderConfiguration<ColumnInfo>>(x);
+                var baseConfig = ParseConfiguration<FileConfiguration<ColumnInfo>>(x);
                 switch (baseConfig.Type.ToUpper())
                 {
                     case "CSV":
