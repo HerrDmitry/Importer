@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Importer.Interfaces;
 
@@ -11,10 +12,13 @@ namespace Importer.Writers
     {
         public async Task FlushAsync()
         {
-            await Task.Run(()=>{
-                this.isFlushing = true;
-                this.Writeout();
-            });
+            this.isFlushing = true;
+            while (taskCounter > 0)
+            {
+                Thread.Sleep(50);
+            }
+            await this.WriteoutAsync();
+            await this.writer.FlushAsync();
         }
 
         public void SetDataDestination(Stream stream)
@@ -36,15 +40,10 @@ namespace Importer.Writers
                 {
                     lock (this.queueLocker)
                     {
-                        if (this.queue == null)
-                        {
-                            this.queue=new StringBuilder();
-                        }
-
                         this.queue.Append(s);
                     }
 
-                    this.Writeout();
+                    this.WriteoutAsync();
                 }
                 finally
                 {
@@ -53,31 +52,35 @@ namespace Importer.Writers
             });
         }
 
-        private void Writeout(){
-            StringBuilder readyToWrite = null;
-            lock (this.queueLocker)
+        private async Task WriteoutAsync()
+        {
+            await Task.Run(() =>
             {
-                if (this.queue?.Length >= MAX_BUFFER_LENGTH || this.isFlushing)
+                string readyToWrite = null;
+                lock (this.queueLocker)
                 {
-                    readyToWrite = this.queue;
-                    this.queue = null;
+                    if (this.queue.Length >= MAX_BUFFER_LENGTH || this.isFlushing)
+                    {
+                        readyToWrite = this.queue.ToString();
+                        this.queue.Clear();
+                    }
                 }
-            }
-            if (readyToWrite != null)
-            {
-                lock (this.writeLocker)
+                if (readyToWrite != null)
                 {
-                    this.writer.WriteAsync(readyToWrite.ToString());
+                    lock (this.writeLocker)
+                    {
+                        this.writer.Write(readyToWrite);
+                    }
                 }
-            }
+            });
         }
 
-        private StringBuilder queue = null;
+        private StringBuilder queue = new StringBuilder();
         private object queueLocker=new object();
         private object writeLocker=new object();
         private TextWriter writer;
         private volatile int taskCounter=0;
-        private const int MAX_BUFFER_LENGTH = 65535;
+        private const int MAX_BUFFER_LENGTH = 1024*1024*10;
         private volatile bool isFlushing=false;
     }
 }

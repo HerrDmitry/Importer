@@ -8,15 +8,9 @@ namespace Importer.Configuration
         [JsonProperty("delimiter")]
         public string Delimiter
         {
-            get
-            {
-                return this.DelimiterChar.ToString();
-            }
+            get => this.DelimiterChar.ToString();
 
-            set
-            {
-                this.DelimiterChar = !string.IsNullOrWhiteSpace(value) ? value[0] : ',';
-            }
+            set => this.DelimiterChar = !string.IsNullOrWhiteSpace(value) ? value[0] : ',';
         }
 
         [JsonIgnore]
@@ -24,15 +18,9 @@ namespace Importer.Configuration
         [JsonProperty("textQualifier")]
         public string TextQualifier
         {
-            get
-            {
-                return this.TextQualifierChar.ToString();
-            }
+            get => this.TextQualifierChar.ToString();
 
-            set
-            {
-                this.TextQualifierChar = !string.IsNullOrEmpty(value) ? value[0] : '"';
-            }
+            set => this.TextQualifierChar = !string.IsNullOrEmpty(value) ? value[0] : '"';
         }
 
         [JsonIgnore]

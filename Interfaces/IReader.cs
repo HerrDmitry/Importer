@@ -12,6 +12,6 @@ namespace Importer.Interfaces
 
         List<Importer.Configuration.ColumnInfo> Columns { get; }
 
-        float Percentage { get; }
+        double Percentage { get; }
     }
 }

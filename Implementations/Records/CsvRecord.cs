@@ -24,8 +24,8 @@ namespace Importer.Records
         protected override ImmutableDictionary<string,IParser> GetValuesInternal()
         {
             return this.values ?? (this.values =
-                                   this.config.Columns.ToImmutableDictionary(x => string.Concat(this.config.Name, ".", x.Name),
-                                                                             x => (IParser)Parser.GetParser(this.config.Name, x, this.GetNext())));
+                                   this.config.GetColumnsWithFullNames().ToImmutableDictionary(x => x.FullName,
+                                                                             x => (IParser)Parser.GetParser(this.config.Name, x.Column, this.GetNext())));
         }
 
         private string GetNext()

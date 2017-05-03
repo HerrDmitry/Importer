@@ -15,25 +15,32 @@ namespace Importer
             this.config = config;
         }
 
-        public async Task<int> ProcessAsync()
+        public async Task ProcessAsync()
         {
-            var stopwatch = new Stopwatch();
-            stopwatch.Start();
-            this.FindAndLoadDictionaries();
-            var writers = this.config.GetWriters().ToList();
-            var reader = this.config.GetReaders().First().Value;
-            foreach(var r in reader.ReadData())
+            await Task.Run(() =>
             {
-                writers.ForEach( w => w.Value.WriteAsync(r));
+                var stopwatch = new Stopwatch();
+                stopwatch.Start();
+                this.FindAndLoadDictionaries();
+                var writers = this.config.GetWriters().ToList();
+                var reader = this.config.GetReaders().First().Value;
+                var lastSeconds = 0;
+                foreach (var r in reader.ReadData())
+                {
+                    writers.ForEach(w => w.Value.WriteAsync(r));
 
-                if( ((int)stopwatch.Elapsed.TotalMilliseconds) % 10000 ==0){
-                    Logger.GetLogger().InfoAsync($"{reader.Percentage} - {stopwatch.Elapsed.TotalSeconds}");
+                    if (((int) stopwatch.Elapsed.TotalMilliseconds) % 10000 == 0 &&
+                        lastSeconds != (int) stopwatch.Elapsed.TotalSeconds)
+                    {
+                        Logger.GetLogger()
+                            .InfoAsync($"{(int) (reader.Percentage * 100)} - {(int) stopwatch.Elapsed.TotalSeconds}");
+                        lastSeconds = (int) stopwatch.Elapsed.TotalSeconds;
+                    }
                 }
-            }
-            writers.ForEach(x => x.Value.FlushAsync());
-            writers.ForEach(x => x.Value.Close());
-            Logger.GetLogger().InfoAsync($"done in - {stopwatch.Elapsed.TotalSeconds}");
-            return await Task.FromResult(-1);
+                writers.ForEach(async x => await x.Value.FlushAsync());
+                writers.ForEach(x => x.Value.Close());
+                Logger.GetLogger().InfoAsync($"done in - {stopwatch.Elapsed.TotalSeconds}");
+            });
         }
 
         private void FindAndLoadDictionaries()

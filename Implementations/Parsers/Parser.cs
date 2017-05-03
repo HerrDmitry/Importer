@@ -10,26 +10,22 @@ namespace Importer.Implementations.Parsers
     [DebuggerDisplay("{" + nameof(input) + "}")]
     public abstract class Parser : IParser
     {
-        public ColumnInfo Column { get; private set; }
-
-        public string SourceName { get; private set; }
-
         public abstract bool IsFailed { get; }
 
         public static Parser GetParser(string sourceName, ColumnInfo column, string input)
         {
-            switch (column.Type.ToUpper())
+            switch (column.Type)
             {
-                case "STRING":
-                    return new StringParser() { SourceName=sourceName, Column = column, input = input };
-                case "INTEGER":
-                    return new IntegerParser() { SourceName=sourceName, Column = column, input = input };
-                case "DATE":
-                    return new DateParser() { SourceName=sourceName, Column = column, input = input };
-                case "FLOAT":
-                    return new FloatParser() { SourceName=sourceName, Column = column, input = input };
-                case "BOOLEAN":
-                    return new BooleanParser() { SourceName=sourceName, Column = column, input = input };
+                case "string":
+                    return new StringParser() { input = input };
+                case "integer":
+                    return new IntegerParser() { input = input };
+                case "date":
+                    return new DateParser() { input = input };
+                case "float":
+                    return new FloatParser() { input = input };
+                case "boolean":
+                    return new BooleanParser() { input = input };
                 default:
                     throw new NotSupportedException($"Type {column.Type} is not supported");
             }

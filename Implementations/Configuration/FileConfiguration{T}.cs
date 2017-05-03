@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Diagnostics;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Importer.Configuration
 {
@@ -16,6 +17,36 @@ namespace Importer.Configuration
         public string Type { get; set; }
 
         [JsonProperty("columns")]
-        public List<T> Columns { get; set; }
+        public List<T> Columns
+        {
+            get => columns;
+            set
+            {
+                columns = value;
+                columnNames = null;
+            }
+        }
+
+        public List<ColumnName> GetColumnsWithFullNames()
+        {
+            return this.columnNames ?? (this.columnNames = this.Columns
+                       .Select(x => new ColumnName(string.Concat(this.Name, ".", x.Name), x)).ToList());
+        }
+
+        private List<ColumnName> columnNames;
+        private List<T> columns;
+
+        public struct ColumnName
+        {
+            public ColumnName(string fullName, T column)
+            {
+                this.FullName = fullName;
+                this.Column = column;
+            }
+
+            public string FullName { get; }
+
+            public T Column { get; }
+        }
     }
 }
