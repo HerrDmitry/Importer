@@ -25,9 +25,13 @@ namespace Importer
                 var writers = this.config.GetWriters().ToList();
                 var reader = this.config.GetReaders().First().Value;
                 var lastSeconds = 0;
-                foreach (var r in reader.ReadData())
+                foreach (var record in reader.ReadData())
                 {
-                    writers.ForEach(w => w.Value.WriteAsync(r));
+                    var r = record;
+                    writers.ForEach(w =>
+                    {
+                        w.Value.WriteAsync(r);
+                    });
 
                     if (((int) stopwatch.Elapsed.TotalMilliseconds) % 10000 == 0 &&
                         lastSeconds != (int) stopwatch.Elapsed.TotalSeconds)

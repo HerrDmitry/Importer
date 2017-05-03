@@ -1,24 +1,18 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Text;
+using Importer.Configuration;
 using Importer.Implementations.Parsers;
 using Importer.Interfaces;
 using static Importer.Readers.CsvReader;
 
 namespace Importer.Records
 {
-    public class CsvRecord : Record
+    public class CsvRecord : Record<CsvRecord>
     {
-        public CsvRecord(CsvReaderConfiguration config, StringBuilder source)
-        {
-            this.source = source;
-            this.index = 0;
-            this.length = this.source.Length;
-            this.config = config;
-        }
-
         private ImmutableDictionary<string,IParser> values=null;
 
         protected override ImmutableDictionary<string,IParser> GetValuesInternal()
@@ -28,11 +22,30 @@ namespace Importer.Records
                                                                              x => (IParser)Parser.GetParser(this.config.Name, x.Column, this.GetNext())));
         }
 
-        private string GetNext()
+        public override void InitializeRecord<TCI>(FileConfiguration<TCI> config, StringBuilder source)
+        {
+            this.source=new char[source.Length];
+            source.CopyTo(0,this.source,0,source.Length);
+            this.index = 0;
+            this.length = this.source.Length;
+            this.config = config as CsvReaderConfiguration;
+            this.values = null;
+        }
+
+        protected override void ClearRecord()
+        {
+            this.source = null;
+            this.index = 0;
+            this.length = 0;
+            this.config = null;
+            this.values = null;
+        }
+
+        private StringBuilder GetNext()
         {
             if (this.index >= this.length)
             {
-                return null;
+                throw new ArgumentOutOfRangeException("index is out of bounds");
             }
 
             var next = new StringBuilder();
@@ -40,7 +53,7 @@ namespace Importer.Records
             if (this.source[this.index] == this.config.DelimiterChar)
             {
                 this.index++;
-                return "";
+                return new StringBuilder();
             }
             if (this.source[this.index] == this.config.TextQualifierChar)
             {
@@ -85,10 +98,10 @@ namespace Importer.Records
                     done = true;
                 }
             }
-            return next.ToString();
+            return next;
         }
 
-        private StringBuilder source;
+        private char[] source;
         private int index;
         private int length;
         private CsvReaderConfiguration config;

@@ -12,7 +12,17 @@
         { "name": "ProjectTitle", "type": "string" },
         { "name": "ProjectDescription", "type": "string" },
         { "name": "LargeProjectDescription", "type": "string" },
-        { "name": "SummaryDescription", "type": "string" }
+        { "name": "SummaryDescription", "type": "string" },
+        { "name": "DateProposedStart", "type": "date", "format": "yyyy-MM-dd" },
+        { "name": "DateProposedEnd", "type": "date", "format": "yyyy-MM-dd" },
+        { "name": "IsEligibilityConfirmed", "type": "boolean" },
+        { "name": "EligibilityConfirmationComment", "type": "boolean" },
+        { "name": "ResourcesAndSkillUsed", "type": "string" },
+        { "name": "BmpId", "type": "integer" },
+        { "name": "BmpOtherDescription", "type": "string" },
+        { "name": "Score", "type": "float" },
+        { "name": "WatershedId", "type": "integer" },
+        { "name": "FinancialAdvisorId", "type": "integer" }
       ],
       "delimiter": ",",
       "textQualifier": "\"",
@@ -33,7 +43,17 @@
         {"source": "Application.ProjectTitle"},
         {"source": "Application.ProjectDescription"},
         {"source": "Application.LargeProjectDescription"},
-        {"source": "Application.SummaryDescription"}
+        {"source": "Application.SummaryDescription"},
+        { "source": "Application.DateProposedStart", "format": "dd/MMM/yyyy" },
+        { "source": "Application.DateProposedEnd", "format": "dd/MMM/yyyy" },
+        { "source": "Application.IsEligibilityConfirmed" },
+        { "source": "Application.EligibilityConfirmationComment" },
+        { "source": "Application.ResourcesAndSkillUsed" },
+        { "source": "Application.BmpId" },
+        { "source": "Application.BmpOtherDescription" },
+        { "source": "Application.Score" },
+        { "source": "Application.WatershedId" },
+        { "source": "Application.FinancialAdvisorId" }
       ],
       "delimiter": ",",
       "textQualifier": "\""

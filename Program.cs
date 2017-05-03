@@ -48,7 +48,7 @@ namespace Importer
                         if(File.Exists(file.Value)){
                             File.Delete(file.Value);
                         }
-                        writer.SetDataDestination(File.OpenWrite(file.Value));
+                        writer.SetDataDestination(File.Open(file.Value,FileMode.Create,FileAccess.Write,FileShare.Read));
                     }
                     else
                     {

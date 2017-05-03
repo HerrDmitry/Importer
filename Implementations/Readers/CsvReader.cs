@@ -28,23 +28,29 @@ namespace Importer.Readers
         {
             var sr = new StreamReader(this.dataSource);
             var qualifier = this.configuration.TextQualifierChar;
-            while (!sr.EndOfStream)
+            var counter = 0;
+            while (!sr.EndOfStream /*&& counter<20000*/)
             {
-                var sourceLine = new StringBuilder();
                 lock (this.dataSource)
                 {
+                    var sourceLine = new StringBuilder();
                     var qualifierCount = 0;
                     while (qualifierCount == 0 || qualifierCount % 2 != 0)
                     {
                         var line = sr.ReadLine();
-                        sourceLine.Append(line);
+                        sourceLine.Append(line).AppendLine();
 
-                        for (var i = 0; i < line.Length; i++)
+                        var index = line.IndexOf(qualifier);
+                        while (index >= 0)
                         {
-                            if (line[i] == qualifier)
+                            qualifierCount++;
+                            index++;
+                            if (index >= line.Length)
                             {
-                                qualifierCount++;
+                                break;
                             }
+
+                            index = line.IndexOf(qualifier, index);
                         }
 
                         if (qualifierCount == 0)
@@ -52,10 +58,10 @@ namespace Importer.Readers
                             break;
                         }
                     }
-
+                    this.Percentage = sr.BaseStream.Position / (double)sr.BaseStream.Length;
+                    counter++;
+                    yield return Record<CsvRecord>.Factory.GetRecord(this.configuration, sourceLine);
                 }
-                this.Percentage=sr.BaseStream.Position/(double)sr.BaseStream.Length;
-                yield return new CsvRecord(this.configuration, sourceLine);
             }
         }
 

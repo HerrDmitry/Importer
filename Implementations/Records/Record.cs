@@ -1,8 +1,13 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using System.Text;
+using System.Threading;
+using Importer.Configuration;
 using Importer.Interfaces;
+using Importer.Readers;
 
 namespace Importer.Records
 {
@@ -16,5 +21,57 @@ namespace Importer.Records
         public IParser this[string columnName] => this.GetValuesInternal()[columnName];
 
         protected abstract ImmutableDictionary<string, IParser> GetValuesInternal();
+
+        public abstract void InitializeRecord<TCI>(FileConfiguration<TCI> config, StringBuilder source) where TCI : ColumnInfo;
+        protected abstract void ClearRecord();
+
+        public abstract void Release();
+    }
+
+    public abstract class Record<T> : Record where T : Record, new()
+    {
+        public static class Factory
+        {
+            private const int MAX_RECORD = 1000;
+            private static volatile int recordCount=0;
+            private static ConcurrentBag<T> recordPool = new ConcurrentBag<T>();
+
+            public static T GetRecord<TCI>(FileConfiguration<TCI> config, StringBuilder source) where TCI : ColumnInfo
+            {
+                lock (recordPool)
+                {
+                    T record = null;
+                    while (record == null)
+                    {
+                        if (!recordPool.TryTake(out record))
+                        {
+                            if (recordCount < MAX_RECORD)
+                            {
+                                recordCount++;
+                                record = new T();
+                            }
+                            else
+                            {
+                                Thread.Sleep(50);
+                            }
+                        }
+
+                        record?.InitializeRecord(config, source);
+                    }
+
+                    return record;
+                }
+            }
+
+            public static void ReleaseRecord(T record)
+            {
+                recordPool.Add(record);
+            }
+        }
+
+        public override void Release()
+        {
+            Factory.ReleaseRecord(this as T);
+        }
     }
 }

@@ -8,5 +8,7 @@ namespace Importer.Interfaces
         bool IsFailed { get; }
 
         string ToString(string format);
+
+        void Release();
     }
 }

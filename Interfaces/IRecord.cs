@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Importer.Configuration;
 
 namespace Importer.Interfaces
 {
@@ -9,5 +10,7 @@ namespace Importer.Interfaces
         IEnumerable<IParser> GetValues();
 
         IParser this[string columnName] { get; }
+
+        void Release();
     }
 }

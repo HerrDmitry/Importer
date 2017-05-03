@@ -25,37 +25,45 @@ namespace Importer.Writers
         {
             await Task.Run(async () =>
             {
-                var qualifier = this.configuration.TextQualifierChar.ToString();
-                var delimiter = this.configuration.DelimiterChar;
-                var delimiterS = delimiter.ToString();
                 var builder = new StringBuilder();
-                for (var i = 0; i < this.configuration.Columns.Count; i++)
+                try
                 {
-                    var columnInfo = this.configuration.Columns[i];
-                    var column = record[columnInfo.Source];
-                    if (column.IsFailed)
+                    var qualifier = this.configuration.TextQualifierChar.ToString();
+                    var delimiter = this.configuration.DelimiterChar;
+                    var delimiterS = delimiter.ToString();
+                    for (var i = 0; i < this.configuration.Columns.Count; i++)
                     {
-                        this.HandleException(record);
-                        return;
-                    }
-                    var s = column.ToString(columnInfo.Format);
-                    var tb = new StringBuilder(s);
-                    var length = tb.Length;
-                    tb.Replace(qualifier, qualifier + qualifier);
-                    if (tb.Length > length || s.Contains(delimiterS))
-                    {
-                        tb.Insert(0, qualifier).Append(qualifier);
-                    }
+                        var columnInfo = this.configuration.Columns[i];
+                        var column = record[columnInfo.Source];
+                        if (column.IsFailed)
+                        {
+                            this.HandleException(record);
+                            return;
+                        }
+                        var s = column.ToString(columnInfo.Format);
+                        var tb = new StringBuilder(s);
+                        var length = tb.Length;
+                        tb.Replace(qualifier, qualifier + qualifier);
+                        if (tb.Length > length || s.Contains(delimiterS))
+                        {
+                            tb.Insert(0, qualifier).Append(qualifier);
+                        }
 
-                    if (builder.Length > 0)
-                    {
-                        builder.Append(delimiter);
+                        if (builder.Length > 0)
+                        {
+                            builder.Append(delimiter);
+                        }
+                        builder.Append(tb);
                     }
-                    builder.Append(tb);
+                }
+                finally
+                {
+                    record.Release();
                 }
 
                 builder.AppendLine();
-                await this.WriteInternalAsync(builder);
+                this.WriteInternalAsync(builder);
+                await Task.FromResult(1);
             });
         }
 

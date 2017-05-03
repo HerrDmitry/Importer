@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
+using System.Threading;
 using Importer.Configuration;
 using Importer.Interfaces;
 
@@ -12,12 +14,14 @@ namespace Importer.Implementations.Parsers
     {
         public abstract bool IsFailed { get; }
 
-        public static Parser GetParser(string sourceName, ColumnInfo column, string input)
+        public static Parser GetParser(string sourceName, ColumnInfo column, StringBuilder input)
         {
+            Parser parser = null;
             switch (column.Type)
             {
                 case "string":
-                    return new StringParser() { input = input };
+                    parser = Factory<StringParser>.GetInstance();
+                    break;
                 case "integer":
                     return new IntegerParser() { input = input };
                 case "date":
@@ -29,6 +33,9 @@ namespace Importer.Implementations.Parsers
                 default:
                     throw new NotSupportedException($"Type {column.Type} is not supported");
             }
+
+            parser.input = input;
+            return parser;
         }
 
         public new abstract string ToString();
@@ -38,7 +45,37 @@ namespace Importer.Implementations.Parsers
             return this.ToString();
         }
 
-        protected string input;
+        public abstract void Release();
+
+        protected StringBuilder input;
+
+        private class Factory<T> where T : Parser, new()
+        {
+            private const int MAX_INSTANCE_COUNTER = 1000;
+            private static int instanceCounter = 0;
+            private static readonly ConcurrentBag<T> availableInstances = new ConcurrentBag<T>();
+
+            public static T GetInstance()
+            {
+                T parser = null;
+                while (parser == null)
+                {
+                    if (!availableInstances.TryTake(out parser))
+                    {
+                        if (instanceCounter < MAX_INSTANCE_COUNTER)
+                        {
+                            parser = new T();
+                        }
+                        else
+                        {
+                            Thread.Sleep(50);
+                        }
+                    }
+                }
+
+                return parser;
+            }
+        }
     }
 
     public abstract class Parser<T>:Parser
@@ -84,5 +121,6 @@ namespace Importer.Implementations.Parsers
         }
 
         protected abstract T Parse(out bool isFailed);
+        protected const string NULL_STRING_VALUE = "N/A";
     }
 }

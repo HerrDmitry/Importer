@@ -18,7 +18,10 @@ namespace Importer.Writers
                 Thread.Sleep(50);
             }
             await this.WriteoutAsync();
-            await this.writer.FlushAsync();
+            lock (this.writeLocker)
+            {
+                this.writer.Flush();
+            }
         }
 
         public void SetDataDestination(Stream stream)
@@ -80,7 +83,7 @@ namespace Importer.Writers
         private object writeLocker=new object();
         private TextWriter writer;
         private volatile int taskCounter=0;
-        private const int MAX_BUFFER_LENGTH = 1024*1024*10;
+        private const int MAX_BUFFER_LENGTH = 1024*1024;
         private volatile bool isFlushing=false;
     }
 }
