@@ -11,7 +11,7 @@ namespace Importer.Records
 {
     public class CsvRecord : Record
     {
-        public CsvRecord(CsvReaderConfiguration config, string source)
+        public CsvRecord(CsvReaderConfiguration config, StringBuilder source)
         {
             this.source = source;
             this.index = 0;
@@ -88,7 +88,7 @@ namespace Importer.Records
             return next.ToString();
         }
 
-        private string source;
+        private StringBuilder source;
         private int index;
         private int length;
         private CsvReaderConfiguration config;

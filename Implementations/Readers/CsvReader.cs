@@ -55,7 +55,7 @@ namespace Importer.Readers
 
                 }
                 this.Percentage=sr.BaseStream.Position/(double)sr.BaseStream.Length;
-                yield return new CsvRecord(this.configuration, sourceLine.ToString());
+                yield return new CsvRecord(this.configuration, sourceLine);
             }
         }
 
