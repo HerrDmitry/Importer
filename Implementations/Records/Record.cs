@@ -23,7 +23,7 @@ namespace Importer.Records
         protected abstract ImmutableDictionary<string, IParser> GetValuesInternal();
 
         public abstract void InitializeRecord<TCI>(FileConfiguration<TCI> config, StringBuilder source) where TCI : ColumnInfo;
-        protected abstract void ClearRecord();
+        public abstract void ClearRecord();
 
         public abstract void Release();
     }
@@ -65,6 +65,7 @@ namespace Importer.Records
 
             public static void ReleaseRecord(T record)
             {
+                record.ClearRecord();
                 recordPool.Add(record);
             }
         }

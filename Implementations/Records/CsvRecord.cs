@@ -32,12 +32,20 @@ namespace Importer.Records
             this.values = null;
         }
 
-        protected override void ClearRecord()
+        public override void ClearRecord()
         {
             this.source = null;
             this.index = 0;
             this.length = 0;
             this.config = null;
+            if (this.values != null)
+            {
+                foreach (var parser in this.values)
+                {
+                    parser.Value.Release();
+                }
+            }
+
             this.values = null;
         }
 

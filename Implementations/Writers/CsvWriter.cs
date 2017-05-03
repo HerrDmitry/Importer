@@ -56,6 +56,10 @@ namespace Importer.Writers
                         builder.Append(tb);
                     }
                 }
+                catch (Exception ex)
+                {
+                    Logger.GetLogger().ErrorAsync(ex.Message);
+                }
                 finally
                 {
                     record.Release();

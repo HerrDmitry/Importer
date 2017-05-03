@@ -23,14 +23,17 @@ namespace Importer.Implementations.Parsers
                     parser = Factory<StringParser>.GetInstance();
                     break;
                 case "integer":
-                    parser = Factory<IntegerParser>().GetInstance();
+                    parser = Factory<IntegerParser>.GetInstance();
                     break;
                 case "date":
-                    return new DateParser() { input = input };
+                    parser = Factory<DateParser>.GetInstance();
+                    break;
                 case "float":
-                    return new FloatParser() { input = input };
+                    parser = Factory<FloatParser>.GetInstance();
+                    break;
                 case "boolean":
-                    return new BooleanParser() { input = input };
+                    parser = Factory<BooleanParser>.GetInstance();
+                    break;
                 default:
                     throw new NotSupportedException($"Type {column.Type} is not supported");
             }
@@ -46,14 +49,43 @@ namespace Importer.Implementations.Parsers
             return this.ToString();
         }
 
-        public abstract void Release();
+        public void Release()
+        {
+            if (this is StringParser)
+            {
+                Factory<StringParser>.ReleaseInstance(this);
+            }
+            if (this is IntegerParser)
+            {
+                Factory<IntegerParser>.ReleaseInstance(this);
+            }
+            if (this is DateParser)
+            {
+                Factory<DateParser>.ReleaseInstance(this);
+            }
+            if (this is FloatParser)
+            {
+                Factory<FloatParser>.ReleaseInstance(this);
+            }
+            if (this is BooleanParser)
+            {
+                Factory<BooleanParser>.ReleaseInstance(this);
+            }
+        }
+
+        public void Clear()
+        {
+            this.input.Clear();
+            this.isParsed = false;
+        }
 
         protected StringBuilder input;
+        protected bool isParsed;
 
-        private class Factory<T> where T : Parser, new()
+        private static class Factory<T> where T : Parser, new()
         {
             private const int MAX_INSTANCE_COUNTER = 1000;
-            private static int instanceCounter = 0;
+            private static volatile int instanceCounter = 0;
             private static readonly ConcurrentBag<T> availableInstances = new ConcurrentBag<T>();
 
             public static T GetInstance()
@@ -66,6 +98,7 @@ namespace Importer.Implementations.Parsers
                         if (instanceCounter < MAX_INSTANCE_COUNTER)
                         {
                             parser = new T();
+                            instanceCounter++;
                         }
                         else
                         {
@@ -76,13 +109,18 @@ namespace Importer.Implementations.Parsers
 
                 return parser;
             }
+
+            public static void ReleaseInstance(Parser instance)
+            {
+                availableInstances.Add((T)instance);
+                instance.Clear();
+            }
         }
     }
 
     public abstract class Parser<T>:Parser
     {
         private object locker = new object();
-        private bool isParsed;
         private T parsedValue;
         private bool isFailed;
         public T Value { 
