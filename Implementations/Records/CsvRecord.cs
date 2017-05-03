@@ -76,11 +76,12 @@ namespace Importer.Records
             while (!done)
             {
                 this.index++;
-
+                var start = this.index;
                 while (this.index < this.length && this.source[this.index] != expected)
                 {
-                    next.Append(this.source[this.index++]);
+                    this.index++;
                 }
+                next.Append(this.source, start, this.index - start);
                 if (this.index < this.length)
                 {
                     if (this.index<this.length-1 && this.source[this.index]==this.config.TextQualifierChar){
