@@ -11,5 +11,7 @@ namespace Importer.Interfaces
         IEnumerable<IRecord> ReadData();
 
         List<Importer.Configuration.ColumnInfo> Columns { get; }
+
+        float Percentage { get; }
     }
 }

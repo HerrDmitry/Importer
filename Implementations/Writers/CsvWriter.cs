@@ -23,31 +23,40 @@ namespace Importer.Writers
 
         public async Task WriteAsync(IRecord record)
         {
-            var qualifier = this.configuration.TextQualifierChar.ToString();
-            var delimiter = this.configuration.DelimiterChar;
-            var delimiterS = delimiter.ToString();
-            var builder = new StringBuilder();
-            for (var i = 0; i < this.configuration.Columns.Count;i++){
-                var columnInfo = this.configuration.Columns[i];
-                var column = record[columnInfo.Source];
-                if(column.IsFailed){
-                    this.HandleException(record);
-                    return;
-                }
-                var s = column.ToString(columnInfo.Format);
-                var tb = new StringBuilder(s);
-                var length = tb.Length;
-                tb.Replace(qualifier, qualifier + qualifier);
-                if(tb.Length>length || s.Contains(delimiterS)){
-                    tb.Insert(0, qualifier).Append(qualifier);
+            await Task.Run(async () =>
+            {
+                var qualifier = this.configuration.TextQualifierChar.ToString();
+                var delimiter = this.configuration.DelimiterChar;
+                var delimiterS = delimiter.ToString();
+                var builder = new StringBuilder();
+                for (var i = 0; i < this.configuration.Columns.Count; i++)
+                {
+                    var columnInfo = this.configuration.Columns[i];
+                    var column = record[columnInfo.Source];
+                    if (column.IsFailed)
+                    {
+                        this.HandleException(record);
+                        return;
+                    }
+                    var s = column.ToString(columnInfo.Format);
+                    var tb = new StringBuilder(s);
+                    var length = tb.Length;
+                    tb.Replace(qualifier, qualifier + qualifier);
+                    if (tb.Length > length || s.Contains(delimiterS))
+                    {
+                        tb.Insert(0, qualifier).Append(qualifier);
+                    }
+
+                    if (builder.Length > 0)
+                    {
+                        builder.Append(delimiter);
+                    }
+                    builder.Append(tb);
                 }
 
-                if(builder.Length>0){
-                    builder.Append(delimiter);
-                }
-                builder.Append(tb);
-            }
-            await this.writer.WriteLineAsync(builder.ToString());
+                builder.AppendLine();
+                await this.WriteInternalAsync(builder);
+            });
         }
 
         private void HandleException(IRecord record){

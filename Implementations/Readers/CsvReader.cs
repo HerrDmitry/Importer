@@ -54,12 +54,14 @@ namespace Importer.Readers
                     }
 
                 }
-
+                this.Percentage=sr.BaseStream.Position;
                 yield return new CsvRecord(this.configuration, sourceLine.ToString());
             }
         }
 
         public List<Configuration.ColumnInfo> Columns => new List<Configuration.ColumnInfo>(this.configuration.Columns);
+
+        public float Percentage { get; private set; } 
 
         private readonly CsvReaderConfiguration configuration;
 

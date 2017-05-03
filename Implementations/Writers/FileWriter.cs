@@ -13,6 +13,7 @@ namespace Importer.Writers
         {
             await Task.Run(()=>{
                 this.isFlushing = true;
+                this.Writeout();
             });
         }
 
@@ -23,17 +24,16 @@ namespace Importer.Writers
 
         public void Close()
         {
-            //this.writer.FlushAsync().Wait();
+            this.FlushAsync().Wait();
         }
 
-        protected async Task WriteAsync(StringBuilder s)
+        protected async Task WriteInternalAsync(StringBuilder s)
         {
             this.taskCounter++;
             await Task.Run(() =>
             {
                 try
                 {
-                    StringBuilder readyToWrite=null;
                     lock (this.queueLocker)
                     {
                         if (this.queue == null)
@@ -42,26 +42,34 @@ namespace Importer.Writers
                         }
 
                         this.queue.Append(s);
-                        if (this.queue.Length >= MAX_BUFFER_LENGTH || this.isFlushing)
-                        {
-                            readyToWrite = this.queue;
-                            this.queue = null;
-                        }
                     }
 
-                    if (readyToWrite != null)
-                    {
-                        lock (this.writeLocker)
-                        {
-                            this.writer.Write(readyToWrite.ToString());
-                        }
-                    }
+                    this.Writeout();
                 }
                 finally
                 {
                     this.taskCounter--;
                 }
             });
+        }
+
+        private void Writeout(){
+            StringBuilder readyToWrite = null;
+            lock (this.queueLocker)
+            {
+                if (this.queue?.Length >= MAX_BUFFER_LENGTH || this.isFlushing)
+                {
+                    readyToWrite = this.queue;
+                    this.queue = null;
+                }
+            }
+            if (readyToWrite != null)
+            {
+                lock (this.writeLocker)
+                {
+                    this.writer.WriteAsync(readyToWrite.ToString());
+                }
+            }
         }
 
         private StringBuilder queue = null;

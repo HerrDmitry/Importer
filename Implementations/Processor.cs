@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -16,14 +17,22 @@ namespace Importer
 
         public async Task<int> ProcessAsync()
         {
+            var stopwatch = new Stopwatch();
+            stopwatch.Start();
             this.FindAndLoadDictionaries();
             var writers = this.config.GetWriters().ToList();
-            foreach(var r in this.config.GetReaders().First().Value.ReadData())
+            var reader = this.config.GetReaders().First().Value;
+            foreach(var r in reader.ReadData())
             {
                 writers.ForEach( w => w.Value.WriteAsync(r));
+
+                if( ((int)stopwatch.Elapsed.TotalMilliseconds) % 10000 ==0){
+                    Logger.GetLogger().InfoAsync($"{reader.Percentage} - {stopwatch.Elapsed.TotalSeconds}");
+                }
             }
             writers.ForEach(x => x.Value.FlushAsync());
             writers.ForEach(x => x.Value.Close());
+            Logger.GetLogger().InfoAsync($"done in - {stopwatch.Elapsed.TotalSeconds}");
             return await Task.FromResult(-1);
         }
 
