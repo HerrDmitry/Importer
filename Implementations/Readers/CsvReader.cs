@@ -37,8 +37,11 @@ namespace Importer.Readers
                     var qualifierCount = 0;
                     while (qualifierCount == 0 || qualifierCount % 2 != 0)
                     {
+                        if (sourceLine.Length>0){
+                            sourceLine.AppendLine();
+                        }
                         var line = sr.ReadLine();
-                        sourceLine.Append(line).AppendLine();
+                        sourceLine.Append(line);
 
                         var index = line.IndexOf(qualifier);
                         while (index >= 0)
