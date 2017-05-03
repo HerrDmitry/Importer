@@ -23,7 +23,8 @@ namespace Importer.Implementations.Parsers
                     parser = Factory<StringParser>.GetInstance();
                     break;
                 case "integer":
-                    return new IntegerParser() { input = input };
+                    parser = Factory<IntegerParser>().GetInstance();
+                    break;
                 case "date":
                     return new DateParser() { input = input };
                 case "float":
