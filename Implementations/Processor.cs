@@ -27,12 +27,12 @@ namespace Importer
                 var lastSeconds = 0;
                 foreach (var record in reader.ReadData())
                 {
-                    var r = record;
+                    var r = record.GetValues().ToList();
                     writers.ForEach(w =>
                     {
-                        w.Value.WriteAsync(r);
+                        //w.Value.WriteAsync(record);
                     });
-
+record.Release();
                     if (((int) stopwatch.Elapsed.TotalMilliseconds) % 10000 == 0 &&
                         lastSeconds != (int) stopwatch.Elapsed.TotalSeconds)
                     {
