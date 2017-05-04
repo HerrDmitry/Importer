@@ -55,8 +55,8 @@
         { "source": "Application.WatershedId" },
         { "source": "Application.FinancialAdvisorId" }
       ],
-      "delimiter": "Я",
-      "textQualifier": "Ч"
+      "delimiter": ",",
+      "textQualifier": "\""
     },
     {
       "name": "ApplicationOutput1",
@@ -82,8 +82,8 @@
         { "source": "Application.WatershedId" },
         { "source": "Application.FinancialAdvisorId" }
       ],
-      "delimiter": "Я",
-      "textQualifier": "Ч"
+      "delimiter": ",",
+      "textQualifier": "\""
     }
   ],
   "log": {

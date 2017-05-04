@@ -15,8 +15,9 @@ namespace Importer
         public Processor(Importer.Configuration.Configuration config)
         {
             this.config = config;
-            this.processingTasks=new Task[Environment.ProcessorCount];
-            for (var i = 0; i < Environment.ProcessorCount; i++)
+            var processingThreads = Environment.ProcessorCount;
+            this.processingTasks=new Task[processingThreads];
+            for (var i = 0; i < processingThreads; i++)
             {
                 this.processingTasks[i] = Task.Run(() => this.HandleRecord());
             }
@@ -37,10 +38,12 @@ namespace Importer
                     Logger.GetLogger().DebugAsync("Start loading data");
                     foreach (var record in reader.ReadData())
                     {
+/*
                         while (this.pendingRecords.Count > 10000)
                         {
                             Thread.Sleep(1);
                         }
+*/
                         this.pendingRecords.Enqueue(record);
 
                         if (lastSeconds+9 < (int) stopwatch.Elapsed.TotalSeconds)
@@ -88,7 +91,7 @@ namespace Importer
         private void HandleRecord()
         {
             var writers = this.config.GetWriters().ToList();
-            while (!this.isDone)
+            while (!this.isDone || this.pendingRecords.Count>0)
             {
                 if (this.pendingRecords.TryDequeue(out IRecord record))
                 {

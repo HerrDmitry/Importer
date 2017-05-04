@@ -53,13 +53,14 @@ namespace Importer.Writers
             try
             {
                 Logger.GetLogger().DebugAsync("Starting file writer's thread");
-                while (!this.isClosing)
+                while (!this.isClosing || this.queue.Count>0)
                 {
-                    if (this.queue.TryDequeue(out StringBuilder s))
+                    while (this.queue.TryDequeue(out StringBuilder s))
                     {
                         this.writer.Write(s);
                     }
-                    else
+                    
+                    if (this.queue.Count==0)
                     {
                         Thread.Sleep(50);
                     }

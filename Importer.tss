@@ -2,43 +2,34 @@
 <ArrayOfArrayOfArrayOfString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <ArrayOfArrayOfString>
     <ArrayOfString>
-      <string>c:\temp\repos\importer\configurations\apps.json</string>
-    </ArrayOfString>
-    <ArrayOfString>
-      <string>c:\temp\repos\importer\program.cs</string>
-    </ArrayOfString>
-    <ArrayOfString>
-      <string>c:\temp\repos\importer\implementations\writers\csvwriter.cs</string>
-    </ArrayOfString>
-    <ArrayOfString>
-      <string>c:\temp\repos\importer\implementations\processor.cs</string>
-    </ArrayOfString>
-    <ArrayOfString>
-      <string>c:\temp\repos\importer\interfaces\iwriter.cs</string>
-    </ArrayOfString>
-    <ArrayOfString>
-      <string>c:\temp\repos\importer\implementations\readers\csvreader.cs</string>
-    </ArrayOfString>
-    <ArrayOfString>
-      <string>c:\temp\repos\importer\implementations\writers\filewriter.cs</string>
-    </ArrayOfString>
-    <ArrayOfString>
-      <string>Importer</string>
-    </ArrayOfString>
-    <ArrayOfString>
-      <string>c:\temp\repos\importer\implementations\parsers\booleanparser.cs</string>
-    </ArrayOfString>
-    <ArrayOfString>
-      <string>C:\temp\Repos\Importer\Implementations\Parsers\Parser.cs</string>
-    </ArrayOfString>
-    <ArrayOfString>
-      <string>c:\temp\repos\importer\implementations\parsers\dateparser.cs</string>
+      <string>c:\temp\repos\importer\implementations\parsers\integerparser.cs</string>
     </ArrayOfString>
     <ArrayOfString>
       <string>c:\temp\repos\importer\implementations\parsers\floatparser.cs</string>
     </ArrayOfString>
     <ArrayOfString>
-      <string>c:\temp\repos\importer\implementations\parsers\integerparser.cs</string>
+      <string>c:\temp\repos\importer\implementations\parsers\dateparser.cs</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>c:\temp\repos\importer\implementations\parsers\parser.cs</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>Importer</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>c:\temp\repos\importer\interfaces\iparser.cs</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>c:\temp\repos\importer\implementations\parsers\booleanparser.cs</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>c:\temp\repos\importer\implementations\writers\filewriter.cs</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>c:\temp\repos\importer\implementations\readers\csvreader.cs</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>C:\temp\Repos\Importer\Implementations\Processor.cs</string>
     </ArrayOfString>
     <ArrayOfString>
       <string>c:\temp\repos\importer\implementations\parsers\stringparser.cs</string>
@@ -56,7 +47,19 @@
       <string>c:\temp\repos\importer\interfaces\irecord.cs</string>
     </ArrayOfString>
     <ArrayOfString>
-      <string>c:\temp\repos\importer\interfaces\iparser.cs</string>
+      <string>c:\temp\repos\importer\implementations\writers\csvwriter.cs</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>c:\temp\repos\importer\program.cs</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>c:\temp\repos\importer\configurations\apps.json</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>C:\temp\Repos\Importer\Interfaces\IWriter.cs</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>C:\temp\Repos\Importer\Implementations\Configuration\Configuration.cs</string>
     </ArrayOfString>
   </ArrayOfArrayOfString>
 </ArrayOfArrayOfArrayOfString>
