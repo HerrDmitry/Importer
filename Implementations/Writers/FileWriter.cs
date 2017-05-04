@@ -60,10 +60,7 @@ namespace Importer.Writers
                         this.writer.Write(s);
                     }
                     
-                    if (this.queue.Count==0)
-                    {
-                        Thread.Sleep(50);
-                    }
+                    Thread.Sleep(100);
 
                     if (this.isFlushing || this.isClosing)
                     {

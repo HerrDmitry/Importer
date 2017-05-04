@@ -84,40 +84,22 @@ namespace Importer.Implementations.Parsers
 
         private static class Factory<T> where T : Parser, new()
         {
-            private const int MAX_INSTANCE_COUNTER = 10000;
-            private static volatile int instanceCounter = 0;
             private static readonly ConcurrentBag<T> availableInstances = new ConcurrentBag<T>();
 
             public static T GetInstance()
             {
-/*
-                T parser = null;
-                while (parser == null)
+                if (!availableInstances.TryTake(out T parser))
                 {
-                    if (instanceCounter<MAX_INSTANCE_COUNTER || !availableInstances.TryTake(out parser))
-                    {
-                        if (instanceCounter < MAX_INSTANCE_COUNTER)
-                        {
-                            parser = new T();
-                            instanceCounter++;
-                        }
-                        else
-                        {
-                            Logger.GetLogger().DebugAsync("Hit parser objects limit.");
-                            Thread.Sleep(50);
-                        }
-                    }
+                    parser = new T();
                 }
 
                 return parser;
-*/
-                return new T();
             }
 
             public static void ReleaseInstance(Parser instance)
             {
-                //availableInstances.Add((T)instance);
-                //instance.Clear();
+                instance.Clear();
+                availableInstances.Add((T)instance);
             }
         }
     }

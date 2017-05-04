@@ -9,6 +9,8 @@ namespace Importer.Interfaces
 
         Task WriteAsync(IRecord record);
 
+        void Write(IRecord record);
+
         Task FlushAsync();
 
         void Close();

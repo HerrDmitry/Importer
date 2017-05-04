@@ -38,12 +38,12 @@ namespace Importer
                     Logger.GetLogger().DebugAsync("Start loading data");
                     foreach (var record in reader.ReadData())
                     {
-/*
-                        while (this.pendingRecords.Count > 10000)
+
+                        while (this.pendingRecords.Count > 100000)
                         {
-                            Thread.Sleep(1);
+                            Thread.Sleep(50);
                         }
-*/
+
                         this.pendingRecords.Enqueue(record);
 
                         if (lastSeconds+9 < (int) stopwatch.Elapsed.TotalSeconds)
@@ -95,12 +95,12 @@ namespace Importer
             {
                 if (this.pendingRecords.TryDequeue(out IRecord record))
                 {
-                    writers.ForEach(x => x.Value.WriteAsync(record).Wait());
+                    writers.ForEach(x => x.Value.Write(record));
                     record.Release();
                 }
                 else
                 {
-                    Thread.Sleep(1);
+                    Thread.Sleep(50);
                 }
             }
         }
