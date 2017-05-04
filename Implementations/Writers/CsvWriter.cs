@@ -28,9 +28,8 @@ namespace Importer.Writers
                 var builder = new StringBuilder();
                 try
                 {
-                    var qualifier = this.configuration.TextQualifierChar.ToString();
+                    var qualifier = this.configuration.TextQualifierChar;
                     var delimiter = this.configuration.DelimiterChar;
-                    var delimiterS = delimiter.ToString();
                     for (var i = 0; i < this.configuration.Columns.Count; i++)
                     {
                         var columnInfo = this.configuration.Columns[i];
@@ -42,10 +41,15 @@ namespace Importer.Writers
                         }
                         var s = column.ToString(columnInfo.Format);
                         var tb = new StringBuilder(s);
-                        var length = tb.Length;
-                        tb.Replace(qualifier, qualifier + qualifier);
-                        if (tb.Length > length || s.Contains(delimiterS))
+                        var hasDelimiters = s.IndexOf(delimiter) >= 0;
+                        var hasQualifier = s.IndexOf(qualifier) >= 0;
+                        if (hasQualifier || hasDelimiters)
                         {
+                            if (hasQualifier)
+                            {
+                                var qs = qualifier.ToString();
+                                tb.Replace(qs, qs+qs);
+                            }
                             tb.Insert(0, qualifier).Append(qualifier);
                         }
 
@@ -62,12 +66,11 @@ namespace Importer.Writers
                 }
                 finally
                 {
-                    record.Release();
+                    //record.Release();
                 }
 
                 builder.AppendLine();
-                this.WriteInternalAsync(builder);
-                await Task.FromResult(1);
+                await this.WriteInternalAsync(builder);
             });
         }
 

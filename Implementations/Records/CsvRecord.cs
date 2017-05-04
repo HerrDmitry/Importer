@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Text;
+using System.Xml;
 using Importer.Configuration;
 using Importer.Implementations.Parsers;
 using Importer.Interfaces;
@@ -24,8 +25,9 @@ namespace Importer.Records
 
         public override void InitializeRecord<TCI>(FileConfiguration<TCI> config, StringBuilder source)
         {
-            this.source=new char[source.Length];
-            source.CopyTo(0,this.source,0,source.Length);
+            this.source = source.ToString();
+            this.sourceChar = new char[source.Length];
+            source.CopyTo(0,this.sourceChar,0,source.Length);
             this.index = 0;
             this.length = this.source.Length;
             this.config = config as CsvReaderConfiguration;
@@ -35,6 +37,7 @@ namespace Importer.Records
         public override void ClearRecord()
         {
             this.source = null;
+            this.sourceChar = null;
             this.index = 0;
             this.length = 0;
             this.config = null;
@@ -77,11 +80,22 @@ namespace Importer.Records
             {
                 this.index++;
                 var start = this.index;
+                var idx = this.source.IndexOf(expected, this.index);
+                if (idx < 0)
+                {
+                    idx = this.source.Length;
+                }
+                next.Append(this.sourceChar,start, idx - start);
+                this.index = idx;
+
+/*
                 while (this.index < this.length && this.source[this.index] != expected)
                 {
                     this.index++;
                 }
+
                 next.Append(this.source, start, this.index - start);
+*/
                 if (this.index < this.length)
                 {
                     if (this.index<this.length-1 && this.source[this.index]==this.config.TextQualifierChar){
@@ -110,7 +124,8 @@ namespace Importer.Records
             return next;
         }
 
-        private char[] source;
+        private string source;
+        private char[] sourceChar;
         private int index;
         private int length;
         private CsvReaderConfiguration config;

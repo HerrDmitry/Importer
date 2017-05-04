@@ -32,7 +32,7 @@ namespace Importer.Records
     {
         public static class Factory
         {
-            private const int MAX_RECORD = 1000;
+            private const int MAX_RECORD = 20000;
             private static volatile int recordCount=0;
             private static ConcurrentBag<T> recordPool = new ConcurrentBag<T>();
 
@@ -52,7 +52,7 @@ namespace Importer.Records
                             }
                             else
                             {
-                                Thread.Sleep(50);
+                                Thread.Sleep(1);
                             }
                         }
 

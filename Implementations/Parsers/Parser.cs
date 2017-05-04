@@ -102,6 +102,7 @@ namespace Importer.Implementations.Parsers
                         }
                         else
                         {
+                            Logger.GetLogger().DebugAsync("Hit parser objects limit.");
                             Thread.Sleep(50);
                         }
                     }

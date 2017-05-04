@@ -27,12 +27,14 @@ namespace Importer
                 var lastSeconds = 0;
                 foreach (var record in reader.ReadData())
                 {
-                    var r = record.GetValues().ToList();
-                    writers.ForEach(w =>
+                    Task.Run(() =>
                     {
-                        //w.Value.WriteAsync(record);
+                        writers.ForEach(async w =>
+                        {
+                            await w.Value.WriteAsync(record);
+                            record.Release();
+                        });
                     });
-record.Release();
                     if (((int) stopwatch.Elapsed.TotalMilliseconds) % 10000 == 0 &&
                         lastSeconds != (int) stopwatch.Elapsed.TotalSeconds)
                     {
@@ -41,6 +43,7 @@ record.Release();
                         lastSeconds = (int) stopwatch.Elapsed.TotalSeconds;
                     }
                 }
+
                 writers.ForEach(async x => await x.Value.FlushAsync());
                 writers.ForEach(x => x.Value.Close());
                 Logger.GetLogger().InfoAsync($"done in - {stopwatch.Elapsed.TotalSeconds}");

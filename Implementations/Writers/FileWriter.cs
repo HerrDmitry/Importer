@@ -26,7 +26,7 @@ namespace Importer.Writers
 
         public void SetDataDestination(Stream stream)
         {
-            this.writer = new StreamWriter(stream);
+            this.writer = new StreamWriter(stream,Encoding.UTF8,10*1024*1024);
         }
 
         public void Close()
