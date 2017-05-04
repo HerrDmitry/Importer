@@ -32,35 +32,27 @@ namespace Importer.Records
     {
         public static class Factory
         {
-            private const int MAX_RECORD = 20000;
+            private const int MAX_RECORD = 100000;
             private static volatile int recordCount=0;
             private static ConcurrentBag<T> recordPool = new ConcurrentBag<T>();
 
             public static T GetRecord<TCI>(FileConfiguration<TCI> config, StringBuilder source) where TCI : ColumnInfo
             {
-                lock (recordPool)
+                if (!recordPool.TryTake(out T record))
                 {
-                    T record = null;
-                    while (record == null)
+                    if (recordCount < MAX_RECORD)
                     {
-                        if (!recordPool.TryTake(out record))
-                        {
-                            if (recordCount < MAX_RECORD)
-                            {
-                                recordCount++;
-                                record = new T();
-                            }
-                            else
-                            {
-                                Thread.Sleep(1);
-                            }
-                        }
-
-                        record?.InitializeRecord(config, source);
+                        recordCount++;
+                        record = new T();
                     }
-
-                    return record;
+                    else
+                    {
+                        Thread.Sleep(1);
+                    }
                 }
+
+                record?.InitializeRecord(config, source);
+                return record;
             }
 
             public static void ReleaseRecord(T record)

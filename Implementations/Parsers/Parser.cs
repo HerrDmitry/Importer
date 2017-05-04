@@ -84,16 +84,17 @@ namespace Importer.Implementations.Parsers
 
         private static class Factory<T> where T : Parser, new()
         {
-            private const int MAX_INSTANCE_COUNTER = 1000;
+            private const int MAX_INSTANCE_COUNTER = 10000;
             private static volatile int instanceCounter = 0;
             private static readonly ConcurrentBag<T> availableInstances = new ConcurrentBag<T>();
 
             public static T GetInstance()
             {
+/*
                 T parser = null;
                 while (parser == null)
                 {
-                    if (!availableInstances.TryTake(out parser))
+                    if (instanceCounter<MAX_INSTANCE_COUNTER || !availableInstances.TryTake(out parser))
                     {
                         if (instanceCounter < MAX_INSTANCE_COUNTER)
                         {
@@ -109,12 +110,14 @@ namespace Importer.Implementations.Parsers
                 }
 
                 return parser;
+*/
+                return new T();
             }
 
             public static void ReleaseInstance(Parser instance)
             {
-                availableInstances.Add((T)instance);
-                instance.Clear();
+                //availableInstances.Add((T)instance);
+                //instance.Clear();
             }
         }
     }

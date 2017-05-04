@@ -29,7 +29,7 @@ namespace Importer.Readers
             var sr = new StreamReader(this.dataSource);
             var qualifier = this.configuration.TextQualifierChar;
             var counter = 0;
-            while (!sr.EndOfStream /*&& counter<20000*/)
+            while (!sr.EndOfStream /*&& counter<40000*/)
             {
                 lock (this.dataSource)
                 {

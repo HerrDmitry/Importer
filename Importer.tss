@@ -20,46 +20,43 @@
       <string>c:\temp\repos\importer\implementations\readers\csvreader.cs</string>
     </ArrayOfString>
     <ArrayOfString>
-      <string>C:\temp\Repos\Importer\Implementations\Writers\FileWriter.cs</string>
+      <string>c:\temp\repos\importer\implementations\writers\filewriter.cs</string>
     </ArrayOfString>
     <ArrayOfString>
       <string>Importer</string>
     </ArrayOfString>
     <ArrayOfString>
-      <string>C:\temp\Repos\Importer\Implementations\Parsers\BooleanParser.cs</string>
+      <string>c:\temp\repos\importer\implementations\parsers\booleanparser.cs</string>
     </ArrayOfString>
     <ArrayOfString>
       <string>C:\temp\Repos\Importer\Implementations\Parsers\Parser.cs</string>
     </ArrayOfString>
     <ArrayOfString>
-      <string>C:\temp\Repos\Importer\Implementations\Parsers\DateParser.cs</string>
+      <string>c:\temp\repos\importer\implementations\parsers\dateparser.cs</string>
     </ArrayOfString>
     <ArrayOfString>
-      <string>C:\temp\Repos\Importer\Implementations\Parsers\FloatParser.cs</string>
+      <string>c:\temp\repos\importer\implementations\parsers\floatparser.cs</string>
     </ArrayOfString>
     <ArrayOfString>
-      <string>C:\temp\Repos\Importer\Implementations\Parsers\IntegerParser.cs</string>
+      <string>c:\temp\repos\importer\implementations\parsers\integerparser.cs</string>
     </ArrayOfString>
     <ArrayOfString>
-      <string>C:\temp\Repos\Importer\Implementations\Parsers\StringParser.cs</string>
+      <string>c:\temp\repos\importer\implementations\parsers\stringparser.cs</string>
     </ArrayOfString>
     <ArrayOfString>
-      <string>C:\temp\Repos\Importer\Implementations\Records\CsvRecord.cs</string>
+      <string>c:\temp\repos\importer\implementations\records\csvrecord.cs</string>
     </ArrayOfString>
     <ArrayOfString>
-      <string>C:\temp\Repos\Importer\Implementations\Records\Record.cs</string>
+      <string>c:\temp\repos\importer\implementations\records\record.cs</string>
     </ArrayOfString>
     <ArrayOfString>
-      <string>C:\temp\Repos\Importer\Implementations\Configuration\CsvFileConfiguration.cs</string>
+      <string>c:\temp\repos\importer\implementations\configuration\csvfileconfiguration.cs</string>
     </ArrayOfString>
     <ArrayOfString>
-      <string>C:\temp\Repos\Importer\Interfaces\IRecord.cs</string>
+      <string>c:\temp\repos\importer\interfaces\irecord.cs</string>
     </ArrayOfString>
     <ArrayOfString>
-      <string>C:\Users\dbalobanov\AppData\Local\JetBrains\Shared\v08\DecompilerCache\decompiler\7C5126ED-2791-4987-BC2A-5287A276F18D\e6\63e69abf\StringBuilder.cs</string>
-    </ArrayOfString>
-    <ArrayOfString>
-      <string>C:\temp\Repos\Importer\Interfaces\IParser.cs</string>
+      <string>c:\temp\repos\importer\interfaces\iparser.cs</string>
     </ArrayOfString>
   </ArrayOfArrayOfString>
 </ArrayOfArrayOfArrayOfString>

@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Importer.Interfaces;
 
 namespace Importer
 {
@@ -13,6 +15,11 @@ namespace Importer
         public Processor(Importer.Configuration.Configuration config)
         {
             this.config = config;
+            this.processingTasks=new Task[Environment.ProcessorCount];
+            for (var i = 0; i < Environment.ProcessorCount; i++)
+            {
+                this.processingTasks[i] = Task.Run(() => this.HandleRecord());
+            }
         }
 
         public async Task ProcessAsync()
@@ -27,30 +34,14 @@ namespace Importer
                     var writers = this.config.GetWriters().ToList();
                     var reader = this.config.GetReaders().First().Value;
                     var lastSeconds = 0;
-                    var countDown=new CountdownEvent(1);
                     Logger.GetLogger().DebugAsync("Start loading data");
                     foreach (var record in reader.ReadData())
                     {
-                        countDown.AddCount();
-                        Task.Run(() =>
+                        while (this.pendingRecords.Count > 10000)
                         {
-                            writers.ForEach(async w =>
-                            {
-                                try
-                                {
-                                    await w.Value.WriteAsync(record);
-                                    record.Release();
-                                }
-                                catch (Exception ex)
-                                {
-                                    Logger.GetLogger().ErrorAsync(ex.Message);
-                                }
-                                finally
-                                {
-                                    countDown.Signal();
-                                }
-                            });
-                        });
+                            Thread.Sleep(1);
+                        }
+                        this.pendingRecords.Enqueue(record);
 
                         if (lastSeconds+9 < (int) stopwatch.Elapsed.TotalSeconds)
                         {
@@ -59,9 +50,9 @@ namespace Importer
                             lastSeconds = (int) stopwatch.Elapsed.TotalSeconds;
                         }
                     }
-                    countDown.Signal();
+                    this.isDone = true;
                     Logger.GetLogger().DebugAsync($"All data loaded in {stopwatch.Elapsed.TotalSeconds} seconds, waiting for write threads...");
-                    countDown.Wait();
+                    Task.WaitAll(this.processingTasks);
                     writers.ForEach(x => x.Value.Close());
                     stopwatch.Stop();
                     Logger.GetLogger().InfoAsync($"done in - {(int)stopwatch.Elapsed.TotalMinutes}:{stopwatch.Elapsed.Seconds}.{stopwatch.Elapsed.Milliseconds}");
@@ -94,6 +85,29 @@ namespace Importer
             }
         }
 
+        private void HandleRecord()
+        {
+            var writers = this.config.GetWriters().ToList();
+            while (!this.isDone)
+            {
+                if (this.pendingRecords.TryDequeue(out IRecord record))
+                {
+                    writers.ForEach(x => x.Value.WriteAsync(record).Wait());
+                    record.Release();
+                }
+                else
+                {
+                    Thread.Sleep(1);
+                }
+            }
+        }
+
         private Importer.Configuration.Configuration config;
+
+        private Task[] processingTasks;
+
+        private ConcurrentQueue<IRecord> pendingRecords=new ConcurrentQueue<IRecord>();
+
+        private volatile bool isDone;
     }
 }

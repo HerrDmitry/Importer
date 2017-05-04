@@ -55,8 +55,35 @@
         { "source": "Application.WatershedId" },
         { "source": "Application.FinancialAdvisorId" }
       ],
-      "delimiter": ",",
-      "textQualifier": "\""
+      "delimiter": "Я",
+      "textQualifier": "Ч"
+    },
+    {
+      "name": "ApplicationOutput1",
+      "type": "CSV",
+      "columns": [
+        {"source": "Application.ApplicationId"},
+        {"source": "Application.OperationId"},
+        {"source": "Application.IntakeId"},
+        {"source": "Application.PremisesIdNumber"},
+        {"source": "Application.PremisesIdNumberOmittedExplanation"},
+        {"source": "Application.ProjectTitle"},
+        {"source": "Application.ProjectDescription"},
+        {"source": "Application.LargeProjectDescription"},
+        {"source": "Application.SummaryDescription"},
+        { "source": "Application.DateProposedStart", "format": "dd/MMM/yyyy" },
+        { "source": "Application.DateProposedEnd", "format": "dd/MMM/yyyy" },
+        { "source": "Application.IsEligibilityConfirmed" },
+        { "source": "Application.EligibilityConfirmationComment" },
+        { "source": "Application.ResourcesAndSkillUsed" },
+        { "source": "Application.BmpId" },
+        { "source": "Application.BmpOtherDescription" },
+        { "source": "Application.Score" },
+        { "source": "Application.WatershedId" },
+        { "source": "Application.FinancialAdvisorId" }
+      ],
+      "delimiter": "Я",
+      "textQualifier": "Ч"
     }
   ],
   "log": {
@@ -64,6 +91,7 @@
   },
   "files": {
     "Application": "../../apps.csv",
-    "ApplicationOutput": "../../appsout.csv"
+    "ApplicationOutput": "../../appsout.csv",
+    "ApplicationOutput1": "../../appsout1.csv"
   }
 }
