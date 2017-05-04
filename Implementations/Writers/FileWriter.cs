@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -12,78 +13,88 @@ namespace Importer.Writers
     {
         public async Task FlushAsync()
         {
-            this.isFlushing = true;
-            while (taskCounter > 0)
+            await Task.Run(() =>
             {
-                Thread.Sleep(50);
-            }
-            await this.WriteoutAsync();
-            lock (this.writeLocker)
-            {
-                this.writer.Flush();
-            }
+                if (this.isClosing)
+                {
+                    return;
+                }
+                this.isFlushing = true;
+                while (this.isFlushing)
+                {
+                    Thread.Sleep(1);
+                }
+            });
         }
 
         public void SetDataDestination(Stream stream)
         {
-            this.writer = new StreamWriter(stream,Encoding.UTF8,10*1024*1024);
+            this.writer = new StreamWriter(stream);
+            this.writerTask = Task.Run(() => this.WriteoutTask());
         }
 
         public void Close()
         {
-            this.FlushAsync().Wait();
+            this.isClosing = true;
+            this.writerTask.Wait();
         }
 
-        protected async Task WriteInternalAsync(StringBuilder s)
+        protected void WriteInternal(StringBuilder s)
         {
-            this.taskCounter++;
-            await Task.Run(() =>
+            if (this.isClosing)
             {
-                try
-                {
-                    lock (this.queueLocker)
-                    {
-                        this.queue.Append(s);
-                    }
-
-                    this.WriteoutAsync();
-                }
-                finally
-                {
-                    this.taskCounter--;
-                }
-            });
+                throw new ObjectDisposedException("Output stream is done for");
+            }
+            this.queue.Enqueue(s);
         }
 
-        private async Task WriteoutAsync()
+        private void WriteoutTask()
         {
-            await Task.Run(() =>
+            try
             {
-                string readyToWrite = null;
-                lock (this.queueLocker)
+                Logger.GetLogger().DebugAsync("Starting file writer's thread");
+                while (!this.isClosing)
                 {
-                    if (this.queue.Length >= MAX_BUFFER_LENGTH || this.isFlushing)
+                    if (this.queue.TryDequeue(out StringBuilder s))
                     {
-                        readyToWrite = this.queue.ToString();
-                        this.queue.Clear();
+                        this.writer.Write(s);
+                    }
+                    else
+                    {
+                        Thread.Sleep(50);
+                    }
+
+                    if (this.isFlushing || this.isClosing)
+                    {
+                        Logger.GetLogger().DebugAsync("Flushing the file buffers");
+                        this.writer.Flush();
+                        this.isFlushing = false;
                     }
                 }
-                if (readyToWrite != null)
-                {
-                    lock (this.writeLocker)
-                    {
-                        this.writer.Write(readyToWrite);
-                    }
-                }
-            });
+
+                Logger.GetLogger().DebugAsync("Disposing the file writer");
+                this.writer.Dispose();
+            }
+            catch (Exception ex)
+            {
+                Logger.GetLogger().ErrorAsync(ex.Message);
+            }
+            finally
+            {
+                Logger.GetLogger().DebugAsync("Exiting writer's thread");
+            }
         }
 
-        private StringBuilder queue = new StringBuilder();
-        private object queueLocker=new object();
-        private object writeLocker=new object();
+        private Task writerTask = null;
+        private ConcurrentQueue<StringBuilder> queue = new ConcurrentQueue<StringBuilder>();
+        //private StringBuilder queue = new StringBuilder();
+//        private object queueLocker=new object();
+//        private object writeLocker=new object();
         private TextWriter writer;
-        private volatile int taskCounter=0;
-        private const int MAX_BUFFER_LENGTH = 1024*1024;
+//        private volatile int taskCounter=0;
+//        private const int MAX_BUFFER_LENGTH = 1024*1024;
         private volatile bool isFlushing=false;
+
+        private volatile bool isClosing = false;
     }
 }

@@ -23,7 +23,7 @@ namespace Importer.Writers
 
         public async Task WriteAsync(IRecord record)
         {
-            await Task.Run(async () =>
+            await Task.Run(() =>
             {
                 var builder = new StringBuilder();
                 try
@@ -48,7 +48,7 @@ namespace Importer.Writers
                             if (hasQualifier)
                             {
                                 var qs = qualifier.ToString();
-                                tb.Replace(qs, qs+qs);
+                                tb.Replace(qs, qs + qs);
                             }
                             tb.Insert(0, qualifier).Append(qualifier);
                         }
@@ -59,18 +59,14 @@ namespace Importer.Writers
                         }
                         builder.Append(tb);
                     }
+
+                    builder.AppendLine();
+                    this.WriteInternal(builder);
                 }
                 catch (Exception ex)
                 {
                     Logger.GetLogger().ErrorAsync(ex.Message);
                 }
-                finally
-                {
-                    //record.Release();
-                }
-
-                builder.AppendLine();
-                await this.WriteInternalAsync(builder);
             });
         }
 

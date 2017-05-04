@@ -19,34 +19,57 @@ namespace Importer
         {
             await Task.Run(() =>
             {
-                var stopwatch = new Stopwatch();
-                stopwatch.Start();
-                this.FindAndLoadDictionaries();
-                var writers = this.config.GetWriters().ToList();
-                var reader = this.config.GetReaders().First().Value;
-                var lastSeconds = 0;
-                foreach (var record in reader.ReadData())
+                try
                 {
-                    Task.Run(() =>
+                    var stopwatch = new Stopwatch();
+                    stopwatch.Start();
+                    this.FindAndLoadDictionaries();
+                    var writers = this.config.GetWriters().ToList();
+                    var reader = this.config.GetReaders().First().Value;
+                    var lastSeconds = 0;
+                    var countDown=new CountdownEvent(1);
+                    Logger.GetLogger().DebugAsync("Start loading data");
+                    foreach (var record in reader.ReadData())
                     {
-                        writers.ForEach(async w =>
+                        countDown.AddCount();
+                        Task.Run(() =>
                         {
-                            await w.Value.WriteAsync(record);
-                            record.Release();
+                            writers.ForEach(async w =>
+                            {
+                                try
+                                {
+                                    await w.Value.WriteAsync(record);
+                                    record.Release();
+                                }
+                                catch (Exception ex)
+                                {
+                                    Logger.GetLogger().ErrorAsync(ex.Message);
+                                }
+                                finally
+                                {
+                                    countDown.Signal();
+                                }
+                            });
                         });
-                    });
-                    if (((int) stopwatch.Elapsed.TotalMilliseconds) % 10000 == 0 &&
-                        lastSeconds != (int) stopwatch.Elapsed.TotalSeconds)
-                    {
-                        Logger.GetLogger()
-                            .InfoAsync($"{(int) (reader.Percentage * 100)} - {(int) stopwatch.Elapsed.TotalSeconds}");
-                        lastSeconds = (int) stopwatch.Elapsed.TotalSeconds;
-                    }
-                }
 
-                writers.ForEach(async x => await x.Value.FlushAsync());
-                writers.ForEach(x => x.Value.Close());
-                Logger.GetLogger().InfoAsync($"done in - {stopwatch.Elapsed.TotalSeconds}");
+                        if (lastSeconds+9 < (int) stopwatch.Elapsed.TotalSeconds)
+                        {
+                            Logger.GetLogger()
+                                .InfoAsync($"Loaded {(int) (reader.Percentage * 100)}% in {(int) stopwatch.Elapsed.TotalSeconds} seconds.");
+                            lastSeconds = (int) stopwatch.Elapsed.TotalSeconds;
+                        }
+                    }
+                    countDown.Signal();
+                    Logger.GetLogger().DebugAsync($"All data loaded in {stopwatch.Elapsed.TotalSeconds} seconds, waiting for write threads...");
+                    countDown.Wait();
+                    writers.ForEach(x => x.Value.Close());
+                    stopwatch.Stop();
+                    Logger.GetLogger().InfoAsync($"done in - {(int)stopwatch.Elapsed.TotalMinutes}:{stopwatch.Elapsed.Seconds}.{stopwatch.Elapsed.Milliseconds}");
+                }
+                catch (Exception ex)
+                {
+                    Logger.GetLogger().ErrorAsync(ex.Message);
+                }
             });
         }
 

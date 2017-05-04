@@ -2,25 +2,64 @@
 <ArrayOfArrayOfArrayOfString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <ArrayOfArrayOfString>
     <ArrayOfString>
-      <string>C:\temp\Repos\Importer\Configurations\apps.json</string>
+      <string>c:\temp\repos\importer\configurations\apps.json</string>
     </ArrayOfString>
     <ArrayOfString>
-      <string>C:\temp\Repos\Importer\Program.cs</string>
+      <string>c:\temp\repos\importer\program.cs</string>
     </ArrayOfString>
     <ArrayOfString>
-      <string>C:\temp\Repos\Importer\Implementations\Writers\CsvWriter.cs</string>
+      <string>c:\temp\repos\importer\implementations\writers\csvwriter.cs</string>
     </ArrayOfString>
     <ArrayOfString>
-      <string>C:\temp\Repos\Importer\Implementations\Processor.cs</string>
+      <string>c:\temp\repos\importer\implementations\processor.cs</string>
     </ArrayOfString>
     <ArrayOfString>
-      <string>C:\temp\Repos\Importer\Interfaces\IWriter.cs</string>
+      <string>c:\temp\repos\importer\interfaces\iwriter.cs</string>
     </ArrayOfString>
     <ArrayOfString>
-      <string>C:\temp\Repos\Importer\Implementations\Readers\CsvReader.cs</string>
+      <string>c:\temp\repos\importer\implementations\readers\csvreader.cs</string>
     </ArrayOfString>
     <ArrayOfString>
       <string>C:\temp\Repos\Importer\Implementations\Writers\FileWriter.cs</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>Importer</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>C:\temp\Repos\Importer\Implementations\Parsers\BooleanParser.cs</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>C:\temp\Repos\Importer\Implementations\Parsers\Parser.cs</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>C:\temp\Repos\Importer\Implementations\Parsers\DateParser.cs</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>C:\temp\Repos\Importer\Implementations\Parsers\FloatParser.cs</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>C:\temp\Repos\Importer\Implementations\Parsers\IntegerParser.cs</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>C:\temp\Repos\Importer\Implementations\Parsers\StringParser.cs</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>C:\temp\Repos\Importer\Implementations\Records\CsvRecord.cs</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>C:\temp\Repos\Importer\Implementations\Records\Record.cs</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>C:\temp\Repos\Importer\Implementations\Configuration\CsvFileConfiguration.cs</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>C:\temp\Repos\Importer\Interfaces\IRecord.cs</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>C:\Users\dbalobanov\AppData\Local\JetBrains\Shared\v08\DecompilerCache\decompiler\7C5126ED-2791-4987-BC2A-5287A276F18D\e6\63e69abf\StringBuilder.cs</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>C:\temp\Repos\Importer\Interfaces\IParser.cs</string>
     </ArrayOfString>
   </ArrayOfArrayOfString>
 </ArrayOfArrayOfArrayOfString>
