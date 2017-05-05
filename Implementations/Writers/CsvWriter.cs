@@ -37,7 +37,7 @@ namespace Importer.Writers
                 }
                 var s = column.ToString(columnInfo.Format);
                 var tb = new StringBuilder(s);
-                var hasDelimiters = s.IndexOf(delimiter) >= 0;
+                var hasDelimiters = s.IndexOf(delimiter) >= 0 || s.IndexOf("\r", StringComparison.Ordinal) >= 0 || s.IndexOf("\n", StringComparison.Ordinal) > 0;
                 var hasQualifier = s.IndexOf(qualifier) >= 0;
                 if (hasQualifier || hasDelimiters)
                 {

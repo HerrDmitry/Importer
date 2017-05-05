@@ -46,6 +46,7 @@ namespace Importer.Implementations.Writers
             var delimiter = this.configuration.DelimiterChar;
             for (var r = 0; r < this.configuration.Rows.Count; r++)
             {
+                var newRow = true;
                 var row = this.configuration.Rows[r];
                 for (var i = 0; i < row.Columns.Count; i++)
                 {
@@ -71,7 +72,7 @@ namespace Importer.Implementations.Writers
                         return null;
                     }
                     var tb = new StringBuilder(s);
-                    var hasDelimiters = s.IndexOf(delimiter) >= 0;
+                    var hasDelimiters = s.IndexOf(delimiter) >= 0 || s.IndexOf("\r", StringComparison.Ordinal) >= 0 || s.IndexOf("\n", StringComparison.Ordinal) > 0;
                     var hasQualifier = s.IndexOf(qualifier) >= 0;
                     if (hasQualifier || hasDelimiters)
                     {
@@ -83,11 +84,12 @@ namespace Importer.Implementations.Writers
                         tb.Insert(0, qualifier).Append(qualifier);
                     }
 
-                    if (builder.Length > 0)
+                    if (!newRow)
                     {
                         builder.Append(delimiter);
                     }
                     builder.Append(tb);
+                    newRow = false;
                 }
 
                 builder.AppendLine();
