@@ -33,7 +33,7 @@ namespace Importer.Writers
             this.writerTask = Task.Run(() => this.WriteoutTask());
         }
 
-        public void Close()
+        public virtual void Close()
         {
             this.isClosing = true;
             this.writerTask.Wait();
@@ -60,7 +60,7 @@ namespace Importer.Writers
                         this.writer.Write(s);
                     }
                     
-                    Thread.Sleep(100);
+                    Thread.Sleep(1);
 
                     if (this.isFlushing || this.isClosing)
                     {
@@ -85,14 +85,8 @@ namespace Importer.Writers
 
         private Task writerTask = null;
         private ConcurrentQueue<StringBuilder> queue = new ConcurrentQueue<StringBuilder>();
-        //private StringBuilder queue = new StringBuilder();
-//        private object queueLocker=new object();
-//        private object writeLocker=new object();
         private TextWriter writer;
-//        private volatile int taskCounter=0;
-//        private const int MAX_BUFFER_LENGTH = 1024*1024;
         private volatile bool isFlushing=false;
-
         private volatile bool isClosing = false;
     }
 }

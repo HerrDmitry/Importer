@@ -39,11 +39,11 @@ namespace Importer
                     foreach (var record in reader.ReadData())
                     {
 
-                        while (this.pendingRecords.Count > 100000)
+                        while (this.pendingRecords.Count > 10000)
                         {
+                            Logger.GetLogger().DebugAsync("Reached record limit");
                             Thread.Sleep(50);
                         }
-
                         this.pendingRecords.Enqueue(record);
 
                         if (lastSeconds+9 < (int) stopwatch.Elapsed.TotalSeconds)

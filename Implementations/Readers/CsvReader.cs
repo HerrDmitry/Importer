@@ -31,40 +31,38 @@ namespace Importer.Readers
             var counter = 0;
             while (!sr.EndOfStream /*&& counter<40000*/)
             {
-                lock (this.dataSource)
+                var sourceLine = new StringBuilder();
+                var qualifierCount = 0;
+                while (qualifierCount == 0 || qualifierCount % 2 != 0)
                 {
-                    var sourceLine = new StringBuilder();
-                    var qualifierCount = 0;
-                    while (qualifierCount == 0 || qualifierCount % 2 != 0)
+                    if (sourceLine.Length > 0)
                     {
-                        if (sourceLine.Length>0){
-                            sourceLine.AppendLine();
-                        }
-                        var line = sr.ReadLine();
-                        sourceLine.Append(line);
+                        sourceLine.AppendLine();
+                    }
+                    var line = sr.ReadLine();
+                    sourceLine.Append(line);
 
-                        var index = line.IndexOf(qualifier);
-                        while (index >= 0)
-                        {
-                            qualifierCount++;
-                            index++;
-                            if (index >= line.Length)
-                            {
-                                break;
-                            }
-
-                            index = line.IndexOf(qualifier, index);
-                        }
-
-                        if (qualifierCount == 0)
+                    var index = line.IndexOf(qualifier);
+                    while (index >= 0)
+                    {
+                        qualifierCount++;
+                        index++;
+                        if (index >= line.Length)
                         {
                             break;
                         }
+
+                        index = line.IndexOf(qualifier, index);
                     }
-                    this.Percentage = sr.BaseStream.Position / (double)sr.BaseStream.Length;
-                    counter++;
-                    yield return Record<CsvRecord>.Factory.GetRecord(this.configuration, sourceLine);
+
+                    if (qualifierCount == 0)
+                    {
+                        break;
+                    }
                 }
+                this.Percentage = sr.BaseStream.Position / (double) sr.BaseStream.Length;
+                counter++;
+                yield return Record<CsvRecord>.Factory.GetRecord(this.configuration, sourceLine);
             }
         }
 

@@ -23,8 +23,6 @@ namespace Importer.Records
         public override void InitializeRecord<TCI>(FileConfiguration<TCI> config, StringBuilder source)
         {
             this.source = source.ToString();
-            this.sourceChar = new char[source.Length];
-            source.CopyTo(0,this.sourceChar,0,source.Length);
             this.index = 0;
             this.length = this.source.Length;
             this.config = config as CsvReaderConfiguration;
@@ -34,7 +32,6 @@ namespace Importer.Records
         public override void ClearRecord()
         {
             this.source = null;
-            this.sourceChar = null;
             this.index = 0;
             this.length = 0;
             this.config = null;
@@ -61,7 +58,7 @@ namespace Importer.Records
             if (this.source[this.index] == this.config.DelimiterChar)
             {
                 this.index++;
-                return new StringBuilder();
+                return next;
             }
             if (this.source[this.index] == this.config.TextQualifierChar)
             {
@@ -82,17 +79,9 @@ namespace Importer.Records
                 {
                     idx = this.source.Length;
                 }
-                next.Append(this.sourceChar,start, idx - start);
+                next.Append(this.source.Substring(start, idx - start));
                 this.index = idx;
 
-/*
-                while (this.index < this.length && this.source[this.index] != expected)
-                {
-                    this.index++;
-                }
-
-                next.Append(this.source, start, this.index - start);
-*/
                 if (this.index < this.length)
                 {
                     if (this.index<this.length-1 && this.source[this.index]==this.config.TextQualifierChar){
@@ -122,7 +111,6 @@ namespace Importer.Records
         }
 
         private string source;
-        private char[] sourceChar;
         private int index;
         private int length;
         private CsvReaderConfiguration config;

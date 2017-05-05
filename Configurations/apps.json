@@ -57,7 +57,7 @@
       ],
       "delimiter": ",",
       "textQualifier": "\""
-    },
+    }/*,
     {
       "name": "ApplicationOutput1",
       "type": "CSV",
@@ -84,14 +84,15 @@
       ],
       "delimiter": ",",
       "textQualifier": "\""
-    }
+    }*/
   ],
   "log": {
     "level": "debug"
   },
   "files": {
-    "Application": "../../apps.csv",
-    "ApplicationOutput": "../../appsout.csv",
+    "Application": "../../apps1.csv",
+    "ApplicationOutput": "../../appsout.csv"/*,
     "ApplicationOutput1": "../../appsout1.csv"
+*/
   }
 }

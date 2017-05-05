@@ -60,6 +60,7 @@ namespace Importer.Writers
 
                 builder.AppendLine();
                 this.WriteInternal(builder);
+                this.recordCounter++;
             }
             catch (Exception ex)
             {
@@ -75,11 +76,20 @@ namespace Importer.Writers
             });
         }
 
-        private void HandleException(IRecord record){
-            
+        public override void Close()
+        {
+            base.Close();
+            Logger.GetLogger().InfoAsync($"Processed successfully {this.recordCounter} records, had errors {this.exceptionCounter} records, total {this.recordCounter+this.exceptionCounter} records");
+        }
+
+        private void HandleException(IRecord record)
+        {
+            this.exceptionCounter++;
         }
 
         private CsvWriterConfiguration configuration;
+        private volatile int recordCounter = 0;
+        private volatile int exceptionCounter = 0;
 
         public class CsvWriterConfiguration:Importer.Configuration.CsvFileConfiguration<CsvWriterColumn>
         {

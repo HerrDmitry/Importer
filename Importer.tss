@@ -23,13 +23,13 @@
       <string>c:\temp\repos\importer\implementations\parsers\booleanparser.cs</string>
     </ArrayOfString>
     <ArrayOfString>
-      <string>c:\temp\repos\importer\implementations\writers\filewriter.cs</string>
+      <string>C:\temp\Repos\Importer\Implementations\Writers\FileWriter.cs</string>
     </ArrayOfString>
     <ArrayOfString>
       <string>c:\temp\repos\importer\implementations\readers\csvreader.cs</string>
     </ArrayOfString>
     <ArrayOfString>
-      <string>C:\temp\Repos\Importer\Implementations\Processor.cs</string>
+      <string>c:\temp\repos\importer\implementations\processor.cs</string>
     </ArrayOfString>
     <ArrayOfString>
       <string>c:\temp\repos\importer\implementations\parsers\stringparser.cs</string>
@@ -56,10 +56,13 @@
       <string>c:\temp\repos\importer\configurations\apps.json</string>
     </ArrayOfString>
     <ArrayOfString>
-      <string>C:\temp\Repos\Importer\Interfaces\IWriter.cs</string>
+      <string>c:\temp\repos\importer\interfaces\iwriter.cs</string>
     </ArrayOfString>
     <ArrayOfString>
-      <string>C:\temp\Repos\Importer\Implementations\Configuration\Configuration.cs</string>
+      <string>c:\temp\repos\importer\implementations\configuration\configuration.cs</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>c:\temp\repos\importer\implementations\configuration\fileconfiguration{t}.cs</string>
     </ArrayOfString>
   </ArrayOfArrayOfString>
 </ArrayOfArrayOfArrayOfString>
