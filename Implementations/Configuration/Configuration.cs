@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using Importer.Implementations.Writers;
 using Importer.Readers;
 using Importer.Interfaces;
 using Newtonsoft.Json;
@@ -52,6 +53,9 @@ namespace Importer.Configuration
                 switch(baseConfig.Type.ToUpper()){
                     case "CSV":
                         this.writers[baseConfig.Name] = new CsvWriter(x);
+                        break;
+                    case "CSVMULTILINE":
+                        this.writers[baseConfig.Name] = new CsvMultilineWriter(x);
                         break;
                 }
 

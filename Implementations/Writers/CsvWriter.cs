@@ -21,75 +21,46 @@ namespace Importer.Writers
             this.SetDataDestination(stream);
         }
 
-        public void Write(IRecord record)
+        protected override StringBuilder ConvertRecord(IRecord record)
         {
             var builder = new StringBuilder();
-            try
+            var qualifier = this.configuration.TextQualifierChar;
+            var delimiter = this.configuration.DelimiterChar;
+            for (var i = 0; i < this.configuration.Columns.Count; i++)
             {
-                var qualifier = this.configuration.TextQualifierChar;
-                var delimiter = this.configuration.DelimiterChar;
-                for (var i = 0; i < this.configuration.Columns.Count; i++)
+                var columnInfo = this.configuration.Columns[i];
+                var column = record[columnInfo.Source];
+                if (column.IsFailed)
                 {
-                    var columnInfo = this.configuration.Columns[i];
-                    var column = record[columnInfo.Source];
-                    if (column.IsFailed)
+                    this.HandleException(record);
+                    return null;
+                }
+                var s = column.ToString(columnInfo.Format);
+                var tb = new StringBuilder(s);
+                var hasDelimiters = s.IndexOf(delimiter) >= 0;
+                var hasQualifier = s.IndexOf(qualifier) >= 0;
+                if (hasQualifier || hasDelimiters)
+                {
+                    if (hasQualifier)
                     {
-                        this.HandleException(record);
-                        return;
+                        var qs = qualifier.ToString();
+                        tb.Replace(qs, qs + qs);
                     }
-                    var s = column.ToString(columnInfo.Format);
-                    var tb = new StringBuilder(s);
-                    var hasDelimiters = s.IndexOf(delimiter) >= 0;
-                    var hasQualifier = s.IndexOf(qualifier) >= 0;
-                    if (hasQualifier || hasDelimiters)
-                    {
-                        if (hasQualifier)
-                        {
-                            var qs = qualifier.ToString();
-                            tb.Replace(qs, qs + qs);
-                        }
-                        tb.Insert(0, qualifier).Append(qualifier);
-                    }
-
-                    if (builder.Length > 0)
-                    {
-                        builder.Append(delimiter);
-                    }
-                    builder.Append(tb);
+                    tb.Insert(0, qualifier).Append(qualifier);
                 }
 
-                builder.AppendLine();
-                this.WriteInternal(builder);
-                this.recordCounter++;
+                if (builder.Length > 0)
+                {
+                    builder.Append(delimiter);
+                }
+                builder.Append(tb);
             }
-            catch (Exception ex)
-            {
-                Logger.GetLogger().ErrorAsync(ex.Message);
-            }
-        }
 
-        public async Task WriteAsync(IRecord record)
-        {
-            await Task.Run(() =>
-            {
-                this.Write(record);
-            });
-        }
-
-        public override void Close()
-        {
-            base.Close();
-            Logger.GetLogger().InfoAsync($"Processed successfully {this.recordCounter} records, had errors {this.exceptionCounter} records, total {this.recordCounter+this.exceptionCounter} records");
-        }
-
-        private void HandleException(IRecord record)
-        {
-            this.exceptionCounter++;
+            builder.AppendLine();
+            return builder;
         }
 
         private CsvWriterConfiguration configuration;
-        private volatile int recordCounter = 0;
-        private volatile int exceptionCounter = 0;
 
         public class CsvWriterConfiguration:Importer.Configuration.CsvFileConfiguration<CsvWriterColumn>
         {
@@ -98,6 +69,9 @@ namespace Importer.Writers
         public class CsvWriterColumn:ColumnInfo{
             [JsonProperty("source")]
             public string Source { get; set; }
+
+            [JsonProperty("text")]
+            public string Text { get; set; }
         }
     }
 }

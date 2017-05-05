@@ -57,42 +57,61 @@
       ],
       "delimiter": ",",
       "textQualifier": "\""
-    }/*,
+    },
     {
       "name": "ApplicationOutput1",
-      "type": "CSV",
-      "columns": [
-        {"source": "Application.ApplicationId"},
-        {"source": "Application.OperationId"},
-        {"source": "Application.IntakeId"},
-        {"source": "Application.PremisesIdNumber"},
-        {"source": "Application.PremisesIdNumberOmittedExplanation"},
-        {"source": "Application.ProjectTitle"},
-        {"source": "Application.ProjectDescription"},
-        {"source": "Application.LargeProjectDescription"},
-        {"source": "Application.SummaryDescription"},
-        { "source": "Application.DateProposedStart", "format": "dd/MMM/yyyy" },
-        { "source": "Application.DateProposedEnd", "format": "dd/MMM/yyyy" },
-        { "source": "Application.IsEligibilityConfirmed" },
-        { "source": "Application.EligibilityConfirmationComment" },
-        { "source": "Application.ResourcesAndSkillUsed" },
-        { "source": "Application.BmpId" },
-        { "source": "Application.BmpOtherDescription" },
-        { "source": "Application.Score" },
-        { "source": "Application.WatershedId" },
-        { "source": "Application.FinancialAdvisorId" }
+      "type": "CSVMultiline",
+      "rows": [
+        {
+          "columns": [
+            { "text": "HDR" },
+            { "source": "Application.ApplicationId" },
+            { "source": "Application.OperationId" },
+            { "source": "Application.IntakeId" }
+          ]
+        },
+        {
+          "columns": [
+            { "text": "LN" },
+            { "source": "Application.PremisesIdNumber" },
+            { "source": "Application.PremisesIdNumberOmittedExplanation" },
+            { "source": "Application.ProjectTitle" },
+            { "source": "Application.ProjectDescription" },
+            { "source": "Application.LargeProjectDescription" },
+            { "source": "Application.SummaryDescription" }
+          ]
+        },
+        {
+          "columns": [
+            { "text": "LN" },
+            { "source": "Application.DateProposedStart", "format": "dd/MMM/yyyy" },
+            { "source": "Application.DateProposedEnd", "format": "dd/MMM/yyyy" },
+            { "source": "Application.IsEligibilityConfirmed" },
+            { "source": "Application.EligibilityConfirmationComment" },
+            { "source": "Application.ResourcesAndSkillUsed" }
+          ]
+        },
+        {
+          "columns": [
+            { "text": "FTR" },
+            { "source": "Application.BmpId" },
+            { "source": "Application.BmpOtherDescription" },
+            { "source": "Application.Score" },
+            { "source": "Application.WatershedId" },
+            { "source": "Application.FinancialAdvisorId" }
+          ]
+        }
       ],
       "delimiter": ",",
       "textQualifier": "\""
-    }*/
+    }
   ],
   "log": {
     "level": "debug"
   },
   "files": {
     "Application": "../../apps1.csv",
-    "ApplicationOutput": "../../appsout.csv"/*,
+    "ApplicationOutput": "../../appsout.csv",
     "ApplicationOutput1": "../../appsout1.csv"
-*/
   }
 }

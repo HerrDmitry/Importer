@@ -5,11 +5,12 @@ using System.IO;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Importer.Configuration;
 using Importer.Interfaces;
 
 namespace Importer.Writers
 {
-    public class FileWriter
+    public abstract class FileWriter
     {
         public async Task FlushAsync()
         {
@@ -37,6 +38,39 @@ namespace Importer.Writers
         {
             this.isClosing = true;
             this.writerTask.Wait();
+            Logger.GetLogger().InfoAsync($"Processed successfully {this.recordCounter} records, had errors {this.exceptionCounter} records, total {this.recordCounter + this.exceptionCounter} records");
+        }
+
+        public virtual void Write(IRecord record)
+        {
+            try
+            {
+                var builder = this.ConvertRecord(record);
+                if (builder != null)
+                {
+                    this.WriteInternal(builder);
+                    this.recordCounter++;
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.GetLogger().ErrorAsync(ex.Message);
+            }
+        }
+
+        public async Task WriteAsync(IRecord record)
+        {
+            await Task.Run(() =>
+            {
+                this.Write(record);
+            });
+        }
+
+        protected abstract StringBuilder ConvertRecord(IRecord record);
+
+        protected virtual void HandleException(IRecord record)
+        {
+            this.exceptionCounter++;
         }
 
         protected void WriteInternal(StringBuilder s)
@@ -88,5 +122,7 @@ namespace Importer.Writers
         private TextWriter writer;
         private volatile bool isFlushing=false;
         private volatile bool isClosing = false;
+        private volatile int recordCounter = 0;
+        private volatile int exceptionCounter = 0;
     }
 }
