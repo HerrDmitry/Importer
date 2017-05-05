@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Concurrent;
+﻿using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Linq;
 using System.Text;
-using System.Threading;
 using Importer.Configuration;
 using Importer.Interfaces;
-using Importer.Readers;
 
 namespace Importer.Records
 {
@@ -20,7 +16,7 @@ namespace Importer.Records
 
         public IParser this[string columnName] => this.GetValuesInternal()[columnName];
 
-        protected abstract ImmutableDictionary<string, IParser> GetValuesInternal();
+        protected abstract Dictionary<string, IParser> GetValuesInternal();
 
         public abstract void InitializeRecord<TCI>(FileConfiguration<TCI> config, StringBuilder source) where TCI : ColumnInfo;
         public abstract void ClearRecord();

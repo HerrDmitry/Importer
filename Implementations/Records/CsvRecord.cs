@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Linq;
 using System.Text;
-using System.Xml;
 using Importer.Configuration;
 using Importer.Implementations.Parsers;
 using Importer.Interfaces;
@@ -14,12 +11,12 @@ namespace Importer.Records
 {
     public class CsvRecord : Record<CsvRecord>
     {
-        private ImmutableDictionary<string,IParser> values=null;
+        private Dictionary<string,IParser> values=null;
 
-        protected override ImmutableDictionary<string,IParser> GetValuesInternal()
+        protected override Dictionary<string,IParser> GetValuesInternal()
         {
             return this.values ?? (this.values =
-                                   this.config.GetColumnsWithFullNames().ToImmutableDictionary(x => x.FullName,
+                                   this.config.GetColumnsWithFullNames().ToDictionary(x => x.FullName,
                                                                              x => (IParser)Parser.GetParser(this.config.Name, x.Column, this.GetNext())));
         }
 

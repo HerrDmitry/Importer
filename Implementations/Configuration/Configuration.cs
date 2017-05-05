@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.Diagnostics;
+﻿using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
 using Importer.Readers;
 using Importer.Interfaces;
 using Newtonsoft.Json;
@@ -68,16 +62,16 @@ namespace Importer.Configuration
                 fls[file.Key] = file.Value?.ToString();
             }
 
-            this.Files = fls.ToImmutableDictionary();
+            this.Files = fls;
         }
 
         private readonly Dictionary<string, IReader> readers;
 
-        public ImmutableDictionary<string, string> Files { get; private set; }
+        public Dictionary<string, string> Files { get; private set; }
 
-        public ImmutableDictionary<string, IReader> GetReaders()
+        public Dictionary<string, IReader> GetReaders()
         {
-            return this.readers.ToImmutableDictionary();
+            return this.readers;
         }
 
         public IReader GetReader(string readerName){
@@ -85,9 +79,9 @@ namespace Importer.Configuration
         }
 
         private readonly Dictionary<string, IWriter> writers;
-        public ImmutableDictionary<string, IWriter> GetWriters()
+        public Dictionary<string, IWriter> GetWriters()
         {
-            return this.writers.ToImmutableDictionary();
+            return this.writers;
         }
 
         public class ConfigurationData

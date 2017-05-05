@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Importer.Implementations.Parsers;
 using Importer.Interfaces;
 
 namespace Importer
@@ -45,7 +42,7 @@ namespace Importer
             this.records = records;
         }
 
-        public IImmutableDictionary<string, IRecord> Items
+        public Dictionary<string, IRecord> Items
         {
             get
             {
@@ -79,7 +76,7 @@ namespace Importer
                       var referenceParts = referencePath.Split(".".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
                       if (referenceParts.Length != 2)
                       {
-                          this.dictionaryItems = new Dictionary<string, IRecord>().ToImmutableDictionary();
+                          this.dictionaryItems = new Dictionary<string, IRecord>();
                           var message = $"Dictionary reference \"{this.referencePath}\" is in incorrect format.";
                           Logger.GetLogger().ErrorAsync(message);
                           throw new FormatException(message);
@@ -96,7 +93,7 @@ namespace Importer
                       }
                       Logger.GetLogger().InfoAsync($"Loaded dictionary {referenceParts[0]} - {dictionary.Count()} records.");
 
-                      this.dictionaryItems = dictionary.ToImmutableDictionary();
+                      this.dictionaryItems = dictionary;
                       stopwatch.Stop();
                       Logger.GetLogger().DebugAsync($"Loading dictionary reference \"{referencePath}\" completed in {stopwatch.ElapsedMilliseconds}ms");
                   }
@@ -109,7 +106,7 @@ namespace Importer
             await task;
         }
 
-        private ImmutableDictionary<string, IRecord> dictionaryItems;
+        private Dictionary<string, IRecord> dictionaryItems;
         private string referencePath;
         private IEnumerable<IRecord> records;
         private object locker = new object();
