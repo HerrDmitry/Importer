@@ -19,5 +19,8 @@ namespace Importer.Configuration
 
         [JsonProperty("format")]
         public string Format { get; set; }
+
+        [JsonProperty("text")]
+        public string Text { get; set; }
     }
 }

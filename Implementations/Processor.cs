@@ -94,18 +94,31 @@ namespace Importer
         private void HandleRecord()
         {
             var writers = this.config.GetWriters().ToList();
+            long recordCount = 0;
             while (!this.isDone || this.handledRecords<this.enqueuedRecords)
             {
+                if (this.isDone && this.handledRecords < this.enqueuedRecords && this.pendingRecords.Count == 0)
+                {
+                    Logger.GetLogger().ErrorAsync($"Missing {this.enqueuedRecords - this.handledRecords} records");
+                    break;
+                }
                 while (this.pendingRecords.TryTake(out IRecord record))
                 {
                     try
                     {
                         writers.ForEach(x => x.Value.Write(record));
                         record.Release();
-                        this.handledRecords++;
-                    }catch(Exception ex){
+                        recordCount++;
+                    }
+                    catch(Exception ex){
                         Logger.GetLogger().ErrorAsync($"HandleRecord - {ex.Message}");
                     }
+                }
+
+                lock (pendingRecords)
+                {
+                    this.handledRecords+=recordCount;
+                    recordCount = 0;
                 }
 
                 Thread.Sleep(1);
@@ -120,8 +133,8 @@ namespace Importer
 
         private volatile bool isDone;
 
-        private volatile int handledRecords;
+        private long handledRecords;
 
-        private volatile int enqueuedRecords;
+        private long enqueuedRecords;
     }
 }

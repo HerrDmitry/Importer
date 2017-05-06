@@ -34,11 +34,15 @@ namespace Importer.Implementations.Parsers
                 case "boolean":
                     parser = Factory<BooleanParser>.GetInstance();
                     break;
+                case "text":
+                    parser = Factory<TextParser>.GetInstance();
+                    break;
                 default:
                     throw new NotSupportedException($"Type {column.Type} is not supported");
             }
 
             parser.input = input;
+            parser.column = column;
             return parser;
         }
 
@@ -71,6 +75,10 @@ namespace Importer.Implementations.Parsers
             {
                 Factory<BooleanParser>.ReleaseInstance(this);
             }
+            if (this is TextParser)
+            {
+                Factory<TextParser>.ReleaseInstance(this);
+            }
         }
 
         public void Clear()
@@ -80,6 +88,7 @@ namespace Importer.Implementations.Parsers
         }
 
         protected StringBuilder input;
+        protected ColumnInfo column;
         protected bool isParsed;
 
         private static class Factory<T> where T : Parser, new()

@@ -11,13 +11,18 @@ namespace Importer.Records
 {
     public class CsvRecord : Record<CsvRecord>
     {
-        private Dictionary<string,IParser> values=null;
+        protected Dictionary<string,IParser> values=null;
 
         protected override Dictionary<string,IParser> GetValuesInternal()
         {
             return this.values ?? (this.values =
                                    this.config.GetColumnsWithFullNames().ToDictionary(x => x.FullName,
                                                                              x => (IParser)Parser.GetParser(this.config.Name, x.Column, this.GetNext())));
+        }
+
+        protected Dictionary<string,IParser> GetValuesInternal(CsvRecord record)
+        {
+            return record.values;
         }
 
         public override void InitializeRecord<TCI>(FileConfiguration<TCI> config, StringBuilder source)

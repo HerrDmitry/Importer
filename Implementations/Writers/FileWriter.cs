@@ -49,7 +49,6 @@ namespace Importer.Writers
                 if (builder != null)
                 {
                     this.WriteInternal(builder);
-                    this.recordCounter++;
                 }
             }
             catch (Exception ex)
@@ -70,7 +69,10 @@ namespace Importer.Writers
 
         protected virtual void HandleException(IRecord record)
         {
-            this.exceptionCounter++;
+            lock (this.writer)
+            {
+                this.exceptionCounter++;
+            }
         }
 
         protected void WriteInternal(StringBuilder s)
@@ -92,8 +94,9 @@ namespace Importer.Writers
                     while (this.queue.TryDequeue(out StringBuilder s))
                     {
                         this.writer.Write(s);
+                        this.recordCounter++;
                     }
-                    
+
                     Thread.Sleep(1);
 
                     if (this.isFlushing || this.isClosing)
@@ -122,7 +125,7 @@ namespace Importer.Writers
         private TextWriter writer;
         private volatile bool isFlushing=false;
         private volatile bool isClosing = false;
-        private volatile int recordCounter = 0;
-        private volatile int exceptionCounter = 0;
+        private long recordCounter = 0;
+        private long exceptionCounter = 0;
     }
 }
