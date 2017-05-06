@@ -69,7 +69,8 @@ namespace Importer.Readers
                 {
                     Delimiter = this.Delimiter,
                     TextQualifier = this.TextQualifier,
-                    Columns = row.Columns
+                    Columns = row.Columns,
+                    Name = this.Name
                 };
             }
         }

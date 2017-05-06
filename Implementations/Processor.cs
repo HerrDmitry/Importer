@@ -10,7 +10,7 @@ namespace Importer
 {
     public class Processor
     {
-        public Processor(Importer.Configuration.Configuration config)
+        public Processor(Configuration.Configuration config)
         {
             this.config = config;
             var processingThreads = Environment.ProcessorCount;
@@ -29,7 +29,7 @@ namespace Importer
                 {
                     var stopwatch = new Stopwatch();
                     stopwatch.Start();
-                    this.FindAndLoadDictionaries();
+                    //this.FindAndLoadDictionaries();
                     var writers = this.config.GetWriters().ToList();
                     var reader = this.config.GetReaders().First().Value;
                     var lastSeconds = 0;

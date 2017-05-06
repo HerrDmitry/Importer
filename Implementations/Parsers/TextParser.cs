@@ -10,7 +10,7 @@
         protected override string Parse(out bool isFailed)
         {
             var s = this.input.ToString();
-            isFailed = s == this.column.Text;
+            isFailed = s != this.column.Text;
             return s;
         }
     }

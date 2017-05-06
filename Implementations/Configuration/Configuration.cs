@@ -39,26 +39,35 @@ namespace Importer.Configuration
             configurationData?.Readers?.ForEach(x =>
             {
                 var baseConfig = ParseConfiguration<FileConfiguration<ColumnInfo>>(x);
-                switch (baseConfig.Type.ToUpper())
+                if (!baseConfig.Disabled)
                 {
-                    case "CSV":
-                        this.readers[baseConfig.Name] = new CsvReader(x);
-                        break;
+                    switch (baseConfig.Type.ToUpper())
+                    {
+                        case "CSV":
+                            this.readers[baseConfig.Name] = new CsvReader(x);
+                            break;
+                        case "CSVMULTILINE":
+                            this.readers[baseConfig.Name] = new CsvMultilineReader(x);
+                            break;
+                    }
                 }
             });
 
             this.writers = new Dictionary<string, IWriter>();
             configurationData?.Writers?.ForEach(x => {
                 var baseConfig = ParseConfiguration<FileConfiguration<ColumnInfo>>(x);
-                switch(baseConfig.Type.ToUpper()){
-                    case "CSV":
-                        this.writers[baseConfig.Name] = new CsvWriter(x);
-                        break;
-                    case "CSVMULTILINE":
-                        this.writers[baseConfig.Name] = new CsvMultilineWriter(x);
-                        break;
+                if (!baseConfig.Disabled)
+                {
+                    switch (baseConfig.Type.ToUpper())
+                    {
+                        case "CSV":
+                            this.writers[baseConfig.Name] = new CsvWriter(x);
+                            break;
+                        case "CSVMULTILINE":
+                            this.writers[baseConfig.Name] = new CsvMultilineWriter(x);
+                            break;
+                    }
                 }
-
             });
 
             var fls = new Dictionary<string, string>();

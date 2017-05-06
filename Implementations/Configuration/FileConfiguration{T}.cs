@@ -16,6 +16,9 @@ namespace Importer.Configuration
         [JsonProperty("type")]
         public string Type { get; set; }
 
+        [JsonProperty("disabled")]
+        public bool Disabled { get; set; }
+
         [JsonProperty("columns")]
         public List<T> Columns
         {

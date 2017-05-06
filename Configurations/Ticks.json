@@ -3,6 +3,7 @@
     {
       "name": "Tick",
       "type": "CSV",
+      "disabled":true,
       "columns": [
         {"name": "SymbolId", "type": "integer"},
         {"name": "TickSizeId", "type": "integer"},
@@ -17,35 +18,35 @@
       "delimiter": ",",
       "textQualifier": "\""
     }, {
-      "name": "TickMulti",
+      "name": "Tick",
       "type": "CSVMultiline",
       "delimiter": ",",
       "textQualifier": "\"",
       "rows": [
         {
           "columns": [
-            { "text": "HDR" },
-            { "name": "SymbolId" },
-            { "name": "TickSizeId" },
+            { "name": "txt1", "text": "HDR", "type": "text" },
+            { "name": "SymbolId", "type": "integer" },
+            { "name": "TickSizeId", "type": "integer" },
           ]
         }, {
           "columns": [
-            { "text": "LT" },
-            { "name": "Timestamp", "format": "hh:mm dd MMMM yyyy" },
-            { "name": "Index" },
+            { "name": "txt2", "text": "LT", "type": "text" },
+            { "name": "Timestamp", "format": "hh:mm dd MMMM yyyy", "type": "date" },
+            { "name": "Index", "type": "integer" },
           ]
         }, {
           "columns": [
-            { "text": "PRICE" },
-            { "name": "PriceOpen" },
-            { "name": "PriceClose" },
-            { "name": "PriceLow" },
-            { "name": "PriceHigh" }
+            { "name": "txt3", "text": "PRICE", "type": "text" },
+            { "name": "PriceOpen", "type": "float" },
+            { "name": "PriceClose", "type": "float" },
+            { "name": "PriceLow", "type": "float" },
+            { "name": "PriceHigh", "type": "float" }
           ]
         }, {
           "columns": [
-            { "text": "VLM" },
-            { "name": "Volume" }
+            { "name": "txt4", "text": "VLM", "type": "text" },
+            { "name": "Volume", "type": "float" }
           ]
         }
       ]
@@ -55,9 +56,9 @@
     "level": "debug"
   },
   "files": {
-    "Tick": "../data/Ticks.csv",
+    //"Tick": "../data/Ticks.csv",
     "TickOutput": "../data/TicksOutput.csv",
-    "TickOutput1": "../data/TicksOutput1.csv"
+    "Tick": "../data/TicksOutput1.csv"
   },
   "writers": [
     { "name": "TickOutput",
@@ -75,7 +76,9 @@
       "type": "CSV",
       "delimiter": ",",
       "textQualifier": "\""
-    },{ "name": "TickOutput1",
+    },{
+      "name": "TickOutput1",
+      "Disabled":true,
       "rows":[
         {
           "columns": [
