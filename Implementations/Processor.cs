@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Importer.Interfaces;
@@ -36,26 +34,31 @@ namespace Importer
                     var reader = this.config.GetReaders().First().Value;
                     var lastSeconds = 0;
                     Logger.GetLogger().DebugAsync("Start loading data");
+                    this.handledRecords = 0;
+                    this.enqueuedRecords = 0;
                     foreach (var record in reader.ReadData())
                     {
 
                         while (this.pendingRecords.Count > 10000)
                         {
-                            Logger.GetLogger().DebugAsync("Reached record limit");
+                            //Logger.GetLogger().DebugAsync("Reached record limit");
                             Thread.Sleep(50);
                         }
-                        this.pendingRecords.Enqueue(record);
+                        this.pendingRecords.Add(record);
+                        this.enqueuedRecords++;
 
                         if (lastSeconds+9 < (int) stopwatch.Elapsed.TotalSeconds)
                         {
                             Logger.GetLogger()
-                                .InfoAsync($"Loaded {(int) (reader.Percentage * 100)}% in {(int) stopwatch.Elapsed.TotalSeconds} seconds.");
+                                .InfoAsync($"Loaded {(int) (reader.LoadedBytes/(double)reader.TotalBytes * 100)}% in {(int) stopwatch.Elapsed.TotalSeconds} seconds.");
                             lastSeconds = (int) stopwatch.Elapsed.TotalSeconds;
                         }
                     }
+
+                    Logger.GetLogger().DebugAsync($"All data {this.enqueuedRecords} records, loaded in {stopwatch.Elapsed.TotalSeconds} seconds, waiting for write threads...");
                     this.isDone = true;
-                    Logger.GetLogger().DebugAsync($"All data loaded in {stopwatch.Elapsed.TotalSeconds} seconds, waiting for write threads...");
                     Task.WaitAll(this.processingTasks);
+                    Logger.GetLogger().DebugAsync($"{this.handledRecords} records enqueued for parsing.");
                     writers.ForEach(x => x.Value.Close());
                     stopwatch.Stop();
                     Logger.GetLogger().InfoAsync($"done in - {(int)stopwatch.Elapsed.TotalMinutes}:{stopwatch.Elapsed.Seconds}.{stopwatch.Elapsed.Milliseconds}");
@@ -91,17 +94,21 @@ namespace Importer
         private void HandleRecord()
         {
             var writers = this.config.GetWriters().ToList();
-            while (!this.isDone || this.pendingRecords.Count>0)
+            while (!this.isDone || this.handledRecords<this.enqueuedRecords)
             {
-                if (this.pendingRecords.TryDequeue(out IRecord record))
+                while (this.pendingRecords.TryTake(out IRecord record))
                 {
-                    writers.ForEach(x => x.Value.Write(record));
-                    record.Release();
+                    try
+                    {
+                        writers.ForEach(x => x.Value.Write(record));
+                        record.Release();
+                        this.handledRecords++;
+                    }catch(Exception ex){
+                        Logger.GetLogger().ErrorAsync($"HandleRecord - {ex.Message}");
+                    }
                 }
-                else
-                {
-                    Thread.Sleep(50);
-                }
+
+                Thread.Sleep(1);
             }
         }
 
@@ -109,8 +116,12 @@ namespace Importer
 
         private Task[] processingTasks;
 
-        private ConcurrentQueue<IRecord> pendingRecords=new ConcurrentQueue<IRecord>();
+        private ConcurrentBag<IRecord> pendingRecords=new ConcurrentBag<IRecord>();
 
         private volatile bool isDone;
+
+        private volatile int handledRecords;
+
+        private volatile int enqueuedRecords;
     }
 }

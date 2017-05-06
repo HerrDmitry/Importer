@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using Importer.Records;
 using Importer.Configuration;
@@ -15,6 +16,10 @@ namespace Importer.Readers
     {
         private Stream dataSource;
 
+        protected CsvReader()
+        {
+        }
+
         public CsvReader(JObject configuration)
         {
             this.configuration = Configuration.Configuration.ParseConfiguration<CsvReaderConfiguration>(configuration);
@@ -24,12 +29,13 @@ namespace Importer.Readers
             this.dataSource = source;
         }
 
-        public IEnumerable<IRecord> ReadData()
+        protected virtual IEnumerable<StringBuilder> ReadLines()
         {
             var sr = new StreamReader(this.dataSource);
+            this.TotalBytes = sr.BaseStream.Length;
+            long counter = 0;
             var qualifier = this.configuration.TextQualifierChar;
-            var counter = 0;
-            while (!sr.EndOfStream /*&& counter<40000*/)
+            while (!sr.EndOfStream)
             {
                 var sourceLine = new StringBuilder();
                 var qualifierCount = 0;
@@ -40,6 +46,7 @@ namespace Importer.Readers
                         sourceLine.AppendLine();
                     }
                     var line = sr.ReadLine();
+                    this.LoadedBytes = sr.BaseStream.Position;
                     sourceLine.Append(line);
 
                     var index = line.IndexOf(qualifier);
@@ -60,17 +67,26 @@ namespace Importer.Readers
                         break;
                     }
                 }
-                this.Percentage = sr.BaseStream.Position / (double) sr.BaseStream.Length;
+
                 counter++;
-                yield return Record<CsvRecord>.Factory.GetRecord(this.configuration, sourceLine);
+                yield return sourceLine;
             }
+
+            Logger.GetLogger().DebugAsync($"Loaded {counter} records.");
+        }
+
+        public virtual IEnumerable<IRecord> ReadData()
+        {
+            return this.ReadLines().Select(sourceLine => Record<CsvRecord>.Factory.GetRecord(this.configuration, sourceLine));
         }
 
         public List<ColumnInfo> Columns => new List<ColumnInfo>(this.configuration.Columns);
 
-        public double Percentage { get; private set; } 
+        public long LoadedBytes { get; private set; }
 
-        private readonly CsvReaderConfiguration configuration;
+        public long TotalBytes { get; private set; }
+
+        protected CsvReaderConfiguration configuration;
 
         public class CsvReaderConfiguration:CsvFileConfiguration<ColumnInfo>{}
     }

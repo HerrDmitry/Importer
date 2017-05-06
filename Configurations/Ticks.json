@@ -16,13 +16,48 @@
       ],
       "delimiter": ",",
       "textQualifier": "\""
-    }],
+    }, {
+      "name": "TickMulti",
+      "type": "CSVMultiline",
+      "delimiter": ",",
+      "textQualifier": "\"",
+      "rows": [
+        {
+          "columns": [
+            { "text": "HDR" },
+            { "name": "SymbolId" },
+            { "name": "TickSizeId" },
+          ]
+        }, {
+          "columns": [
+            { "text": "LT" },
+            { "name": "Timestamp", "format": "hh:mm dd MMMM yyyy" },
+            { "name": "Index" },
+          ]
+        }, {
+          "columns": [
+            { "text": "PRICE" },
+            { "name": "PriceOpen" },
+            { "name": "PriceClose" },
+            { "name": "PriceLow" },
+            { "name": "PriceHigh" }
+          ]
+        }, {
+          "columns": [
+            { "text": "VLM" },
+            { "name": "Volume" }
+          ]
+        }
+      ]
+    }
+  ],
   "log": {
     "level": "debug"
   },
   "files": {
     "Tick": "../data/Ticks.csv",
-    "TickOutput": "../data/TicksOutput.csv"
+    "TickOutput": "../data/TicksOutput.csv",
+    "TickOutput1": "../data/TicksOutput1.csv"
   },
   "writers": [
     { "name": "TickOutput",
@@ -38,6 +73,38 @@
         {"source": "Tick.Volume"}
       ],
       "type": "CSV",
+      "delimiter": ",",
+      "textQualifier": "\""
+    },{ "name": "TickOutput1",
+      "rows":[
+        {
+          "columns": [
+            {"text":"HDR"},
+            {"source": "Tick.SymbolId"},
+            {"source": "Tick.TickSizeId"},
+          ]
+        }, {
+          "columns": [
+            {"text":"LT"},
+            {"source": "Tick.Timestamp", "format": "hh:mm dd MMMM yyyy" },
+            {"source": "Tick.Index"},
+          ]
+        }, {
+          "columns": [
+            {"text":"PRICE"},
+            {"source": "Tick.PriceOpen"},
+            {"source": "Tick.PriceClose" },
+            {"source": "Tick.PriceLow"},
+            {"source": "Tick.PriceHigh"},
+          ]
+        }, {
+          "columns": [
+            {"text":"VLM"},
+            {"source": "Tick.Volume"}
+          ]
+        }
+      ],
+      "type": "CSVMultiline",
       "delimiter": ",",
       "textQualifier": "\""
     }

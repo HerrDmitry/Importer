@@ -12,6 +12,7 @@ namespace Importer.Interfaces
 
         List<Importer.Configuration.ColumnInfo> Columns { get; }
 
-        double Percentage { get; }
+        long LoadedBytes { get; }
+        long TotalBytes { get; }
     }
 }
