@@ -32,13 +32,13 @@ namespace Importer.Readers
 
         public void SetDataSource(Stream source){
             this.dataSource = source;
+            var task = Task.Run(() => this.ReadLinesTask());
         }
 
         protected IEnumerable<StringBuilder> ReadLines()
         {
             long counter = 0;
             this.eof = false;
-            Task.Run(() => this.ReadLinesTask());
             while (!this.eof || this.csvLines.Count>0)
             {
                 if(this.csvLines.TryDequeue(out StringBuilder sourceLine)) {
