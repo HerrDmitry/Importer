@@ -29,7 +29,7 @@ namespace Importer.Readers
             this.dataSource = source;
         }
 
-        protected virtual IEnumerable<StringBuilder> ReadLines()
+        protected IEnumerable<StringBuilder> ReadLines()
         {
             var sr = new StreamReader(this.dataSource);
             this.TotalBytes = sr.BaseStream.Length;

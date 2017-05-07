@@ -3,7 +3,7 @@
     "Importer": {
       "commandName": "Project",
       "commandLineArgs": "/c:configurations\\ticks.json",
-      "workingDirectory": "C:\\Users\\dmitr\\Source\\Repos\\Importer"
+      "workingDirectory": "C:\\Source\\Repos\\Importer"
     }
   }
 }
