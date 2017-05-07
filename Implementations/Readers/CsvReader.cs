@@ -12,6 +12,11 @@ using Newtonsoft.Json.Serialization;
 
 namespace Importer.Readers
 {
+    using System.Collections.Concurrent;
+    using System.Runtime.CompilerServices;
+    using System.Threading;
+    using System.Threading.Tasks;
+
     public class CsvReader : IReader
     {
         private Stream dataSource;
@@ -31,10 +36,30 @@ namespace Importer.Readers
 
         protected IEnumerable<StringBuilder> ReadLines()
         {
+            long counter = 0;
+            this.eof = false;
+            Task.Run(() => this.ReadLinesTask());
+            while (!this.eof || this.csvLines.Count>0)
+            {
+                if(this.csvLines.TryDequeue(out StringBuilder sourceLine)) {
+                    counter++;
+                    yield return sourceLine;
+                }
+            }
+            Logger.GetLogger().DebugAsync($"Loaded {counter} records.");
+        }
+
+        public virtual IEnumerable<IRecord> ReadData()
+        {
+            return this.ReadLines().Select(sourceLine => Record<CsvRecord>.Factory.GetRecord(this.configuration, sourceLine));
+        }
+
+        private void ReadLinesTask()
+        {
             var sr = new StreamReader(this.dataSource);
             this.TotalBytes = sr.BaseStream.Length;
-            long counter = 0;
             var qualifier = this.configuration.TextQualifierChar;
+            var bufferSize = this.configuration.ReadBuffer.GetValueOrDefault(0) > 0 ? this.configuration.ReadBuffer.Value : LINES_BUFFER;
             while (!sr.EndOfStream)
             {
                 var sourceLine = new StringBuilder();
@@ -68,16 +93,17 @@ namespace Importer.Readers
                     }
                 }
 
-                counter++;
-                yield return sourceLine;
+                if (this.csvLines.Count < bufferSize)
+                {
+                    this.csvLines.Enqueue(sourceLine);
+                }
+                else
+                {
+                    Thread.Sleep(50);
+                }
+
+                this.eof = true;
             }
-
-            Logger.GetLogger().DebugAsync($"Loaded {counter} records.");
-        }
-
-        public virtual IEnumerable<IRecord> ReadData()
-        {
-            return this.ReadLines().Select(sourceLine => Record<CsvRecord>.Factory.GetRecord(this.configuration, sourceLine));
         }
 
         public List<ColumnInfo> Columns => new List<ColumnInfo>(this.configuration.Columns);
@@ -88,6 +114,11 @@ namespace Importer.Readers
 
         protected CsvReaderConfiguration configuration;
 
+        private volatile bool eof = false;
+
+        private const int LINES_BUFFER = 10000;
+
+        private ConcurrentQueue<StringBuilder> csvLines=new ConcurrentQueue<StringBuilder>();
         public class CsvReaderConfiguration:CsvFileConfiguration<ColumnInfo>{}
     }
 }

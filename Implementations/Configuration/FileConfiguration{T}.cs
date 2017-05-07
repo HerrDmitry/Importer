@@ -22,11 +22,11 @@ namespace Importer.Configuration
         [JsonProperty("columns")]
         public List<T> Columns
         {
-            get => columns;
+            get => this.columns;
             set
             {
-                columns = value;
-                columnNames = null;
+                this.columns = value;
+                this.columnNames = null;
             }
         }
 

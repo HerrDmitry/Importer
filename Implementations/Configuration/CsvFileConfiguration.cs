@@ -3,6 +3,8 @@ using Newtonsoft.Json;
 
 namespace Importer.Configuration
 {
+    using System.Runtime.InteropServices;
+
     public class CsvFileConfiguration<T>:FileConfiguration<T> where T:ColumnInfo
     {
         [JsonProperty("delimiter")]
@@ -31,5 +33,8 @@ namespace Importer.Configuration
 
         [JsonProperty("header")]
         public int? Header { get; set; }
+
+        [JsonProperty("readBuffer")]
+        public int? ReadBuffer { get; set; }
     }
 }

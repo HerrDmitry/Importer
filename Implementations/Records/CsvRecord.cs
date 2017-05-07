@@ -53,12 +53,12 @@ namespace Importer.Records
 
         private StringBuilder GetNext()
         {
+            var next = new StringBuilder();
             if (this.index >= this.length)
             {
-                throw new ArgumentOutOfRangeException("index is out of bounds");
+                return next;
             }
 
-            var next = new StringBuilder();
             var expected = this.config.DelimiterChar;
             if (this.source[this.index] == this.config.DelimiterChar)
             {
