@@ -30,6 +30,9 @@ namespace Importer.Configuration
             }
         }
 
+        [JsonProperty("references")]
+        public List<FileReference> References { get; set; }
+
         public List<ColumnName> GetColumnsWithFullNames()
         {
             return this.columnNames ?? (this.columnNames = this.Columns

@@ -11,6 +11,7 @@ namespace Importer.Interfaces
         IEnumerable<IRecord> ReadData();
 
         List<Importer.Configuration.ColumnInfo> Columns { get; }
+        List<Configuration.FileReference> References { get; }
 
         long LoadedBytes { get; }
         long TotalBytes { get; }

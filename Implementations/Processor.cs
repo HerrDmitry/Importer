@@ -29,7 +29,7 @@ namespace Importer
                 {
                     var stopwatch = new Stopwatch();
                     stopwatch.Start();
-                    //this.FindAndLoadDictionaries();
+                    this.FindAndLoadDictionaries();
                     var writers = this.config.GetWriters().ToList();
                     var reader = this.config.GetReaders().First().Value;
                     var lastSeconds = 0;
@@ -41,7 +41,7 @@ namespace Importer
 
                         while (this.pendingRecords.Count > 10000)
                         {
-                            Logger.GetLogger().DebugAsync("Reached record limit");
+                            //Logger.GetLogger().DebugAsync("Reached record limit");
                             Thread.Sleep(50);
                         }
                         this.pendingRecords.Add(record);
@@ -72,7 +72,7 @@ namespace Importer
 
         private void FindAndLoadDictionaries()
         {
-            var references = this.config.GetReaders().SelectMany(x => x.Value.Columns.Where(c => !string.IsNullOrWhiteSpace(c.Reference)).Select(c => c.Reference)).Distinct();
+            var references = this.config.GetReaders().SelectMany(x => x.Value.References?.Select(c => c.Reference)).Distinct();
             foreach (var reference in references)
             {
                 var referenceParts = reference.Split(".".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);

@@ -83,7 +83,9 @@ namespace Importer.Readers
             return this.ReadLines().Select(sourceLine => Record<CsvRecord>.Factory.GetRecord(this.configuration, sourceLine));
         }
 
-        public List<ColumnInfo> Columns => new List<ColumnInfo>(this.configuration.Columns);
+        public List<ColumnInfo> Columns => new List<ColumnInfo>(this.configuration.Columns??new List<ColumnInfo>());
+        public List<FileReference> References => new List<FileReference>(this.configuration.References??new List<FileReference>());
+
         public long LoadedBytes => this.reader.LoadedBytes;
         public long TotalBytes => this.reader.TotalBytes;
 
