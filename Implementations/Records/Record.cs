@@ -7,6 +7,8 @@ using Importer.Interfaces;
 
 namespace Importer.Records
 {
+    using Importer.Implementations.Parsers;
+
     public abstract class Record : IRecord
     {
         public IEnumerable<IParser> GetValues()
@@ -14,7 +16,7 @@ namespace Importer.Records
             return this.GetValuesInternal().Values.ToList();
         }
 
-        public IParser this[string columnName] => this.GetValuesInternal()[columnName];
+        public IParser this[string columnName] => this.GetValuesInternal().TryGetValue(columnName, out IParser parser)?parser:new ThrowExceptionParser();
 
         protected abstract Dictionary<string, IParser> GetValuesInternal();
 

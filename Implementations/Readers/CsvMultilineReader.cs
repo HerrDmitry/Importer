@@ -10,6 +10,8 @@ using Newtonsoft.Json.Linq;
 
 namespace Importer.Readers
 {
+    using System.Collections.Concurrent;
+
     public class CsvMultilineReader : CsvReader
     {
         public CsvMultilineReader(JObject configuration)

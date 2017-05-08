@@ -115,7 +115,7 @@ namespace Importer
                     }
                 }
 
-                lock (pendingRecords)
+                lock (this.pendingRecords)
                 {
                     this.handledRecords+=recordCount;
                     recordCount = 0;

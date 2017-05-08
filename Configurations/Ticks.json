@@ -3,7 +3,7 @@
     {
       "name": "Tick",
       "type": "CSV",
-      "disabled":true,
+      "disabled":false,
       "columns": [
         {"name": "SymbolId", "type": "integer"},
         {"name": "TickSizeId", "type": "integer"},
@@ -22,6 +22,7 @@
       "type": "CSVMultiline",
       "delimiter": ",",
       "textQualifier": "\"",
+      "disabled": true,
       "rows": [
         {
           "columns": [
@@ -56,9 +57,9 @@
     "level": "debug"
   },
   "files": {
-    //"Tick": "../data/Ticks.csv",
+    "Tick": "../data/Ticks.csv",
     "TickOutput": "../data/TicksOutput.csv",
-    "Tick": "../data/TicksOutput1.csv"
+    //"Tick": "../data/TicksOutput1.csv"
   },
   "writers": [
     { "name": "TickOutput",
