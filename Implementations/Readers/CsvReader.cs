@@ -1,26 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Importer.Records;
 using Importer.Configuration;
 using Importer.Interfaces;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using Newtonsoft.Json.Serialization;
 
 namespace Importer.Readers
 {
     using System.Collections.Concurrent;
-    using System.Runtime.CompilerServices;
-    using System.Threading;
-    using System.Threading.Tasks;
 
     public class CsvReader : IReader
     {
-        private Stream dataSource;
-
         protected CsvReader()
         {
         }
