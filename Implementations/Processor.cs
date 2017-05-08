@@ -41,7 +41,7 @@ namespace Importer
 
                         while (this.pendingRecords.Count > 10000)
                         {
-                            //Logger.GetLogger().DebugAsync("Reached record limit");
+                            Logger.GetLogger().DebugAsync("Reached record limit");
                             Thread.Sleep(50);
                         }
                         this.pendingRecords.Add(record);
@@ -97,11 +97,6 @@ namespace Importer
             long recordCount = 0;
             while (!this.isDone || this.handledRecords<this.enqueuedRecords)
             {
-                if (this.isDone && this.handledRecords < this.enqueuedRecords && this.pendingRecords.Count == 0)
-                {
-                    Logger.GetLogger().ErrorAsync($"Missing {this.enqueuedRecords - this.handledRecords} records");
-                    break;
-                }
                 while (this.pendingRecords.TryTake(out IRecord record))
                 {
                     try

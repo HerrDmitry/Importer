@@ -17,7 +17,7 @@ namespace Importer.Readers
     using System.Threading;
     using System.Threading.Tasks;
 
-    public class CsvReader : BufferedTextReader, IReader
+    public class CsvReader : IReader
     {
         private Stream dataSource;
 
@@ -33,54 +33,49 @@ namespace Importer.Readers
         protected IEnumerable<StringBuilder> ReadLines()
         {
             long counter = 0;
-            while (!this.Eof || this.csvLines.Count>0)
+            var qualifier = this.configuration.TextQualifierChar;
+            using (var readerEnumerator = this.reader.GetLines().GetEnumerator())
             {
-                var qualifier = this.configuration.TextQualifierChar;
-                while (!this.Eof)
+                var sourceLine = new StringBuilder();
+                var qualifierCount = 0;
+                while (readerEnumerator.MoveNext())
                 {
-                    var sourceLine = new StringBuilder();
-                    var qualifierCount = 0;
-                    while (qualifierCount == 0 || qualifierCount % 2 != 0)
+                    if (sourceLine.Length > 0)
                     {
-                        if (sourceLine.Length > 0)
-                        {
-                            sourceLine.AppendLine();
-                        }
-                        var line = this.GetNextLine();
-                        if (line != null)
-                        {
-                            sourceLine.Append(line);
+                        sourceLine.AppendLine();
+                    }
 
-                            var index = line.IndexOf(qualifier);
-                            while (index >= 0)
-                            {
-                                qualifierCount++;
-                                index++;
-                                if (index >= line.Length)
-                                {
-                                    break;
-                                }
+                    var line = readerEnumerator.Current;
+                    sourceLine.Append(line);
 
-                                index = line.IndexOf(qualifier, index);
-                            }
-
-                            if (qualifierCount == 0)
-                            {
-                                break;
-                            }
-                        }
-                        else
+                    var index = line.IndexOf(qualifier);
+                    while (index >= 0)
+                    {
+                        qualifierCount++;
+                        index++;
+                        if (index >= line.Length)
                         {
                             break;
                         }
+
+                        index = line.IndexOf(qualifier, index);
                     }
 
-                    counter++;
-                    yield return sourceLine;
+                    if (qualifierCount == 0 || qualifierCount % 2 == 0)
+                    {
+                        counter++;
+                        yield return sourceLine;
+                        sourceLine=new StringBuilder();
+                    }
                 }
-            }
 
-            Logger.GetLogger().DebugAsync($"Loaded {counter} records.");
+                Logger.GetLogger().DebugAsync($"Loaded {counter} records.");
+            }
+        }
+
+        public void SetDataSource(ITextReader reader)
+        {
+            this.reader = reader;
         }
 
         public virtual IEnumerable<IRecord> ReadData()
@@ -88,14 +83,13 @@ namespace Importer.Readers
             return this.ReadLines().Select(sourceLine => Record<CsvRecord>.Factory.GetRecord(this.configuration, sourceLine));
         }
 
-        private void ReadLinesTask()
-        {
-        }
-
         public List<ColumnInfo> Columns => new List<ColumnInfo>(this.configuration.Columns);
+        public long LoadedBytes => this.reader.LoadedBytes;
+        public long TotalBytes => this.reader.TotalBytes;
 
         protected CsvReaderConfiguration configuration;
 
+        private ITextReader reader;
         private const int LINES_BUFFER = 100000;
 
         private ConcurrentQueue<StringBuilder> csvLines=new ConcurrentQueue<StringBuilder>();

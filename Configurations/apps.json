@@ -61,6 +61,7 @@
     {
       "name": "ApplicationOutput1",
       "type": "CSVMultiline",
+      "disabled": true,
       "rows": [
         {
           "columns": [

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using Importer.Configuration;
 using Importer.Interfaces;
+using Importer.Readers;
 
 namespace Importer
 {
@@ -43,7 +44,7 @@ namespace Importer
                             Logger.GetLogger().ErrorAsync($"Source file \"{file.Value}\" not found");
                             hasError = true;
                         }
-                        reader.SetDataSource(File.OpenRead(file.Value));
+                        reader.SetDataSource(new BufferedTextReader(File.OpenRead(file.Value)));
                     }else if(writers.TryGetValue(file.Key, out IWriter writer)){
                         if(File.Exists(file.Value)){
                             File.Delete(file.Value);

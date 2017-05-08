@@ -1,6 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
+using Importer.Interfaces;
 
 namespace Importer.Readers
 {
@@ -9,43 +8,28 @@ namespace Importer.Readers
     using System.Threading;
     using System.Threading.Tasks;
 
-    public class BufferedTextReader
+    public class BufferedTextReader:ITextReader
     {
-        public void SetDataSource(Stream source)
+        public BufferedTextReader(Stream source)
         {
-            if (this.readerTask != null)
-            {
-                this.isChanging = true;
-                this.readerTask.Wait();
-            }
-
             this.dataSource = source;
             this.eof = false;
             this.readerTask = Task.Run(() => this.ReadInternal());
         }
 
-        protected string GetNextLine()
+        public IEnumerable<string> GetLines()
         {
-            if (this.buffer.TryDequeue(out string line))
+            while (!this.eof)
             {
-                return line;
-            }
-            else
-            {
-                while (!this.eof)
+                if (this.buffer.TryDequeue(out string line))
                 {
-                    if (this.buffer.TryDequeue(out line))
-                    {
-                        return line;
-                    }
-                    else
-                    {
-                        Thread.Sleep(50);
-                    }
+                    yield return line;
+                }
+                else
+                {
+                    Thread.Sleep(50);
                 }
             }
-
-            return null;
         }
 
         private void ReadInternal()
@@ -80,8 +64,6 @@ namespace Importer.Readers
         private Stream dataSource;
 
         private Task readerTask;
-
-        private volatile bool isChanging = false;
 
         private volatile bool eof = false;
 
