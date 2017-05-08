@@ -2,22 +2,22 @@
 <ArrayOfArrayOfArrayOfString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <ArrayOfArrayOfString>
     <ArrayOfString>
-      <string>C:\temp\Repos\Importer\Implementations\Writers\CsvWriter.cs</string>
+      <string>c:\temp\repos\importer\implementations\writers\csvwriter.cs</string>
     </ArrayOfString>
     <ArrayOfString>
       <string>C:\temp\Repos\Importer\Implementations\Writers\CsvMultilineWriter.cs</string>
     </ArrayOfString>
     <ArrayOfString>
-      <string>C:\temp\Repos\Importer\Implementations\Writers\FileWriter.cs</string>
+      <string>c:\temp\repos\importer\implementations\writers\filewriter.cs</string>
     </ArrayOfString>
     <ArrayOfString>
-      <string>C:\temp\Repos\Importer\Implementations\Configuration\CsvFileConfiguration.cs</string>
+      <string>c:\temp\repos\importer\implementations\configuration\csvfileconfiguration.cs</string>
     </ArrayOfString>
     <ArrayOfString>
-      <string>C:\temp\Repos\Importer\Implementations\Configuration\FileConfiguration{T}.cs</string>
+      <string>c:\temp\repos\importer\implementations\configuration\fileconfiguration{t}.cs</string>
     </ArrayOfString>
     <ArrayOfString>
-      <string>C:\temp\Repos\Importer\Implementations\Configuration\Configuration.cs</string>
+      <string>c:\temp\repos\importer\implementations\configuration\configuration.cs</string>
     </ArrayOfString>
   </ArrayOfArrayOfString>
 </ArrayOfArrayOfArrayOfString>

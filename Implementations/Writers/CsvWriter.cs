@@ -69,9 +69,6 @@ namespace Importer.Writers
         public class CsvWriterColumn:ColumnInfo{
             [JsonProperty("source")]
             public string Source { get; set; }
-
-            [JsonProperty("text")]
-            public string Text { get; set; }
         }
     }
 }
