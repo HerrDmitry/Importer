@@ -25,6 +25,7 @@ namespace Importer.Readers
             var config = (CsvMultilineReaderConfiguration) this.configuration;
             using (var enumerator = this.ReadLines().GetEnumerator())
             {
+                long rowNumber = 0;
                 while (true)
                 {
                     CsvMultilineRecord record = null;
@@ -35,7 +36,7 @@ namespace Importer.Readers
                             yield break;
                         }
 
-                        var partialRecord = Record<CsvRecord>.Factory.GetRecord(config.ToConfiguration(row), enumerator.Current);
+                        var partialRecord = Record<CsvRecord>.Factory.GetRecord(config.ToConfiguration(row), enumerator.Current, 0);
                         var parsers = partialRecord.GetValues();
                         if (record == null)
                         {
@@ -49,7 +50,15 @@ namespace Importer.Readers
                         }
                     }
 
-                    yield return record;
+                    if (record != null)
+                    {
+                        record.RowNumber = rowNumber++;
+                        yield return record;
+                    }
+                    else
+                    {
+                        yield break;
+                    }
                 }
             }
         }

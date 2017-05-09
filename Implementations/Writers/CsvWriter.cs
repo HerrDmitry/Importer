@@ -62,8 +62,7 @@ namespace Importer.Writers
             return builder;
         }
 
-        protected CsvWriterConfiguration configuration;
-
+        private CsvWriterConfiguration configuration;
 
         public class CsvWriterConfiguration:CsvFileConfiguration<CsvWriterColumn>
         {

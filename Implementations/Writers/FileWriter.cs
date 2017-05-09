@@ -28,12 +28,14 @@ namespace Importer.Writers
             });
         }
 
-        public void SetDataDestination(Stream stream, Stream errorOutputDestination=null)
+        public void SetDataDestination(Stream stream, FileWriter errorOutputDestination=null)
         {
             this.writer = new StreamWriter(stream);
             this.writerTask = Task.Run(() => this.WriteoutTask());
-            this.ErrorWriter=new FileWriter();
-            this.ErrorWriter.SetDataDestination(errorOutputDestination);
+            if (errorOutputDestination != null)
+            {
+                this.ErrorWriter = errorOutputDestination;
+            }
         }
 
         public virtual void Close()
@@ -67,6 +69,11 @@ namespace Importer.Writers
             });
         }
 
+        public virtual void Write(StringBuilder str)
+        {
+            this.WriteInternal(str);
+        }
+
         protected virtual StringBuilder ConvertRecord(IRecord record)
         {
             return null;
@@ -77,10 +84,12 @@ namespace Importer.Writers
             lock (this.writer)
             {
                 this.exceptionCounter++;
+                var message=new StringBuilder();
+                message.Append($"Exception on row {record.RowNumber}, column {column.ColumnName}").AppendLine().Append("\t").Append(record.Source);
+                this.ErrorWriter?.Write(message);
                 if (this.ErrorWriter == null)
                 {
                     this.ErrorWriter=new FileWriter();
-                    this.ErrorWriter.SetDataDestination(File.Open(this.configuration.));
                 }
             }
         }

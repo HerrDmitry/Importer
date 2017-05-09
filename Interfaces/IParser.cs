@@ -10,5 +10,7 @@ namespace Importer.Interfaces
         string ToString(string format);
 
         void Release();
+
+        string ColumnName { get; }
     }
 }

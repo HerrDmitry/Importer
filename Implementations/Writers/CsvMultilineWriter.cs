@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using Importer.Interfaces;
+using Importer.Parsers;
 using Importer.Writers;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -57,7 +58,7 @@ namespace Importer.Implementations.Writers
                         var column = record[columnInfo.Source];
                         if (column.IsFailed)
                         {
-                            this.HandleException(record);
+                            this.HandleException(column, record);
                             return null;
                         }
                         s = column.ToString(columnInfo.Format);
@@ -68,7 +69,7 @@ namespace Importer.Implementations.Writers
                     }
                     else
                     {
-                        this.HandleException(record);
+                        this.HandleException(new NotFoundParser(columnInfo), record);
                         return null;
                     }
                     var tb = new StringBuilder(s);

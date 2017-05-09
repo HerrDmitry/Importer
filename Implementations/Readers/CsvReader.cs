@@ -77,7 +77,11 @@ namespace Importer.Readers
 
         public virtual IEnumerable<IRecord> ReadData()
         {
-            return this.ReadLines().Select(sourceLine => Record<CsvRecord>.Factory.GetRecord(this.configuration, sourceLine));
+            long rowNumber = 0;
+            foreach (var line in this.ReadLines())
+            {
+                yield return Record<CsvRecord>.Factory.GetRecord(this.configuration, line, rowNumber++);
+            }
         }
 
         public List<ColumnInfo> Columns => new List<ColumnInfo>(this.configuration.Columns??new List<ColumnInfo>());

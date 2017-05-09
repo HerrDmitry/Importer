@@ -2,73 +2,46 @@
 <ArrayOfArrayOfArrayOfString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <ArrayOfArrayOfString>
     <ArrayOfString>
+      <string>c:\temp\repos\importer\implementations\writers\csvwriter.cs</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>c:\temp\repos\importer\interfaces\irecord.cs</string>
+    </ArrayOfString>
+    <ArrayOfString>
       <string>c:\temp\repos\importer\implementations\processor.cs</string>
     </ArrayOfString>
     <ArrayOfString>
-      <string>c:\temp\repos\importer\configurations\apps.json</string>
+      <string>c:\temp\repos\importer\implementations\records\record.cs</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>c:\temp\repos\importer\implementations\records\csvrecord.cs</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>c:\temp\repos\importer\implementations\writers\filewriter.cs</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>c:\temp\repos\importer\program.cs</string>
     </ArrayOfString>
     <ArrayOfString>
       <string>c:\temp\repos\importer\implementations\configuration\fileconfiguration{t}.cs</string>
     </ArrayOfString>
     <ArrayOfString>
+      <string>c:\temp\repos\importer\interfaces\iwriter.cs</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>c:\temp\repos\importer\implementations\configuration\configuration.cs</string>
+    </ArrayOfString>
+    <ArrayOfString>
       <string>c:\temp\repos\importer\interfaces\ireader.cs</string>
     </ArrayOfString>
     <ArrayOfString>
-      <string>c:\temp\repos\importer\implementations\configuration\columninfo.cs</string>
+      <string>c:\temp\repos\importer\implementations\readers\csvreader.cs</string>
     </ArrayOfString>
     <ArrayOfString>
-      <string>c:\temp\repos\importer\implementations\configuration\filereference.cs</string>
+      <string>C:\temp\Repos\Importer\Configurations\apps.json</string>
     </ArrayOfString>
     <ArrayOfString>
-      <string>C:\temp\Repos\Importer\Implementations\Readers\CsvReader.cs</string>
-    </ArrayOfString>
-    <ArrayOfString>
-      <string>C:\temp\Repos\Importer\Implementations\Records\CsvRecord.cs</string>
-    </ArrayOfString>
-    <ArrayOfString>
-      <string>C:\temp\Repos\Importer\Implementations\Records\Record.cs</string>
-    </ArrayOfString>
-    <ArrayOfString>
-      <string>C:\temp\Repos\Importer\Implementations\Readers\CsvMultilineReader.cs</string>
-    </ArrayOfString>
-    <ArrayOfString>
-      <string>C:\temp\Repos\Importer\Interfaces\IRecord.cs</string>
-    </ArrayOfString>
-    <ArrayOfString>
-      <string>C:\temp\Repos\Importer\Implementations\DataDictionary.cs</string>
-    </ArrayOfString>
-    <ArrayOfString>
-      <string>C:\temp\Repos\Importer\Implementations\Parsers\DictionaryParser.cs</string>
-    </ArrayOfString>
-    <ArrayOfString>
-      <string>C:\temp\Repos\Importer\Implementations\Writers\CsvWriter.cs</string>
-    </ArrayOfString>
-    <ArrayOfString>
-      <string>Importer</string>
-    </ArrayOfString>
-    <ArrayOfString>
-      <string>C:\temp\Repos\Importer\Implementations\Parsers\FloatParser.cs</string>
-    </ArrayOfString>
-    <ArrayOfString>
-      <string>C:\temp\Repos\Importer\Implementations\Configuration\CsvFileConfiguration.cs</string>
-    </ArrayOfString>
-    <ArrayOfString>
-      <string>C:\temp\Repos\Importer\Implementations\Parsers\Parser.cs</string>
-    </ArrayOfString>
-    <ArrayOfString>
-      <string>C:\temp\Repos\Importer\Implementations\Parsers\BooleanParser.cs</string>
-    </ArrayOfString>
-    <ArrayOfString>
-      <string>C:\temp\Repos\Importer\Implementations\Parsers\DateParser.cs</string>
-    </ArrayOfString>
-    <ArrayOfString>
-      <string>C:\temp\Repos\Importer\Implementations\Parsers\IntegerParser.cs</string>
-    </ArrayOfString>
-    <ArrayOfString>
-      <string>C:\temp\Repos\Importer\Implementations\Parsers\StringParser.cs</string>
-    </ArrayOfString>
-    <ArrayOfString>
-      <string>C:\temp\Repos\Importer\Implementations\Parsers\TextParser.cs</string>
+      <string>C:\Temp\Repos\Importer\Importer.tss</string>
     </ArrayOfString>
   </ArrayOfArrayOfString>
 </ArrayOfArrayOfArrayOfString>

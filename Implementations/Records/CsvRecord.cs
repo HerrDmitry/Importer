@@ -77,6 +77,8 @@ namespace Importer.Records
             this.references?.Clear();
         }
 
+        public override string Source => this.source;
+
         private string GetNext()
         {
             if (this.index >= this.length)

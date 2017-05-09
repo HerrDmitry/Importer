@@ -90,6 +90,8 @@ namespace Importer.Implementations.Parsers
             this.isParsed = false;
         }
 
+        public string ColumnName => this.column.Name;
+
         protected string input;
         protected ColumnInfo column;
         protected bool isParsed;

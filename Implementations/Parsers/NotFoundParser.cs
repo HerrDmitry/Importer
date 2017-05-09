@@ -1,21 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Importer.Configuration;
+using Importer.Implementations.Parsers;
 
 namespace Importer.Parsers
 {
     using Importer.Interfaces;
 
-    public class NotFoundParser: IParser{
-        public bool IsFailed => true;
+    public class NotFoundParser: Parser{
 
-        public string ToString(string format)
+        public NotFoundParser(ColumnInfo column)
         {
-            return null;
+            this.column = column;
         }
 
-        public void Release()
+        public override bool IsFailed => true;
+
+        public override string ToString(string format)
         {
+            return null;
         }
     }
 }

@@ -5,6 +5,7 @@ using System.Threading;
 using Importer.Configuration;
 using Importer.Interfaces;
 using Importer.Readers;
+using Importer.Writers;
 
 namespace Importer
 {
@@ -56,34 +57,26 @@ namespace Importer
                         hasError = true;
                         break;
                     }
-                    string errorOutput = null;
-                    if(writer.Value. )
+                    
 
                     if (File.Exists(file))
                     {
                         File.Delete(file);
                     }
-                    writer.Value.SetDataDestination(File.Open(file, FileMode.Create, FileAccess.Write, FileShare.Read));
-                }
 
-                foreach (var file in files)
-                {
-                    if (readers.TryGetValue(file.Key, out IReader reader))
+                    FileWriter errorOutput = null;
+                    if (files.TryGetValue(ERROR_OUTPUT_NAME, out string errorFile))
                     {
-                        if (!File.Exists(file.Value))
+                        if (File.Exists(errorFile))
                         {
-                            Logger.GetLogger().ErrorAsync($"Source file \"{file.Value}\" not found");
-                            hasError = true;
+                            File.Delete(errorFile);
                         }
-                        reader.SetDataSource(new BufferedTextReader(File.OpenRead(file.Value)));
-                    }else if(writers.TryGetValue(file.Key, out IWriter writer)){
+
+                        errorOutput=new FileWriter();
+                        errorOutput.SetDataDestination(File.Open(errorFile, FileMode.Create, FileAccess.Write, FileShare.Read));
                     }
-                    else
-                    {
-                        Logger.GetLogger().ErrorAsync(
-                            $"There is no definition for \"{file.Key}\" in configuration file \"{configPath}\"");
-                        hasError = true;
-                    }
+
+                    writer.Value.SetDataDestination(File.Open(file, FileMode.Create, FileAccess.Write, FileShare.Read), errorOutput);
                 }
 
                 var processor = new Processor(config);
@@ -131,5 +124,7 @@ namespace Importer
             Logger.GetLogger().MessageAsync("Usage:");
             Logger.GetLogger().MessageAsync("/c:{configuration file name} [/f:{tableName}:{source file name} ...]");
         }
+
+        private const string ERROR_OUTPUT_NAME = "Error_Output";
     }
 }

@@ -1,11 +1,12 @@
 ﻿using System.IO;
 using System.Threading.Tasks;
+using Importer.Writers;
 
 namespace Importer.Interfaces
 {
     public interface IWriter
     {
-        void SetDataDestination(Stream stream, Stream errorOutputStream = null);
+        void SetDataDestination(Stream stream, FileWriter errorOutputStream = null);
 
         Task WriteAsync(IRecord record);
 

@@ -14,5 +14,7 @@ namespace Importer.Interfaces
         void Release();
 
         long RowNumber { get; }
+
+        string Source { get; }
     }
 }

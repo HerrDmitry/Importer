@@ -36,7 +36,7 @@ namespace Importer.Records
                     }
                 }
 
-                return value ?? new NotFoundParser();
+                return value ?? new NotFoundParser(new ColumnInfo{Name = columnName});
             }
         }
 
@@ -49,7 +49,9 @@ namespace Importer.Records
 
         public abstract void Release();
 
-        public long RowNumber { get; protected set; }
+        public long RowNumber { get; set; }
+
+        public abstract string Source { get; }
     }
 
 
