@@ -60,6 +60,11 @@ namespace Importer
             return this.Items.TryGetValue(key, out IRecord value) ? value : defaultValue;
         }
 
+        public bool TryGetValue(string key, out IRecord record)
+        {
+            return this.Items.TryGetValue(key, out record);
+        }
+
         private void LoadItems()
         {
             try

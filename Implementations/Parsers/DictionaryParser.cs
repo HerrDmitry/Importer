@@ -10,7 +10,7 @@ namespace Importer.Implementations.Parsers
 
         public override string ToString()
         {
-            return this.
+            return null;
         }
     }
 }

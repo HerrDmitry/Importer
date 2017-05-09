@@ -4,19 +4,32 @@ using System.Linq;
 using System.Text;
 using Importer.Configuration;
 using Importer.Interfaces;
+using Importer.Parsers;
 
 namespace Importer.Records
 {
-    using Importer.Implementations.Parsers;
-
     public abstract class Record : IRecord
     {
-        public IEnumerable<IParser> GetValues()
+        public Dictionary<string,IParser> GetValues()
         {
-            return this.GetValuesInternal().Values.ToList();
+            return this.GetValuesInternal();
         }
 
-        public IParser this[string columnName] => this.GetValuesInternal().TryGetValue(columnName, out IParser parser)?parser:new NotFoundParser();
+        public IParser this[string columnName]
+        {
+            get
+            {
+                var value =  this.GetValuesInternal().TryGetValue(columnName, out IParser parser) ? parser : null;
+                if (value == null)
+                {
+                    this.references?.TryGetValue(columnName, out value);
+                }
+
+                return value ?? new NotFoundParser();
+            }
+        }
+
+        protected Dictionary<string, IParser> references = null;
 
         protected abstract Dictionary<string, IParser> GetValuesInternal();
 

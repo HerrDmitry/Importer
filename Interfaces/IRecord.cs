@@ -7,7 +7,7 @@ namespace Importer.Interfaces
 {
     public interface IRecord
     {
-        IEnumerable<IParser> GetValues();
+        Dictionary<string,IParser> GetValues();
 
         IParser this[string columnName] { get; }
 

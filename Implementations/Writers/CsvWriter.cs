@@ -32,10 +32,6 @@ namespace Importer.Writers
             {
                 var columnInfo = this.configuration.Columns[i];
                 var column = record[columnInfo.Source];
-                if (column is NotFoundParser)
-                {
-                    DataDictionary.GetDictionary(this.configuration.References, columnInfo.Source)
-                }
                 if (column.IsFailed)
                 {
                     this.HandleException(record);

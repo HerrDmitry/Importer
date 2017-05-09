@@ -43,7 +43,7 @@ namespace Importer.Readers
                         }
 
                         record.AddParsers(partialRecord);
-                        if (parsers.Where(x=>x is TextParser).Any(x => x.IsFailed))
+                        if (parsers.Where(x=>x.Value is TextParser).Any(x => x.Value.IsFailed))
                         {
                             break;
                         }

@@ -20,6 +20,18 @@ namespace Importer.Records
                 this.values = this.config.GetColumnsWithFullNames().ToDictionary(x => x.FullName, x => (IParser)Parser.GetParser(this.config.Name, x.Column, this.GetNext()));
             }
 
+            this.references = config.References?.SelectMany(r =>
+            {
+                var key = string.Concat(this.config.Name, ".", r.Field);
+                if (this.values.TryGetValue(key, out IParser keyValue))
+                {
+                    if (!keyValue.IsFailed && DataDictionary.GetDictionary(r.Reference).TryGetValue(keyValue.ToString(), out IRecord dictionaryRecord)){
+                        return dictionaryRecord.GetValues();
+                    }
+                }
+                return new Dictionary<string, IParser>();
+            }).ToDictionary(x => x.Key, x => x.Value);
+
             return this.values;
         }
 
@@ -52,6 +64,7 @@ namespace Importer.Records
             }
 
             this.values = null;
+            this.references = null;
         }
 
         private StringBuilder GetNext()
