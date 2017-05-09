@@ -67,40 +67,41 @@ namespace Importer.Records
             this.references = null;
         }
 
-        private StringBuilder GetNext()
+        private string GetNext()
         {
-            var next = new StringBuilder();
             if (this.index >= this.length)
             {
-                return next;
+                return "";
             }
 
             var expected = this.config.DelimiterChar;
             if (this.source[this.index] == this.config.DelimiterChar)
             {
                 this.index++;
-                return next;
+                return "";
             }
+            int start,end;
             if (this.source[this.index] == this.config.TextQualifierChar)
             {
                 expected = this.config.TextQualifierChar;
+                start = this.index + 1;
             }
             else
             {
-                next.Append(this.source[this.index]);
+                start = this.index;
             }
 
+            end = start;
             var done = false;
             while (!done)
             {
                 this.index++;
-                var start = this.index;
                 var idx = this.source.IndexOf(expected, this.index);
                 if (idx < 0)
                 {
                     idx = this.source.Length;
                 }
-                next.Append(this.source.Substring(start, idx - start));
+                end = idx - start;
                 this.index = idx;
 
                 if (this.index < this.length)
@@ -108,7 +109,6 @@ namespace Importer.Records
                     if (this.index<this.length-1 && this.source[this.index]==this.config.TextQualifierChar){
                         if (this.source[this.index + 1] == this.config.TextQualifierChar)
                         {
-                            next.Append(this.config.TextQualifierChar);
                             this.index++;
                             continue;
                         } else if(this.source[this.index+1]==this.config.DelimiterChar){
@@ -128,7 +128,7 @@ namespace Importer.Records
                     done = true;
                 }
             }
-            return next;
+            return this.source.Substring(start,end).Replace(this.config.TextQualifier,this.config.TextQualifierDouble);
         }
 
         private string source;

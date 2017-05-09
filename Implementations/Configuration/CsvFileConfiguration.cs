@@ -10,6 +10,8 @@ namespace Importer.Configuration
         public CsvFileConfiguration() {
             this.DelimiterChar = ',';
             this.TextQualifierChar = '\"';
+            this.textQualifier = "\"";
+            this.textQualifierDouble = "\"\"";
         }
 
         [JsonProperty("delimiter")]
@@ -26,10 +28,17 @@ namespace Importer.Configuration
         [JsonProperty("textQualifier")]
         public string TextQualifier
         {
-            get => this.TextQualifierChar.ToString();
+            get => this.textQualifier;
 
-            set => this.TextQualifierChar = !string.IsNullOrEmpty(value) ? value[0] : '"';
+            set
+            {
+                this.textQualifier = !string.IsNullOrEmpty(value) ? value[0].ToString() : "\"";
+                this.textQualifierDouble = this.textQualifier + this.textQualifier;
+                this.TextQualifierChar = this.textQualifier[0];
+            } 
         }
+
+        public string TextQualifierDouble => this.textQualifierDouble;
 
         [JsonIgnore]
         public char TextQualifierChar { get; private set; }
@@ -42,5 +51,8 @@ namespace Importer.Configuration
 
         [JsonProperty("readBuffer")]
         public int? ReadBuffer { get; set; }
+
+        private string textQualifier;
+        private string textQualifierDouble;
     }
 }

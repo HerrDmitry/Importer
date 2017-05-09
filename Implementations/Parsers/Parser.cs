@@ -14,7 +14,7 @@ namespace Importer.Implementations.Parsers
     {
         public abstract bool IsFailed { get; }
 
-        public static Parser GetParser(string sourceName, ColumnInfo column, StringBuilder input)
+        public static Parser GetParser(string sourceName, ColumnInfo column, string input)
         {
             Parser parser = null;
             switch (column.Type)
@@ -86,11 +86,11 @@ namespace Importer.Implementations.Parsers
 
         public void Clear()
         {
-            this.input.Clear();
+            this.input = null;
             this.isParsed = false;
         }
 
-        protected StringBuilder input;
+        protected string input;
         protected ColumnInfo column;
         protected bool isParsed;
 

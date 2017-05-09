@@ -8,7 +8,7 @@ namespace Importer.Implementations.Parsers
     {
         protected override string Parse(out bool isFailed){
             isFailed = false;
-            return this.input.ToString();
+            return this.input;
         }
 
         public override string ToString()

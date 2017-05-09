@@ -22,12 +22,15 @@ namespace Importer.Implementations.Parsers
 
         public override string ToString()
         {
-            return this.Value.HasValue?this.Value.ToString():NULL_STRING_VALUE;
+            return valueString ?? (valueString = this.Value.HasValue ? this.Value.Value.ToString() : NULL_STRING_VALUE);
         }
+
+        private string valueString = null;
 
         public override string ToString(string format)
         {
             return this.Value.HasValue?this.Value.Value.ToString(format):NULL_STRING_VALUE;
         }
+
     }
 }
