@@ -69,7 +69,7 @@
         { "source": "Intake.Description" }
       ],
       "delimiter": ",",
-      "textQualifier": "\""
+      "textQualifier": "\"",
     },
     {
       "name": "ApplicationOutput1",
@@ -127,6 +127,7 @@
     "Application": "../data/application.csv",
     "Intake": "../data/Intake.csv",
     "ApplicationOutput": "../data/appsout.csv",
+    "ApplicationOutput_Error": "../data/appsout_error.csv",
     "ApplicationOutput1": "../data/appsout1.csv"
   }
 }

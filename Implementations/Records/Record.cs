@@ -10,7 +10,7 @@ namespace Importer.Records
 {
     public abstract class Record : IRecord
     {
-        public Dictionary<string,IParser> GetValues()
+        public Dictionary<string, IParser> GetValues()
         {
             return this.GetValuesInternal();
         }
@@ -19,25 +19,39 @@ namespace Importer.Records
         {
             get
             {
-                var value =  this.GetValuesInternal().TryGetValue(columnName, out IParser parser) ? parser : null;
-                if (value == null)
+                var value = this.GetValuesInternal().TryGetValue(columnName, out IParser parser) ? parser : null;
+                if (value != null)
                 {
-                    this.references?.TryGetValue(columnName, out value);
+                    return value;
+                }
+
+                if (this.references?.Count > 0)
+                {
+                    for (var i = 0; i < this.references.Count; i++)
+                    {
+                        if (this.references[i].GetValues().TryGetValue(columnName, out value))
+                        {
+                            break;
+                        }
+                    }
                 }
 
                 return value ?? new NotFoundParser();
             }
         }
 
-        protected Dictionary<string, IParser> references = null;
+        protected List<IRecord> references = null;
 
         protected abstract Dictionary<string, IParser> GetValuesInternal();
 
-        public abstract void InitializeRecord<TCI>(FileConfiguration<TCI> config, StringBuilder source) where TCI : ColumnInfo;
+        public abstract void InitializeRecord<TCI>(FileConfiguration<TCI> config, StringBuilder source, long rowNumber) where TCI : ColumnInfo;
         public abstract void ClearRecord();
 
         public abstract void Release();
+
+        public long RowNumber { get; protected set; }
     }
+
 
     public abstract class Record<T> : Record where T : Record, new()
     {
@@ -45,14 +59,14 @@ namespace Importer.Records
         {
             private static ConcurrentBag<T> recordPool = new ConcurrentBag<T>();
 
-            public static T GetRecord<TCI>(FileConfiguration<TCI> config, StringBuilder source) where TCI : ColumnInfo
+            public static T GetRecord<TCI>(FileConfiguration<TCI> config, StringBuilder source, long rowNumber) where TCI : ColumnInfo
             {
                 if (!recordPool.TryTake(out T record))
                 {
                     record = new T();
                 }
 
-                record?.InitializeRecord(config, source);
+                record.InitializeRecord(config, source, rowNumber);
                 return record;
             }
 

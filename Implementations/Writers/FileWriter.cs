@@ -10,7 +10,7 @@ using Importer.Interfaces;
 
 namespace Importer.Writers
 {
-    public abstract class FileWriter
+    public class FileWriter
     {
         public async Task FlushAsync()
         {
@@ -28,10 +28,12 @@ namespace Importer.Writers
             });
         }
 
-        public void SetDataDestination(Stream stream)
+        public void SetDataDestination(Stream stream, Stream errorOutputDestination=null)
         {
             this.writer = new StreamWriter(stream);
             this.writerTask = Task.Run(() => this.WriteoutTask());
+            this.ErrorWriter=new FileWriter();
+            this.ErrorWriter.SetDataDestination(errorOutputDestination);
         }
 
         public virtual void Close()
@@ -65,13 +67,21 @@ namespace Importer.Writers
             });
         }
 
-        protected abstract StringBuilder ConvertRecord(IRecord record);
+        protected virtual StringBuilder ConvertRecord(IRecord record)
+        {
+            return null;
+        }
 
-        protected virtual void HandleException(IRecord record)
+        protected virtual void HandleException(IParser column, IRecord record)
         {
             lock (this.writer)
             {
                 this.exceptionCounter++;
+                if (this.ErrorWriter == null)
+                {
+                    this.ErrorWriter=new FileWriter();
+                    this.ErrorWriter.SetDataDestination(File.Open(this.configuration.));
+                }
             }
         }
 
@@ -119,6 +129,8 @@ namespace Importer.Writers
                 Logger.GetLogger().DebugAsync("Exiting writer's thread");
             }
         }
+
+        private FileWriter ErrorWriter;
 
         private Task writerTask = null;
         private ConcurrentQueue<StringBuilder> queue = new ConcurrentQueue<StringBuilder>();

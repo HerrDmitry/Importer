@@ -35,6 +35,37 @@ namespace Importer
                 }
                 var readers = config.GetReaders();
                 var writers = config.GetWriters();
+
+                foreach (var reader in config.GetReaders())
+                {
+                    if (!files.TryGetValue(reader.Key, out string file) || string.IsNullOrWhiteSpace(file))
+                    {
+                        Logger.GetLogger().ErrorAsync($"No file defined for reader configuration {reader.Key}");
+                        hasError = true;
+                        break;
+                    }
+
+                    reader.Value.SetDataSource(new BufferedTextReader(File.OpenRead(file)));
+                }
+
+                foreach (var writer in config.GetWriters())
+                {
+                    if (!files.TryGetValue(writer.Key, out string file) || string.IsNullOrWhiteSpace(file))
+                    {
+                        Logger.GetLogger().ErrorAsync($"No file defined for writer configuration {writer.Key}");
+                        hasError = true;
+                        break;
+                    }
+                    string errorOutput = null;
+                    if(writer.Value. )
+
+                    if (File.Exists(file))
+                    {
+                        File.Delete(file);
+                    }
+                    writer.Value.SetDataDestination(File.Open(file, FileMode.Create, FileAccess.Write, FileShare.Read));
+                }
+
                 foreach (var file in files)
                 {
                     if (readers.TryGetValue(file.Key, out IReader reader))
@@ -46,10 +77,6 @@ namespace Importer
                         }
                         reader.SetDataSource(new BufferedTextReader(File.OpenRead(file.Value)));
                     }else if(writers.TryGetValue(file.Key, out IWriter writer)){
-                        if(File.Exists(file.Value)){
-                            File.Delete(file.Value);
-                        }
-                        writer.SetDataDestination(File.Open(file.Value,FileMode.Create,FileAccess.Write,FileShare.Read));
                     }
                     else
                     {

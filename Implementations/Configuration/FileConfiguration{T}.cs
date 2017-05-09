@@ -7,8 +7,7 @@ using System.Linq;
 
 namespace Importer.Configuration
 {
-    [DebuggerDisplay("{Name} - {Type}")]
-    public class FileConfiguration<T> where T : ColumnInfo
+    public class FileConfiguration
     {
         [JsonProperty("name")]
         public string Name { get; set; }
@@ -18,6 +17,14 @@ namespace Importer.Configuration
 
         [JsonProperty("disabled")]
         public bool Disabled { get; set; }
+
+        [JsonProperty("references")]
+        public List<FileReference> References { get; set; }
+    }
+
+    [DebuggerDisplay("{Name} - {Type}")]
+    public class FileConfiguration<T>:FileConfiguration where T : ColumnInfo
+    {
 
         [JsonProperty("columns")]
         public List<T> Columns
@@ -30,17 +37,11 @@ namespace Importer.Configuration
             }
         }
 
-        [JsonProperty("references")]
-        public List<FileReference> References { get; set; }
-
         public List<ColumnName> GetColumnsWithFullNames()
         {
             return this.columnNames ?? (this.columnNames = this.Columns
                        .Select(x => new ColumnName(string.Concat(this.Name, ".", x.Name), x)).ToList());
         }
-
-        private List<ColumnName> columnNames;
-        private List<T> columns;
 
         public struct ColumnName
         {
@@ -54,5 +55,8 @@ namespace Importer.Configuration
 
             public T Column { get; }
         }
+
+        private List<T> columns;
+        private List<ColumnName> columnNames;
     }
 }

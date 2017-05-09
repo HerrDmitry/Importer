@@ -5,7 +5,7 @@ namespace Importer.Interfaces
 {
     public interface IWriter
     {
-        void SetDataDestination(Stream stream);
+        void SetDataDestination(Stream stream, Stream errorOutputStream = null);
 
         Task WriteAsync(IRecord record);
 

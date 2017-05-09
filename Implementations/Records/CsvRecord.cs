@@ -15,22 +15,30 @@ namespace Importer.Records
 
         protected override Dictionary<string,IParser> GetValuesInternal()
         {
-            if (this.values == null)
+            if (this.values?.Count > 0)
             {
-                this.values = this.config.GetColumnsWithFullNames().ToDictionary(x => x.FullName, x => (IParser)Parser.GetParser(this.config.Name, x.Column, this.GetNext()));
+                return this.values;
             }
 
-            this.references = config.References?.SelectMany(r =>
+            this.values = this.config.GetColumnsWithFullNames().ToDictionary(x => x.FullName, x => (IParser)Parser.GetParser(this.config.Name, x.Column, this.GetNext()));
+
+            if (this.references == null)
+            {
+                this.references=new List<IRecord>();
+            }
+
+            this.references.Clear();
+            config.References?.ForEach(r =>
             {
                 var key = string.Concat(this.config.Name, ".", r.Field);
                 if (this.values.TryGetValue(key, out IParser keyValue))
                 {
-                    if (!keyValue.IsFailed && DataDictionary.GetDictionary(r.Reference).TryGetValue(keyValue.ToString(), out IRecord dictionaryRecord)){
-                        return dictionaryRecord.GetValues();
+                    if (!keyValue.IsFailed && DataDictionary.GetDictionary(r.Reference).TryGetValue(keyValue.ToString(), out IRecord dictionaryRecord))
+                    {
+                        this.references.Add(dictionaryRecord);
                     }
                 }
-                return new Dictionary<string, IParser>();
-            }).ToDictionary(x => x.Key, x => x.Value);
+            });
 
             return this.values;
         }
@@ -40,13 +48,15 @@ namespace Importer.Records
             return record.values;
         }
 
-        public override void InitializeRecord<TCI>(FileConfiguration<TCI> config, StringBuilder source)
+        public override void InitializeRecord<TCI>(FileConfiguration<TCI> config, StringBuilder source, long rowNumber)
         {
             this.source = source.ToString();
             this.index = 0;
             this.length = this.source.Length;
             this.config = config as CsvReaderConfiguration;
-            this.values = null;
+            this.values?.Clear();
+            this.references?.Clear();
+            this.RowNumber = rowNumber;
         }
 
         public override void ClearRecord()
@@ -63,8 +73,8 @@ namespace Importer.Records
                 }
             }
 
-            this.values = null;
-            this.references = null;
+            this.values?.Clear();
+            this.references?.Clear();
         }
 
         private string GetNext()

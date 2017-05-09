@@ -12,5 +12,7 @@ namespace Importer.Interfaces
         IParser this[string columnName] { get; }
 
         void Release();
+
+        long RowNumber { get; }
     }
 }

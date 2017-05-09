@@ -34,7 +34,7 @@ namespace Importer.Writers
                 var column = record[columnInfo.Source];
                 if (column.IsFailed)
                 {
-                    this.HandleException(record);
+                    this.HandleException(column,record);
                     return null;
                 }
                 var s = column.ToString(columnInfo.Format);
@@ -62,9 +62,10 @@ namespace Importer.Writers
             return builder;
         }
 
-        private CsvWriterConfiguration configuration;
+        protected CsvWriterConfiguration configuration;
 
-        public class CsvWriterConfiguration:Importer.Configuration.CsvFileConfiguration<CsvWriterColumn>
+
+        public class CsvWriterConfiguration:CsvFileConfiguration<CsvWriterColumn>
         {
         }
 
