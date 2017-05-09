@@ -9,6 +9,7 @@ using Newtonsoft.Json.Linq;
 namespace Importer.Readers
 {
     using System.Collections.Concurrent;
+    using System.IO;
 
     public class CsvReader : IReader
     {
@@ -25,6 +26,11 @@ namespace Importer.Readers
         {
             long counter = 0;
             var qualifier = this.configuration.TextQualifierChar;
+            if (this.reader == null)
+            {
+                throw new FileLoadException($"Data file \"{this.configuration.Name}\" not found/not accessible.");
+            }
+
             using (var readerEnumerator = this.reader.GetLines().GetEnumerator())
             {
                 var sourceLine = new StringBuilder();

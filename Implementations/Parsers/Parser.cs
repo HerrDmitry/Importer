@@ -46,7 +46,10 @@ namespace Importer.Implementations.Parsers
             return parser;
         }
 
-        public new abstract string ToString();
+        public override string ToString()
+        {
+            throw new NotImplementedException();
+        }
 
         public virtual string ToString(string format)
         {

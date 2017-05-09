@@ -15,9 +15,12 @@ namespace Importer.Records
 
         protected override Dictionary<string,IParser> GetValuesInternal()
         {
-            return this.values ?? (this.values =
-                                   this.config.GetColumnsWithFullNames().ToDictionary(x => x.FullName,
-                                                                             x => (IParser)Parser.GetParser(this.config.Name, x.Column, this.GetNext())));
+            if (this.values == null)
+            {
+                this.values = this.config.GetColumnsWithFullNames().ToDictionary(x => x.FullName, x => (IParser)Parser.GetParser(this.config.Name, x.Column, this.GetNext()));
+            }
+
+            return this.values;
         }
 
         protected Dictionary<string,IParser> GetValuesInternal(CsvRecord record)

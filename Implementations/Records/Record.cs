@@ -16,7 +16,7 @@ namespace Importer.Records
             return this.GetValuesInternal().Values.ToList();
         }
 
-        public IParser this[string columnName] => this.GetValuesInternal().TryGetValue(columnName, out IParser parser)?parser:new ThrowExceptionParser();
+        public IParser this[string columnName] => this.GetValuesInternal().TryGetValue(columnName, out IParser parser)?parser:new NotFoundParser();
 
         protected abstract Dictionary<string, IParser> GetValuesInternal();
 

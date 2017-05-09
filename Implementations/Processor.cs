@@ -8,12 +8,14 @@ using Importer.Interfaces;
 
 namespace Importer
 {
+    using System.Collections.Generic;
+
     public class Processor
     {
         public Processor(Configuration.Configuration config)
         {
             this.config = config;
-            var processingThreads = Environment.ProcessorCount;
+            var processingThreads = 1;// Environment.ProcessorCount;
             this.processingTasks=new Task[processingThreads];
             for (var i = 0; i < processingThreads; i++)
             {
@@ -73,6 +75,7 @@ namespace Importer
         private void FindAndLoadDictionaries()
         {
             var references = this.config.GetReaders().SelectMany(x => x.Value.References?.Select(c => c.Reference)).Distinct();
+            var dictionaryTask = new List<Task>();
             foreach (var reference in references)
             {
                 var referenceParts = reference.Split(".".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
@@ -86,9 +89,11 @@ namespace Importer
                         throw new ArgumentException(message);
                     }
 
-                    DataDictionary.GetDictionary(reference, reader.ReadData());
+                    dictionaryTask.Add(DataDictionary.LoadDictionary(reference, reader.ReadData()));
                 }
             }
+
+            Task.WaitAll(dictionaryTask.ToArray());
         }
 
         private void HandleRecord()

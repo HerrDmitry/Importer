@@ -2,10 +2,37 @@
 <ArrayOfArrayOfArrayOfString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <ArrayOfArrayOfString>
     <ArrayOfString>
-      <string>C:\temp\Repos\Importer\Implementations\Processor.cs</string>
+      <string>c:\source\repos\importer\implementations\configuration\csvfileconfiguration.cs</string>
     </ArrayOfString>
     <ArrayOfString>
-      <string>C:\temp\Repos\Importer\Configurations\apps.json</string>
+      <string>C:\Source\Repos\Importer\Implementations\Readers\CsvMultilineReader.cs</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>c:\source\repos\importer\implementations\readers\csvreader.cs</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>c:\source\repos\importer\implementations\records\csvrecord.cs</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>c:\source\repos\importer\implementations\configuration\fileconfiguration{t}.cs</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>c:\source\repos\importer\implementations\writers\filewriter.cs</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>c:\source\repos\importer\implementations\processor.cs</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>c:\source\repos\importer\implementations\records\record.cs</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>c:\source\repos\importer\implementations\parsers\throwexceptionparser.cs</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>c:\source\repos\importer\configurations\ticks.json</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>Importer</string>
     </ArrayOfString>
   </ArrayOfArrayOfString>
 </ArrayOfArrayOfArrayOfString>

@@ -7,6 +7,11 @@ namespace Importer.Configuration
 
     public class CsvFileConfiguration<T>:FileConfiguration<T> where T:ColumnInfo
     {
+        public CsvFileConfiguration() {
+            this.DelimiterChar = ',';
+            this.TextQualifierChar = '\"';
+        }
+
         [JsonProperty("delimiter")]
         public string Delimiter
         {
@@ -17,6 +22,7 @@ namespace Importer.Configuration
 
         [JsonIgnore]
         public char DelimiterChar { get; set; }
+
         [JsonProperty("textQualifier")]
         public string TextQualifier
         {

@@ -3,7 +3,7 @@
     "Importer": {
       "commandName": "Project",
       "commandLineArgs": "/c:configurations\\apps.json",
-      "workingDirectory": "C:\\temp\\Repos\\Importer"
+      "workingDirectory": "C:\\Source\\Repos\\Importer"
     }
   }
 }

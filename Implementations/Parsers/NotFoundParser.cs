@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Importer.Implementations.Parsers
+namespace Importer.Parsers
 {
     using Importer.Interfaces;
 
-    public class ThrowExceptionParser: IParser{
+    public class NotFoundParser: IParser{
         public bool IsFailed => true;
 
         public string ToString(string format)

@@ -19,7 +19,7 @@ namespace Importer.Readers
 
         public IEnumerable<string> GetLines()
         {
-            while (!this.eof)
+            while (!this.eof || this.buffer.Count>0)
             {
                 if (this.buffer.TryDequeue(out string line))
                 {
