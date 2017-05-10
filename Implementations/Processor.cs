@@ -15,7 +15,7 @@ namespace Importer
         public Processor(Configuration.Configuration config)
         {
             this.config = config;
-            var processingThreads = Environment.ProcessorCount;
+            var processingThreads = 1;// Environment.ProcessorCount;
             this.processingTasks=new Task[processingThreads];
             for (var i = 0; i < processingThreads; i++)
             {

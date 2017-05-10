@@ -15,7 +15,7 @@ namespace Importer.Implementations.Records
                 this.values=new Dictionary<string, IParser>();
             }
 
-            foreach (var parser in this.GetValuesInternal(record))
+            foreach (var parser in this.GetValues())
             {
                 this.values.Add(parser.Key, parser.Value);
             }

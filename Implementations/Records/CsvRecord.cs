@@ -28,7 +28,7 @@ namespace Importer.Records
             }
 
             this.references.Clear();
-            config.References?.ForEach(r =>
+            this.config.References?.ForEach(r =>
             {
                 var key = string.Concat(this.config.Name, ".", r.Field);
                 if (this.values.TryGetValue(key, out IParser keyValue))
@@ -37,15 +37,18 @@ namespace Importer.Records
                     {
                         this.references.Add(dictionaryRecord);
                     }
+                    else
+                    {
+                        key = key;
+                    }
+                }
+                else
+                {
+                    key = key;
                 }
             });
 
             return this.values;
-        }
-
-        protected Dictionary<string,IParser> GetValuesInternal(CsvRecord record)
-        {
-            return record.values;
         }
 
         public override void InitializeRecord<TCI>(FileConfiguration<TCI> config, StringBuilder source, long rowNumber)

@@ -85,7 +85,7 @@ namespace Importer.Writers
             {
                 this.exceptionCounter++;
                 var message=new StringBuilder();
-                message.Append($"Exception on row {record.RowNumber}, column {column.ColumnName}").AppendLine().Append("\t").Append(record.Source);
+                message.Append($"Exception on row {record.RowNumber}, column {column.ColumnName}").AppendLine().Append("\t").Append(record.Source).AppendLine();
                 this.ErrorWriter?.Write(message);
                 if (this.ErrorWriter == null)
                 {
