@@ -118,7 +118,7 @@ namespace Importer.Pipe.Reader
                 if (source[index] == this.delimiter)
                 {
                     index++;
-                    result.Add("");
+                    result.Add(null);
                     continue;
                 }
                 int start, end;

@@ -20,7 +20,7 @@
       <string>c:\temp\repos\importer\implementations\writers\filewriter.cs</string>
     </ArrayOfString>
     <ArrayOfString>
-      <string>C:\temp\Repos\Importer\Program.cs</string>
+      <string>c:\temp\repos\importer\program.cs</string>
     </ArrayOfString>
     <ArrayOfString>
       <string>c:\temp\repos\importer\implementations\configuration\fileconfiguration{t}.cs</string>
@@ -62,25 +62,22 @@
       <string>Importer</string>
     </ArrayOfString>
     <ArrayOfString>
-      <string>C:\temp\Repos\Importer\Pipe\Input\IInput.cs</string>
+      <string>c:\temp\repos\importer\pipe\input\iinput.cs</string>
     </ArrayOfString>
     <ArrayOfString>
-      <string>C:\temp\Repos\Importer\Pipe\Output\IOutput.cs</string>
+      <string>c:\temp\repos\importer\pipe\output\ioutput.cs</string>
     </ArrayOfString>
     <ArrayOfString>
-      <string>C:\temp\Repos\Importer\Pipe\Pipe.cs</string>
+      <string>c:\temp\repos\importer\pipe\pipe.cs</string>
     </ArrayOfString>
     <ArrayOfString>
-      <string>C:\temp\Repos\Importer\Implementations\DataDictionary.cs</string>
+      <string>c:\temp\repos\importer\implementations\datadictionary.cs</string>
     </ArrayOfString>
     <ArrayOfString>
-      <string>C:\temp\Repos\Importer\Pipe\Reader\IFileReader.cs</string>
+      <string>c:\temp\repos\importer\pipe\reader\ifilereader.cs</string>
     </ArrayOfString>
     <ArrayOfString>
-      <string>C:\temp\Repos\Importer\Implementations\Readers\BufferedTextReader.cs</string>
-    </ArrayOfString>
-    <ArrayOfString>
-      <string>C:\Users\dbalobanov\AppData\Local\JetBrains\Shared\v08\DecompilerCache\decompiler\7C5126ED-2791-4987-BC2A-5287A276F18D\18\5aaacec3\StreamReader.cs</string>
+      <string>c:\temp\repos\importer\implementations\readers\bufferedtextreader.cs</string>
     </ArrayOfString>
     <ArrayOfString>
       <string>C:\temp\Repos\Importer\Pipe\Reader\CsvFileReader.cs</string>

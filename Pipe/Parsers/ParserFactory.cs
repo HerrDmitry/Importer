@@ -2,10 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Importer.Implementations
+namespace Importer.Pipe.Parsers
 {
-    public class Pipe
+    class ParserFactory
     {
-        void SetUp()
     }
 }
