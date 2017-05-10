@@ -20,7 +20,7 @@
       <string>c:\temp\repos\importer\implementations\writers\filewriter.cs</string>
     </ArrayOfString>
     <ArrayOfString>
-      <string>c:\temp\repos\importer\program.cs</string>
+      <string>C:\temp\Repos\Importer\Program.cs</string>
     </ArrayOfString>
     <ArrayOfString>
       <string>c:\temp\repos\importer\implementations\configuration\fileconfiguration{t}.cs</string>
@@ -38,10 +38,52 @@
       <string>c:\temp\repos\importer\implementations\readers\csvreader.cs</string>
     </ArrayOfString>
     <ArrayOfString>
-      <string>C:\temp\Repos\Importer\Configurations\apps.json</string>
+      <string>c:\temp\repos\importer\configurations\apps.json</string>
     </ArrayOfString>
     <ArrayOfString>
-      <string>C:\Temp\Repos\Importer\Importer.tss</string>
+      <string>c:\temp\repos\importer\interfaces\iparser.cs</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>c:\temp\repos\importer\implementations\parsers\parser.cs</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>c:\temp\repos\importer\implementations\parsers\notfoundparser.cs</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>c:\temp\repos\importer\implementations\readers\csvmultilinereader.cs</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>c:\temp\repos\importer\implementations\records\csvmultilinerecord.cs</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>c:\temp\repos\importer\implementations\writers\csvmultilinewriter.cs</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>Importer</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>C:\temp\Repos\Importer\Pipe\Input\IInput.cs</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>C:\temp\Repos\Importer\Pipe\Output\IOutput.cs</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>C:\temp\Repos\Importer\Pipe\Pipe.cs</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>C:\temp\Repos\Importer\Implementations\DataDictionary.cs</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>C:\temp\Repos\Importer\Pipe\Reader\IFileReader.cs</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>C:\temp\Repos\Importer\Implementations\Readers\BufferedTextReader.cs</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>C:\Users\dbalobanov\AppData\Local\JetBrains\Shared\v08\DecompilerCache\decompiler\7C5126ED-2791-4987-BC2A-5287A276F18D\18\5aaacec3\StreamReader.cs</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>C:\temp\Repos\Importer\Pipe\Reader\CsvFileReader.cs</string>
     </ArrayOfString>
   </ArrayOfArrayOfString>
 </ArrayOfArrayOfArrayOfString>
