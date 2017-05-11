@@ -1,21 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Importer.Pipe.Values;
 
 namespace Importer.Pipe.Parsers
 {
     public class StringParser:Parser,IParser<string>
     {
-        public bool Parse(string input, out string result, out bool isNull)
+        public bool Parse(string input, out IValue<string> result)
         {
-            result = input;
-            isNull = input == null;
+            result = Value.GetValue(input, input == null);
             return true;
         }
 
-        public override bool Parse(string input, out string result)
+        public override bool Parse(string input, out IValue result)
         {
-            result = input ?? this.nullStringValue;
+            this.Parse(input, out IValue<string> r);
+            result = r;
             return true;
         }
     }

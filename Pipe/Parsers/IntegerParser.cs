@@ -2,32 +2,32 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
+using Importer.Pipe.Values;
 
 namespace Importer.Pipe.Parsers
 {
     public class IntegerParser:Parser,IParser<int>
     {
-        public bool Parse(string input, out int result, out bool isNull)
+        public bool Parse(string input, out IValue<int> result)
         {
             var isSuccessful = true;
-            isNull = false;
             if (string.IsNullOrWhiteSpace(input))
             {
-                result = 0;
-                isNull = true;
+                result = Value.GetValue(0, true);
             }
             else
             {
-                isSuccessful = int.TryParse(input, out result);
+                isSuccessful = int.TryParse(input, out int r);
+                result = Value.GetValue(r, false);
             }
             return isSuccessful;
         }
 
-        public override bool Parse(string input, out string result)
+        public override bool Parse(string input, out IValue result)
         {
-            var isSuccessful = this.Parse(input, out int r, out bool isNull);
+            var isSuccessful = this.Parse(input, out IValue<int> r);
 
-            result = isSuccessful ? (isNull ? null : r.ToString(this.outputFormat)) : this.nullStringValue;
+            result = r;
             return isSuccessful;
         }
     }

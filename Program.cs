@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading;
 using Importer.Configuration;
 using Importer.Interfaces;
+using Importer.Pipe;
+using Importer.Pipe.Configuration;
 using Importer.Readers;
 using Importer.Writers;
 
@@ -24,6 +26,12 @@ namespace Importer
                     Logger.GetLogger().Flush(); 
                     return -1;
                 }
+
+                var importerConfig = ImporterConfiguration.ReadConfiguration(configPath);
+                var df =new DataFlow(importerConfig);
+
+
+
 
                 var config=new Configuration.Configuration(configPath);
                 var files = new System.Collections.Generic.Dictionary<string, string>(config.Files);

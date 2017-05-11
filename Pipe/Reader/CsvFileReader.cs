@@ -8,13 +8,13 @@ using System.Threading.Tasks;
 
 namespace Importer.Pipe.Reader
 {
-    public class CsvFileReader : IFileReader,IDisposable
+    public class CsvFileReader : IFileReader
     {
-        public CsvFileReader(Stream source, char qualifier = '"', char delimiter = ',', int bufferSize = 1000)
+        public CsvFileReader(Stream source, string qualifier = "\"", string delimiter = ",", int bufferSize = 1000)
         {
             this.reader=new StreamReader(source);
-            this.qualifier = qualifier;
-            this.delimiter = delimiter;
+            this.qualifier = !string.IsNullOrWhiteSpace(qualifier)?qualifier[0]:'"';
+            this.delimiter = !string.IsNullOrWhiteSpace(delimiter)?delimiter[0]:',';
             this.bufferSize = bufferSize;
             this.buffer=new ConcurrentQueue<IEnumerable<string>>();
         }
@@ -73,6 +73,7 @@ namespace Importer.Pipe.Reader
                 {
                     sourceLine.AppendLine();
                 }
+                sourceLine.Append(line);
                 var qualifierIndex = line.IndexOf(this.qualifier);
                 while (qualifierIndex >= 0)
                 {
@@ -95,7 +96,9 @@ namespace Importer.Pipe.Reader
                     }
 
                     this.buffer.Enqueue(this.Split(sourceLine.ToString()));
+                    sourceLine.Clear();
                     counter++;
+
                 }
 
             }

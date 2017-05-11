@@ -9,9 +9,10 @@ namespace Importer.Pipe.Parsers
         void SetFormat(string format);
         void SetNullValue(string nullValue);
         string ToString(string format, string nullValue="");
+        bool IsNull { get; }
     }
 
-    public interface IValue<out T> : IValue
+    public interface IValue<T> : IValue
     {
         T Value { get; }
     }

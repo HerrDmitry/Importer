@@ -11,6 +11,6 @@ namespace Importer.Pipe.Parsers
 
     public interface IParser<T>:IParser
     {
-        bool Parse(string input, IValue<T> result);
+        bool Parse(string input, out IValue<T> result);
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Importer.Pipe.Configuration
@@ -16,6 +17,15 @@ namespace Importer.Pipe.Configuration
 
         [JsonProperty("textQualifier")]
         public string TextQualifier { get; set; }
+
+        public override List<string> GetReferences()
+        {
+            return Columns.Where(x => !string.IsNullOrWhiteSpace(x.Reference)).Select(x =>
+            {
+                var parts = x.Reference.Split(new[] {'.'}, StringSplitOptions.RemoveEmptyEntries);
+                return parts.Length > 0 ? parts[0] : null;
+            }).Where(x => !string.IsNullOrWhiteSpace(x)).Distinct().ToList();
+        }
     }
 }
  

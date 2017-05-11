@@ -1,32 +1,33 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Importer.Pipe.Values;
 
 namespace Importer.Pipe.Parsers
 {
     public class BooleanParser:Parser,IParser<bool>
     {
-        public bool Parse(string input, out bool result, out bool isNull)
+        public bool Parse(string input, out IValue<bool> result)
         {
             var isSuccessful = true;
-            isNull = false;
             if (string.IsNullOrWhiteSpace(input))
             {
-                isNull = true;
-                result = false;
+                result = Value.GetValue(false, true);
+
             }
             else
             {
-                isSuccessful = bool.TryParse(input, out result);
+                isSuccessful = bool.TryParse(input, out bool r);
+                result = Value.GetValue(r, false);
             }
 
             return isSuccessful;
         }
 
-        public override bool Parse(string input, out string result)
+        public override bool Parse(string input, out IValue result)
         {
-            var isSuccessful = this.Parse(input, out bool r, out bool isNull);
-            result = isSuccessful ? (isNull ? null : r.ToString()) : this.nullStringValue;
+            var isSuccessful = this.Parse(input, out IValue<bool> r);
+            result = r;
 
             return isSuccessful;
         }

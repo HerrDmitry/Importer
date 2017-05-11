@@ -15,6 +15,9 @@ namespace Importer.Pipe.Configuration
         [JsonProperty("type")]
         public string Type { get; set; }
 
+        [JsonProperty("disabled")]
+        public bool Disabled { get; set; }
+
         public static FileConfiguration Read(JObject rawConfig)
         {
             var baseConfig = rawConfig.ToObject<FileConfiguration>();
@@ -24,6 +27,11 @@ namespace Importer.Pipe.Configuration
             }
 
             throw new ArgumentOutOfRangeException($"File of type {baseConfig.Type} is not supported.");
+        }
+
+        public virtual List<string> GetReferences()
+        {
+            return new List<string>();
         }
     }
 }

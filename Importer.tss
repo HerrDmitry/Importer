@@ -2,25 +2,31 @@
 <ArrayOfArrayOfArrayOfString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <ArrayOfArrayOfString>
     <ArrayOfString>
-      <string>C:\Source\Repos\Importer\Pipe\Configuration\Column.cs</string>
+      <string>Importer</string>
     </ArrayOfString>
     <ArrayOfString>
-      <string>C:\Source\Repos\Importer\Implementations\Configuration\Configuration.cs</string>
+      <string>C:\temp\Repos\Importer\Implementations\Records\CsvRecord.cs</string>
     </ArrayOfString>
     <ArrayOfString>
-      <string>C:\Source\Repos\Importer\Pipe\Configuration\CsvFileConfiguration.cs</string>
+      <string>C:\temp\Repos\Importer\Pipe\Parsers\DictionaryParser.cs</string>
     </ArrayOfString>
     <ArrayOfString>
-      <string>C:\Source\Repos\Importer\Pipe\DataFlow.cs</string>
+      <string>C:\temp\Repos\Importer\Pipe\Parsers\Parser.cs</string>
     </ArrayOfString>
     <ArrayOfString>
-      <string>C:\Source\Repos\Importer\Pipe\Configuration\FileConfiguration.cs</string>
+      <string>C:\temp\Repos\Importer\Pipe\Parsers\IParser.cs</string>
     </ArrayOfString>
     <ArrayOfString>
-      <string>C:\Source\Repos\Importer\Pipe\Configuration\ImporterConfiguration.cs</string>
+      <string>C:\temp\Repos\Importer\Pipe\Values\IValue.cs</string>
     </ArrayOfString>
     <ArrayOfString>
-      <string>C:\Source\Repos\Importer\Implementations\Readers\CsvReader.cs</string>
+      <string>C:\temp\Repos\Importer\Pipe\Values\Value.cs</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>C:\temp\Repos\Importer\Pipe\Values\BooleanValue.cs</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>C:\temp\Repos\Importer\Implementations\Values\FloatParser.cs</string>
     </ArrayOfString>
   </ArrayOfArrayOfString>
 </ArrayOfArrayOfArrayOfString>

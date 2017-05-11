@@ -7,16 +7,21 @@ namespace Importer.Pipe.Values
 {
     public abstract class Value:IValue
     {
-        public static IValue<T> GetValue<T>(T value)
+        public interface ISetValue<T>
+        {
+            IValue<T> SetValue(T value);
+        }
+
+        public static IValue<T> GetValue<T>(T value, bool isNull)
         {
             switch (typeof(T).Name)
             {
                 case "System.Boolean":
-                    return new BooleanValue().SetValue(value);
+                    return ((ISetValue<T>) new BooleanValue{IsNull = isNull}).SetValue(value);
+                default:
+                    throw new ArgumentOutOfRangeException($"Value of type {typeof(T).Name} is not supported.");
             }
         }
-
-        protected abstract IValue<T> SetValue<T>(T value);
 
         public void SetFormat(string format)
         {
@@ -41,6 +46,8 @@ namespace Importer.Pipe.Values
 
             return this.lastString;
         }
+
+        public bool IsNull { get; protected set; }
 
         private string lastString=null;
         private string lastUsedFormat = null;

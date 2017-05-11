@@ -2,35 +2,34 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
+using Importer.Pipe.Values;
 
 namespace Importer.Pipe.Parsers
 {
     public class DateParser:Parser,IParser<DateTime>
     {
-        public bool Parse(string input, out DateTime result, out bool isNull)
+        public bool Parse(string input, out IValue<DateTime> result)
         {
             var isSuccessful = true;
-            isNull = false;
             if (string.IsNullOrWhiteSpace(input))
             {
-                isNull = true;
-                result = DateTime.MinValue;
+                result = Value.GetValue(DateTime.MinValue,true);
             }
             else
             {
                 isSuccessful = !string.IsNullOrWhiteSpace(this.inputFormat)
-                    ? DateTime.TryParseExact(input, this.inputFormat, CultureInfo.CurrentCulture, DateTimeStyles.AssumeLocal, out result)
-                    : DateTime.TryParse(input, out result);
+                    ? DateTime.TryParseExact(input, this.inputFormat, CultureInfo.CurrentCulture, DateTimeStyles.AssumeLocal, out DateTime r)
+                    : DateTime.TryParse(input, out r);
+                result = Value.GetValue(r, false);
             }
 
             return isSuccessful;
         }
 
-        public override bool Parse(string input, out string result)
+        public override bool Parse(string input, out IValue result)
         {
-            var isSuccessful = this.Parse(input, out DateTime r, out bool isNull);
-            result = isSuccessful ? (isNull ? null : r.ToString(this.outputFormat)) : this.nullStringValue;
-
+            var isSuccessful = this.Parse(input, out IValue<DateTime> r);
+            result = r;
             return isSuccessful;
         }
     }

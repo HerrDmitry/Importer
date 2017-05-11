@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Importer.Pipe.Reader
 {
-    public interface IFileReader
+    public interface IFileReader:IDisposable
     {
         IEnumerable<IEnumerable<string>> ReadData();
     }

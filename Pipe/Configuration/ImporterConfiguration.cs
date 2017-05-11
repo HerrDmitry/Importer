@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 
 namespace Importer.Pipe.Configuration
@@ -12,6 +13,7 @@ namespace Importer.Pipe.Configuration
     public class ImporterConfiguration
     {
         private List<JObject> readersRaw;
+        private JObject _filesRaw;
 
         [JsonProperty("readers")]
         public List<JObject> ReadersRaw
@@ -26,5 +28,33 @@ namespace Importer.Pipe.Configuration
 
         [JsonIgnore]
         public IEnumerable<FileConfiguration> Readers { get; private set; }
+
+        [JsonProperty("files")]
+        public JObject FilesRaw
+        {
+            get => this._filesRaw;
+            set
+            {
+                _filesRaw = value;
+                var fls = new Dictionary<string, string>();
+                foreach (var file in this._filesRaw)
+                {
+                    fls[file.Key] = file.Value?.ToString();
+                }
+
+                this.Files = fls;
+
+            }
+        }
+
+        [JsonIgnore]
+        public Dictionary<string, string> Files { get; private set; }
+
+        public static ImporterConfiguration ReadConfiguration(string filePath)
+        {
+            var configurationJson = File.OpenText(filePath).ReadToEnd();
+            var configurationData = JsonConvert.DeserializeObject<ImporterConfiguration>(configurationJson);
+            return configurationData;
+        }
     }
 }
