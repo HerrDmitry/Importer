@@ -37,14 +37,6 @@ namespace Importer.Records
                     {
                         this.references.Add(dictionaryRecord);
                     }
-                    else
-                    {
-                        key = key;
-                    }
-                }
-                else
-                {
-                    key = key;
                 }
             });
 

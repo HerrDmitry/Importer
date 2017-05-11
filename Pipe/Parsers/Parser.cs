@@ -18,7 +18,7 @@ namespace Importer.Pipe.Parsers
             this.outputFormat = output;
         }
 
-        public abstract bool Parse(string input, out string result);
+        public abstract bool Parse(string input, out IValue result);
 
         public static IParser GetParser(Column column)
         {
@@ -53,10 +53,6 @@ namespace Importer.Pipe.Parsers
 
             parser.SetInputFormat(column.Format);
             return parser;
-        }
-
-        public string GetDictionaryValue(string key)
-        {
         }
 
         protected string inputFormat;
