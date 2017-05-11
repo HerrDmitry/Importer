@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -13,6 +14,8 @@ namespace Importer.Pipe
     {
         public DataFlow(ImporterConfiguration configuration)
         {
+            Logger.GetLogger().SetLogginLevel(Logger.LogLevel.Debug);
+
             this.LoadDictionaries(configuration.Files,configuration.Readers);
         }
 
@@ -27,8 +30,22 @@ namespace Importer.Pipe
                 }
 
                 var fileReader = FileReader.GetFileReader(File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.Read), reader);
-                var data = fileReader.ReadData().ToList();
+                long counter = 0;
+                var stopWatch=new Stopwatch();
+                stopWatch.Start();
+                var elapsedSeconds = 0D;
+                foreach (var record in fileReader.ReadData())
+                {
+                    counter++;
+                    if (stopWatch.Elapsed.TotalSeconds - elapsedSeconds > 10)
+                    {
+                        elapsedSeconds = stopWatch.Elapsed.TotalSeconds;
+                        Logger.GetLogger().InfoAsync($"loaded {counter} records in {elapsedSeconds} seconds");
+                    }
+                };
                 fileReader.Dispose();
+
+                Logger.GetLogger().ErrorAsync($"Read {counter} records");
             }
         }
 

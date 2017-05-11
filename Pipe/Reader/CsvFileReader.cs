@@ -10,11 +10,14 @@ namespace Importer.Pipe.Reader
 {
     public class CsvFileReader : IFileReader
     {
-        public CsvFileReader(Stream source, string qualifier = "\"", string delimiter = ",", int bufferSize = 1000)
+        public CsvFileReader(Stream source, string qualifier = "\"", string delimiter = ",", int bufferSize = 1000000)
         {
             this.reader=new StreamReader(source);
             this.qualifier = !string.IsNullOrWhiteSpace(qualifier)?qualifier[0]:'"';
             this.delimiter = !string.IsNullOrWhiteSpace(delimiter)?delimiter[0]:',';
+            this.qualifierStr = this.qualifier.ToString();
+            this.qualifierStrDbl = this.qualifierStr + this.qualifierStr;
+            this.delimiterStr = this.delimiter.ToString();
             this.bufferSize = bufferSize;
             this.buffer=new ConcurrentQueue<IEnumerable<string>>();
         }
@@ -90,13 +93,14 @@ namespace Importer.Pipe.Reader
                 if (qualifierCount == 0 || qualifierCount % 2 == 0)
                 {
 
+                    var columns = this.Split(sourceLine.ToString());
+                    sourceLine.Clear();
                     while (!token.IsCancellationRequested && this.bufferSize != 0 && this.buffer.Count > this.bufferSize)
                     {
                         Thread.Sleep(50);
                     }
 
-                    this.buffer.Enqueue(this.Split(sourceLine.ToString()));
-                    sourceLine.Clear();
+                    this.buffer.Enqueue(columns);
                     counter++;
 
                 }
@@ -179,7 +183,7 @@ namespace Importer.Pipe.Reader
                         done = true;
                     }
                 }
-                result.Add(source.Substring(start, end).Replace(this.qualifier.ToString(), ""));
+                result.Add(source.Substring(start, end).Replace(this.qualifierStrDbl, this.qualifierStr));
             }
             return result;
         }
@@ -188,7 +192,10 @@ namespace Importer.Pipe.Reader
         private StreamReader reader;
         private ConcurrentQueue<IEnumerable<string>> buffer;
         private char qualifier;
+        private string qualifierStr;
+        private string qualifierStrDbl;
         private char delimiter;
+        private string delimiterStr;
         private int bufferSize;
         private Task readTask;
         private CancellationTokenSource token;

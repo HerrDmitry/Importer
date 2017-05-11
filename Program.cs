@@ -30,7 +30,7 @@ namespace Importer
                 var importerConfig = ImporterConfiguration.ReadConfiguration(configPath);
                 var df =new DataFlow(importerConfig);
 
-
+                return 0; 
 
 
                 var config=new Configuration.Configuration(configPath);
