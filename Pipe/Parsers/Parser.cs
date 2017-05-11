@@ -4,16 +4,60 @@ using System.Text;
 
 namespace Importer.Pipe.Parsers
 {
+    using Importer.Pipe.Configuration;
+
     public abstract class Parser:IParser
     {
-        public void SetFormat(string input, string output, string nullStringValue="")
+        public void SetInputFormat(string input)
         {
             this.inputFormat = input;
+        }
+
+        public void SetOutputFormat(string output)
+        {
             this.outputFormat = output;
-            this.nullStringValue = nullStringValue;
         }
 
         public abstract bool Parse(string input, out string result);
+
+        public static IParser GetParser(Column column)
+        {
+            IParser parser;
+            switch (column.Type)
+            {
+                case "string":
+                    parser = new StringParser();
+                    break;
+                case "boolean":
+                case "bool":
+                    parser = new BooleanParser();
+                    break;
+                case "date":
+                case "datetime":
+                case "time":
+                    parser = new DateParser();
+                    break;
+                case "decimal":
+                case "float":
+                case "double":
+                case "money":
+                    parser = new DecimalParser();
+                    break;
+                case "integer":
+                case "int":
+                    parser = new IntegerParser();
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException($"Column type {column.Type} for column {column.Name} is not supported.");
+            }
+
+            parser.SetInputFormat(column.Format);
+            return parser;
+        }
+
+        public string GetDictionaryValue(string key)
+        {
+        }
 
         protected string inputFormat;
 

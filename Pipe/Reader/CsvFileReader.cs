@@ -41,22 +41,22 @@ namespace Importer.Pipe.Reader
         {
             if (disposing)
             {
-                if (readTask != null && !this.eof)
+                if (this.readTask != null && !this.eof)
                 {
-                    token.Cancel();
-                    readTask.Wait();
+                    this.token.Cancel();
+                    this.readTask.Wait();
                 }
-                if (reader != null)
+                if (this.reader != null)
                 {
-                    reader.Dispose();
-                    reader = null;
+                    this.reader.Dispose();
+                    this.reader = null;
                 }
             }
         }
 
         public void Dispose()
         {
-            Dispose(true);
+            this.Dispose(true);
             GC.SuppressFinalize(this);
         }
 
@@ -65,7 +65,7 @@ namespace Importer.Pipe.Reader
             long counter = 0;
             var qualifierCount = 0;
 
-            StringBuilder sourceLine = new StringBuilder();
+            var sourceLine = new StringBuilder();
             while (!this.reader.EndOfStream && !token.IsCancellationRequested)
             {
                 var line = this.reader.ReadLine();

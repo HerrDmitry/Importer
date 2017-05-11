@@ -6,7 +6,8 @@ namespace Importer.Pipe.Parsers
 {
     public interface IParser
     {
-        void SetFormat(string input, string output, string nullStringValue=null);
+        void SetInputFormat(string input);
+        void SetOutputFormat(string output);
         bool Parse(string input, out string result);
     }
 

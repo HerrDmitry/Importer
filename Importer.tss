@@ -2,85 +2,25 @@
 <ArrayOfArrayOfArrayOfString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <ArrayOfArrayOfString>
     <ArrayOfString>
-      <string>c:\temp\repos\importer\implementations\writers\csvwriter.cs</string>
+      <string>C:\Source\Repos\Importer\Pipe\Configuration\Column.cs</string>
     </ArrayOfString>
     <ArrayOfString>
-      <string>c:\temp\repos\importer\interfaces\irecord.cs</string>
+      <string>C:\Source\Repos\Importer\Implementations\Configuration\Configuration.cs</string>
     </ArrayOfString>
     <ArrayOfString>
-      <string>c:\temp\repos\importer\implementations\processor.cs</string>
+      <string>C:\Source\Repos\Importer\Pipe\Configuration\CsvFileConfiguration.cs</string>
     </ArrayOfString>
     <ArrayOfString>
-      <string>c:\temp\repos\importer\implementations\records\record.cs</string>
+      <string>C:\Source\Repos\Importer\Pipe\DataFlow.cs</string>
     </ArrayOfString>
     <ArrayOfString>
-      <string>c:\temp\repos\importer\implementations\records\csvrecord.cs</string>
+      <string>C:\Source\Repos\Importer\Pipe\Configuration\FileConfiguration.cs</string>
     </ArrayOfString>
     <ArrayOfString>
-      <string>c:\temp\repos\importer\implementations\writers\filewriter.cs</string>
+      <string>C:\Source\Repos\Importer\Pipe\Configuration\ImporterConfiguration.cs</string>
     </ArrayOfString>
     <ArrayOfString>
-      <string>c:\temp\repos\importer\program.cs</string>
-    </ArrayOfString>
-    <ArrayOfString>
-      <string>c:\temp\repos\importer\implementations\configuration\fileconfiguration{t}.cs</string>
-    </ArrayOfString>
-    <ArrayOfString>
-      <string>c:\temp\repos\importer\interfaces\iwriter.cs</string>
-    </ArrayOfString>
-    <ArrayOfString>
-      <string>c:\temp\repos\importer\implementations\configuration\configuration.cs</string>
-    </ArrayOfString>
-    <ArrayOfString>
-      <string>c:\temp\repos\importer\interfaces\ireader.cs</string>
-    </ArrayOfString>
-    <ArrayOfString>
-      <string>c:\temp\repos\importer\implementations\readers\csvreader.cs</string>
-    </ArrayOfString>
-    <ArrayOfString>
-      <string>c:\temp\repos\importer\configurations\apps.json</string>
-    </ArrayOfString>
-    <ArrayOfString>
-      <string>c:\temp\repos\importer\interfaces\iparser.cs</string>
-    </ArrayOfString>
-    <ArrayOfString>
-      <string>c:\temp\repos\importer\implementations\parsers\parser.cs</string>
-    </ArrayOfString>
-    <ArrayOfString>
-      <string>c:\temp\repos\importer\implementations\parsers\notfoundparser.cs</string>
-    </ArrayOfString>
-    <ArrayOfString>
-      <string>c:\temp\repos\importer\implementations\readers\csvmultilinereader.cs</string>
-    </ArrayOfString>
-    <ArrayOfString>
-      <string>c:\temp\repos\importer\implementations\records\csvmultilinerecord.cs</string>
-    </ArrayOfString>
-    <ArrayOfString>
-      <string>c:\temp\repos\importer\implementations\writers\csvmultilinewriter.cs</string>
-    </ArrayOfString>
-    <ArrayOfString>
-      <string>Importer</string>
-    </ArrayOfString>
-    <ArrayOfString>
-      <string>c:\temp\repos\importer\pipe\input\iinput.cs</string>
-    </ArrayOfString>
-    <ArrayOfString>
-      <string>c:\temp\repos\importer\pipe\output\ioutput.cs</string>
-    </ArrayOfString>
-    <ArrayOfString>
-      <string>c:\temp\repos\importer\pipe\pipe.cs</string>
-    </ArrayOfString>
-    <ArrayOfString>
-      <string>c:\temp\repos\importer\implementations\datadictionary.cs</string>
-    </ArrayOfString>
-    <ArrayOfString>
-      <string>c:\temp\repos\importer\pipe\reader\ifilereader.cs</string>
-    </ArrayOfString>
-    <ArrayOfString>
-      <string>c:\temp\repos\importer\implementations\readers\bufferedtextreader.cs</string>
-    </ArrayOfString>
-    <ArrayOfString>
-      <string>C:\temp\Repos\Importer\Pipe\Reader\CsvFileReader.cs</string>
+      <string>C:\Source\Repos\Importer\Implementations\Readers\CsvReader.cs</string>
     </ArrayOfString>
   </ArrayOfArrayOfString>
 </ArrayOfArrayOfArrayOfString>

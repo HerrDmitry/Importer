@@ -9,6 +9,8 @@ using Importer.Writers;
 
 namespace Importer.Configuration
 {
+    using Importer.Pipe.Reader;
+
     public class Configuration
     {
         public Configuration(string filePath)
