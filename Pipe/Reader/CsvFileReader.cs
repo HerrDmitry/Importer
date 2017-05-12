@@ -161,7 +161,7 @@ namespace Importer.Pipe.Reader
                         result.Add(null);
                         continue;
                     }
-                    int start, end;
+                    int start, len;
                     if (line[index] == this.qualifier)
                     {
                         expected = this.qualifier;
@@ -172,7 +172,7 @@ namespace Importer.Pipe.Reader
                         start = index;
                     }
 
-                    end = start;
+                    len = 0;
                     var done = false;
                     while (!done)
                     {
@@ -180,7 +180,7 @@ namespace Importer.Pipe.Reader
                         var idx = index;
                         while (idx < source.Length && line[idx] != expected) idx++;
 
-                        end = idx - start;
+                        len = idx - start;
                         index = idx;
 
                         if (index < source.Length)
@@ -214,11 +214,30 @@ namespace Importer.Pipe.Reader
                             done = true;
                         }
                     }
-                    
-                    result.Add(new string(line, start, end).Replace(this.qualifierStrDbl, this.qualifierStr));
+                    var resultLine = new char[len];
+                    fixed (char* resultPtr = resultLine)
+                    {
+                        var idx = 0;
+                        for (var i = start; i < start+len; i++)
+                        {
+                            if (line[i] == this.qualifier)
+                            {
+                                i++;
+                                if (i < start+len)
+                                {
+                                    resultPtr[idx++] = line[i];
+                                }
+                            }
+                            else
+                            {
+                                resultPtr[idx++] = line[i];
+                            }
+                        }
+                        result.Add(new string(resultPtr, 0, idx));
+                    }
                 }
             }
-            return new List<string>();
+            return result;
         }
 
         private void ReadLinesTask(CancellationToken token)
@@ -358,7 +377,7 @@ namespace Importer.Pipe.Reader
         private CancellationTokenSource token;
         private volatile bool eof = false;
 
-        private const int MAX_BUFFER_SIZE = 65535;
-        private const int MAX_LINE_SIZE = 1024 * 1024;
+        private const int MAX_BUFFER_SIZE = 1024*1024;
+        private const int MAX_LINE_SIZE = 1024 * 1024*20;
     }
 }

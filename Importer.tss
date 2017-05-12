@@ -5,13 +5,22 @@
       <string>C:\temp\Repos\Importer\Pipe\Reader\CsvFileReader.cs</string>
     </ArrayOfString>
     <ArrayOfString>
-      <string>C:\temp\Repos\Importer\Program.cs</string>
+      <string>c:\temp\repos\importer\program.cs</string>
     </ArrayOfString>
     <ArrayOfString>
-      <string>C:\temp\Repos\Importer\Pipe\DataFlow.cs</string>
+      <string>c:\temp\repos\importer\pipe\dataflow.cs</string>
     </ArrayOfString>
     <ArrayOfString>
-      <string>C:\temp\Repos\Importer\Configurations\apps.json</string>
+      <string>c:\temp\repos\importer\configurations\apps.json</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>Source Control Explorer - Disconnected</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>C:\temp\Repos\Importer\.tss</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>C:\temp\Repos\Importer\.gitignore</string>
     </ArrayOfString>
   </ArrayOfArrayOfString>
 </ArrayOfArrayOfArrayOfString>
