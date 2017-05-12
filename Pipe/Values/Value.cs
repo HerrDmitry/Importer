@@ -5,6 +5,8 @@ using Importer.Pipe.Parsers;
 
 namespace Importer.Pipe.Values
 {
+    using Importer.Pipe.Configuration;
+
     public abstract class Value:IValue
     {
         public interface ISetValue<T>
@@ -12,15 +14,20 @@ namespace Importer.Pipe.Values
             IValue<T> SetValue(T value);
         }
 
-        public static IValue<T> GetValue<T>(T value, bool isNull)
+        public static IValue<T> GetValue<T>(T value, bool isNull, Column column)
         {
             switch (typeof(T).Name)
             {
                 case "System.Boolean":
-                    return ((ISetValue<T>) new BooleanValue{IsNull = isNull}).SetValue(value);
+                    return ((ISetValue<T>) new BooleanValue(column){IsNull = isNull}).SetValue(value);
                 default:
                     throw new ArgumentOutOfRangeException($"Value of type {typeof(T).Name} is not supported.");
             }
+        }
+
+        public Value(Column column)
+        {
+            this.column = column;
         }
 
         public void SetFormat(string format)
@@ -59,5 +66,7 @@ namespace Importer.Pipe.Values
 
         protected string format = null;
         protected string nullValue = "";
+
+        protected Column column;
     }
 }

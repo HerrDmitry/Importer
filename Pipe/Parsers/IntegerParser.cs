@@ -6,19 +6,25 @@ using Importer.Pipe.Values;
 
 namespace Importer.Pipe.Parsers
 {
+    using Importer.Pipe.Configuration;
+
     public class IntegerParser:Parser,IParser<int>
     {
+        public IntegerParser(Column column):base(column)
+        {
+        }
+
         public bool Parse(string input, out IValue<int> result)
         {
             var isSuccessful = true;
             if (string.IsNullOrWhiteSpace(input))
             {
-                result = Value.GetValue(0, true);
+                result = Value.GetValue(0, true, this.column);
             }
             else
             {
                 isSuccessful = int.TryParse(input, out int r);
-                result = Value.GetValue(r, false);
+                result = Value.GetValue(r, false, this.column);
             }
             return isSuccessful;
         }

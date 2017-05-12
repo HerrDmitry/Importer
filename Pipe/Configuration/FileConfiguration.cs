@@ -29,9 +29,9 @@ namespace Importer.Pipe.Configuration
             throw new ArgumentOutOfRangeException($"File of type {baseConfig.Type} is not supported.");
         }
 
-        public virtual List<string> GetReferences()
+        public virtual List<KeyValuePair<string,string>> GetReferences()
         {
-            return new List<string>();
+            return new List<KeyValuePair<string,string>>();
         }
     }
 }

@@ -5,8 +5,15 @@ using Importer.Pipe.Parsers;
 
 namespace Importer.Pipe.Values
 {
+    using Importer.Pipe.Configuration;
+
     public class DecimalValue : Value, IValue<Decimal>, Value.ISetValue<Decimal>
     {
+        public DecimalValue(Column column)
+            : base(column)
+        {
+        }
+
         protected override string ToStringInternal(string format, string nullValue = "")
         {
             return this.IsNull ? nullValue : this.Value.ToString(format);

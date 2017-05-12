@@ -5,20 +5,26 @@ using Importer.Pipe.Values;
 
 namespace Importer.Pipe.Parsers
 {
+    using Importer.Pipe.Configuration;
+
     public class BooleanParser:Parser,IParser<bool>
     {
+        public BooleanParser(Column column):base(column)
+        {
+        }
+
         public bool Parse(string input, out IValue<bool> result)
         {
             var isSuccessful = true;
             if (string.IsNullOrWhiteSpace(input))
             {
-                result = Value.GetValue(false, true);
+                result = Value.GetValue(false, true, this.column);
 
             }
             else
             {
                 isSuccessful = bool.TryParse(input, out bool r);
-                result = Value.GetValue(r, false);
+                result = Value.GetValue(r, false, this.column);
             }
 
             return isSuccessful;

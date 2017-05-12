@@ -5,8 +5,14 @@ using Importer.Pipe.Parsers;
 
 namespace Importer.Pipe.Values
 {
+    using Importer.Pipe.Configuration;
+
     public class BooleanValue : Value, IValue<bool>, Value.ISetValue<bool>
     {
+        public BooleanValue(Column column):base(column)
+        {
+        }
+
         IValue<bool> ISetValue<bool>.SetValue(bool value)
         {
             this.Value = value;

@@ -13,7 +13,7 @@ namespace Importer.Pipe.Configuration
     public class ImporterConfiguration
     {
         private List<JObject> readersRaw;
-        private JObject _filesRaw;
+        private JObject filesRaw;
 
         [JsonProperty("readers")]
         public List<JObject> ReadersRaw
@@ -32,12 +32,12 @@ namespace Importer.Pipe.Configuration
         [JsonProperty("files")]
         public JObject FilesRaw
         {
-            get => this._filesRaw;
+            get => this.filesRaw;
             set
             {
-                _filesRaw = value;
+                this.filesRaw = value;
                 var fls = new Dictionary<string, string>();
-                foreach (var file in this._filesRaw)
+                foreach (var file in this.filesRaw)
                 {
                     fls[file.Key] = file.Value?.ToString();
                 }

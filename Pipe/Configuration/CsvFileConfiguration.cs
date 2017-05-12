@@ -18,13 +18,13 @@ namespace Importer.Pipe.Configuration
         [JsonProperty("textQualifier")]
         public string TextQualifier { get; set; }
 
-        public override List<string> GetReferences()
+        public override List<KeyValuePair<string,string>> GetReferences()
         {
             return Columns.Where(x => !string.IsNullOrWhiteSpace(x.Reference)).Select(x =>
             {
                 var parts = x.Reference.Split(new[] {'.'}, StringSplitOptions.RemoveEmptyEntries);
-                return parts.Length > 0 ? parts[0] : null;
-            }).Where(x => !string.IsNullOrWhiteSpace(x)).Distinct().ToList();
+                return parts.Length > 1 ? new KeyValuePair<string,string>(parts[0],parts[1]) : new KeyValuePair<string, string>("","");
+            }).Where(x => !string.IsNullOrWhiteSpace(x.Key)).Distinct().ToList();
         }
     }
 }

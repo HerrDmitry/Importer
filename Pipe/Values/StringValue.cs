@@ -5,8 +5,15 @@ using Importer.Pipe.Parsers;
 
 namespace Importer.Pipe.Values
 {
+    using Importer.Pipe.Configuration;
+
     public class StringValue : Value, IValue<string>, Value.ISetValue<string>
     {
+        public StringValue(Column column)
+            : base(column)
+        {
+        }
+
         protected override string ToStringInternal(string format, string nullValue = "")
         {
             return this.IsNull ? nullValue : this.Value;

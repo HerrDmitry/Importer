@@ -5,8 +5,15 @@ using Importer.Pipe.Parsers;
 
 namespace Importer.Pipe.Values
 {
+    using Importer.Pipe.Configuration;
+
     public class DateValue : Value, IValue<DateTime>, Value.ISetValue<DateTime>
     {
+        public DateValue(Column column)
+            : base(column)
+        {
+        }
+
         protected override string ToStringInternal(string format, string nullValue = "")
         {
             return this.IsNull ? nullValue : this.Value.ToString(format);

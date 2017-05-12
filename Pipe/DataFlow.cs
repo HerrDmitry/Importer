@@ -8,6 +8,8 @@ using Importer.Pipe.Reader;
 
 namespace Importer.Pipe
 {
+    using System.Threading.Tasks;
+
     using Importer.Pipe.Configuration;
 
     public class DataFlow
@@ -21,19 +23,32 @@ namespace Importer.Pipe
 
         private void LoadDictionaries(Dictionary<string,string> files, IEnumerable<FileConfiguration> readers)
         {
-            var dictionaries = readers.SelectMany(x => x.GetReferences()).Distinct();
-            foreach (var reader in readers.Where(x=>dictionaries.Contains(x.Name) && !x.Disabled))
+            var dictionaries = new Dictionary<string, string>();
+            readers.SelectMany(x => x.GetReferences()).ToList().ForEach(x => dictionaries[x.Key] = x.Value);
+            var tasks=new List<Task>();
+            foreach (var reader in readers.Where(x => dictionaries.Keys.Contains(x.Name) && !x.Disabled))
             {
                 if (!files.TryGetValue(reader.Name, out string filePath) || !File.Exists(filePath))
                 {
                     throw new FileNotFoundException($"Data file \"{reader.Name}\" was not found");
                 }
 
-                var fileReader = FileReader.GetFileReader(File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.Read), reader);
+                tasks.Append(Task.Run(() => this.LoadDictionary(filePath, reader, dictionaries[reader.Name])));
+
+            }
+
+            Task.WaitAll(tasks.ToArray());
+        }
+
+        private void LoadDictionary(string filePath, FileConfiguration config, string keyFieldName)
+        {
+            using (var fileReader = FileReader.GetFileReader(File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.Read), config))
+            {
                 long counter = 0;
-                var stopWatch=new Stopwatch();
+                var stopWatch = new Stopwatch();
                 stopWatch.Start();
                 var elapsedSeconds = 0D;
+                //DataDictionary.LoadDictionary()
                 foreach (var record in fileReader.ReadData())
                 {
                     counter++;
@@ -42,13 +57,9 @@ namespace Importer.Pipe
                         elapsedSeconds = stopWatch.Elapsed.TotalSeconds;
                         Logger.GetLogger().InfoAsync($"loaded {counter} records in {elapsedSeconds} seconds");
                     }
-                };
-                fileReader.Dispose();
-
-                Logger.GetLogger().ErrorAsync($"Read {counter} records");
+                }
+                ;
             }
         }
-
-
     }
 }

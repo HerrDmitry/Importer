@@ -6,7 +6,7 @@
       "columns": [
         { "name": "ApplicationId", "type": "integer" },
         { "name": "OperationId", "type": "integer" },
-        { "name": "IntakeId", "type": "integer" },
+        { "name": "IntakeId", "type": "integer", "reference": "Intake.IntakeId" },
         { "name": "PremisesIdNumber", "type": "string" },
         { "name": "PremisesIdNumberOmittedExplanation", "type": "string" },
         { "name": "ProjectTitle", "type": "string" },
@@ -35,7 +35,7 @@
       "name": "Intake",
       "type": "CSV",
       "columns": [
-        { "name": "IntakeId", "type": "integer",  "reference": "Application.IntakeId" },
+        { "name": "IntakeId", "type": "integer" },
         { "name": "ApplicationTypeId", "type": "integer" },
         { "name": "FiscalYearId", "type": "integer" },
         { "name": "Description", "type": "string" }
@@ -69,7 +69,7 @@
         { "source": "Intake.Description" }
       ],
       "delimiter": ",",
-      "textQualifier": "\"",
+      "textQualifier": "\""
     },
     {
       "name": "ApplicationOutput1",
