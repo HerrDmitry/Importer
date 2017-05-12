@@ -63,6 +63,60 @@ namespace Importer.Pipe.Reader
             GC.SuppressFinalize(this);
         }
 
+        private unsafe void FastReadLineTask(CancellationToken token)
+        {
+            var cBuff =new char[MAX_BUFFER_SIZE];
+            var lBuff=new char[MAX_BUFFER_SIZE];
+            int bufferLength = 0;
+            int findEndOfTheLine(int position)
+            {
+                position++;
+                if (position<bufferLength && cBuff[position] == '\n') position++;
+                while (cBuff[position] != '\r' && cBuff[position] != '\n' && position<bufferLength) position++;
+                return position == bufferLength ? -1 : position;
+            }
+            long counter = 0;
+            fixed (char* bPtr = cBuff)
+            {
+                var lineLenght = 0;
+                var lineBufferStart = 0;
+                while (!this.reader.EndOfStream && !token.IsCancellationRequested)
+                {
+                    bufferLength = this.reader.ReadBlock(cBuff, 0, MAX_BUFFER_SIZE);
+                    var bufferPosition = 0;
+                    while (bufferPosition < bufferLength && !token.IsCancellationRequested)
+                    {
+                        if (bPtr[bufferPosition] == '\r' || bPtr[bufferPosition] == '\n')
+                        {
+                            char[] line = null;
+                            if (lineLenght > 0)
+                            {
+                                line = new char[lineLenght + bufferPosition - lineBufferStart-1];
+                                Array.Copy(lBuff,line,lineLenght);
+                                Array.Copy(cBuff, lineBufferStart, line, lineLenght, bufferPosition - lineBufferStart-1);
+                            }
+
+                            var columns = this.SplitIntoColumns(line);
+                            line = null;
+                            lineLenght = 0;
+                            while (!token.IsCancellationRequested && this.bufferSize != 0 && this.buffer.Count > this.bufferSize)
+                            {
+                                Thread.Sleep(50);
+                            }
+
+                            this.buffer.Enqueue(columns);
+                            counter++;
+
+                        }
+                    }
+                }
+            }
+        }
+
+        private IEnumerable<string> SplitIntoColumns(char[] source)
+        {
+        }
+
         private void ReadLinesTask(CancellationToken token)
         {
             long counter = 0;
@@ -86,7 +140,6 @@ namespace Importer.Pipe.Reader
                     {
                         break;
                     }
-
                     qualifierIndex = line.IndexOf(this.qualifier, qualifierIndex);
                 }
 
@@ -200,5 +253,8 @@ namespace Importer.Pipe.Reader
         private Task readTask;
         private CancellationTokenSource token;
         private volatile bool eof = false;
+
+        private const int MAX_BUFFER_SIZE = 65535;
+        private const int MAX_LINE_SIZE = 1024 * 1024;
     }
 }
