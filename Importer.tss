@@ -2,40 +2,16 @@
 <ArrayOfArrayOfArrayOfString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <ArrayOfArrayOfString>
     <ArrayOfString>
-      <string>c:\source\repos\importer\pipe\configuration\column.cs</string>
+      <string>C:\temp\Repos\Importer\Pipe\Reader\CsvFileReader.cs</string>
     </ArrayOfString>
     <ArrayOfString>
-      <string>c:\source\repos\importer\implementations\configuration\configuration.cs</string>
+      <string>C:\temp\Repos\Importer\Program.cs</string>
     </ArrayOfString>
     <ArrayOfString>
-      <string>c:\source\repos\importer\pipe\configuration\csvfileconfiguration.cs</string>
+      <string>C:\temp\Repos\Importer\Pipe\DataFlow.cs</string>
     </ArrayOfString>
     <ArrayOfString>
-      <string>C:\Source\Repos\Importer\Pipe\Reader\CsvFileReader.cs</string>
-    </ArrayOfString>
-    <ArrayOfString>
-      <string>c:\source\repos\importer\pipe\dataflow.cs</string>
-    </ArrayOfString>
-    <ArrayOfString>
-      <string />
-    </ArrayOfString>
-    <ArrayOfString>
-      <string>C:\Source\Repos\Importer\Pipe\Configuration\FileConfiguration.cs</string>
-    </ArrayOfString>
-    <ArrayOfString>
-      <string>C:\Source\Repos\Importer\Pipe\Parsers\FileParser.cs</string>
-    </ArrayOfString>
-    <ArrayOfString>
-      <string>c:\source\repos\importer\pipe\configuration\importerconfiguration.cs</string>
-    </ArrayOfString>
-    <ArrayOfString>
-      <string>C:\Source\Repos\Importer\Pipe\Parsers\IParser.cs</string>
-    </ArrayOfString>
-    <ArrayOfString>
-      <string>C:\Source\Repos\Importer\Pipe\Parsers\Parser.cs</string>
-    </ArrayOfString>
-    <ArrayOfString>
-      <string>C:\Source\Repos\Importer\Pipe\Parsers\DecimalParser.cs</string>
+      <string>C:\temp\Repos\Importer\Configurations\apps.json</string>
     </ArrayOfString>
   </ArrayOfArrayOfString>
 </ArrayOfArrayOfArrayOfString>

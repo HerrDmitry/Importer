@@ -41,3 +41,4 @@ Importer.tss
 *.dotCover
 /.vs/
 /.idea/
+*.tss

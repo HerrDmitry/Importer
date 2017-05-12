@@ -33,7 +33,8 @@ namespace Importer.Pipe
                     throw new FileNotFoundException($"Data file \"{reader.Name}\" was not found");
                 }
 
-                tasks.Append(Task.Run(() => this.LoadDictionary(filePath, reader, dictionaries[reader.Name])));
+                this.LoadDictionary(filePath, reader, dictionaries[reader.Name]);
+                //tasks.Append(Task.Run(() => ));
 
             }
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Threading;
@@ -25,7 +26,7 @@ namespace Importer.Pipe.Reader
         public IEnumerable<IEnumerable<string>> ReadData()
         {
             this.token=new CancellationTokenSource();
-            this.readTask = Task.Run(() => this.ReadLinesTask(this.token.Token));
+            this.readTask = Task.Run(() => this.FastReadLineTask(this.token.Token));
 
             while (!this.eof || this.buffer.Count > 0)
             {
@@ -66,55 +67,158 @@ namespace Importer.Pipe.Reader
         private unsafe void FastReadLineTask(CancellationToken token)
         {
             var cBuff =new char[MAX_BUFFER_SIZE];
-            var lBuff=new char[MAX_BUFFER_SIZE];
             int bufferLength = 0;
-            int findEndOfTheLine(int position)
-            {
-                position++;
-                if (position<bufferLength && cBuff[position] == '\n') position++;
-                while (cBuff[position] != '\r' && cBuff[position] != '\n' && position<bufferLength) position++;
-                return position == bufferLength ? -1 : position;
-            }
-            long counter = 0;
+            int bufferPosition = 0;
             fixed (char* bPtr = cBuff)
             {
-                var lineLenght = 0;
-                var lineBufferStart = 0;
+                long counter = 0;
+                bufferLength = this.reader.ReadBlock(cBuff, 0, MAX_BUFFER_SIZE);
+                bufferPosition = 0;
+                var stopwatch=new Stopwatch();
+                stopwatch.Start();
+                var lastelapsed=0d;
                 while (!this.reader.EndOfStream && !token.IsCancellationRequested)
                 {
-                    bufferLength = this.reader.ReadBlock(cBuff, 0, MAX_BUFFER_SIZE);
-                    var bufferPosition = 0;
-                    while (bufferPosition < bufferLength && !token.IsCancellationRequested)
+                    bool hasLine = false;
+                    int qualifierCount = 0;
+                    char[] line = null;
+                    var startPosition = bufferPosition;
+
+                    void appendToLine()
                     {
-                        if (bPtr[bufferPosition] == '\r' || bPtr[bufferPosition] == '\n')
+                        var lineLength = line?.Length > 0 ? line.Length : 0;
+                        if (MAX_LINE_SIZE < lineLength + bufferPosition - startPosition)
                         {
-                            char[] line = null;
-                            if (lineLenght > 0)
+                            throw new FileLoadException("Line is too big");
+                        }
+                        var newLine = new char[lineLength + bufferPosition - startPosition];
+                        if (lineLength > 0)
+                        {
+                            Array.Copy(line, newLine, lineLength);
+                        }
+                        Array.Copy(cBuff, startPosition, newLine, lineLength, bufferPosition - startPosition);
+                        line = newLine;
+                    }
+
+                    while (!hasLine)
+                    {
+                        while (bufferPosition < bufferLength && ((qualifierCount > 0 && qualifierCount % 2 != 0) || (bPtr[bufferPosition] != '\r' && bPtr[bufferPosition] != '\n')))
+                        {
+                            if (bPtr[bufferPosition] == this.qualifier) qualifierCount++;
+                            bufferPosition++;
+                        }
+
+                        if (bufferPosition == bufferLength)
+                        {
+                            appendToLine();
+                            startPosition = 0;
+                            bufferPosition = 0;
+                            bufferLength = this.reader.ReadBlock(cBuff, 0, MAX_BUFFER_SIZE);
+                        }
+                        else
+                        {
+                            if (bufferPosition > startPosition + 1)
                             {
-                                line = new char[lineLenght + bufferPosition - lineBufferStart-1];
-                                Array.Copy(lBuff,line,lineLenght);
-                                Array.Copy(cBuff, lineBufferStart, line, lineLenght, bufferPosition - lineBufferStart-1);
+                                appendToLine();
+                                hasLine = true;
                             }
-
-                            var columns = this.SplitIntoColumns(line);
-                            line = null;
-                            lineLenght = 0;
-                            while (!token.IsCancellationRequested && this.bufferSize != 0 && this.buffer.Count > this.bufferSize)
-                            {
-                                Thread.Sleep(50);
-                            }
-
-                            this.buffer.Enqueue(columns);
-                            counter++;
-
+                            bufferPosition++;
+                            startPosition = bufferPosition;
                         }
                     }
+
+                    counter++;
+                    this.SplitIntoColumns(line);
+                    line = null;
+                    if (stopwatch.Elapsed.TotalSeconds-lastelapsed >= 10)
+                    {
+                        Logger.GetLogger().DebugAsync($"Loaded {counter} lines in {stopwatch.Elapsed.TotalSeconds} seconds");
+                        lastelapsed = stopwatch.Elapsed.TotalSeconds;
+                    }
                 }
+
+                Logger.GetLogger().DebugAsync($"Loaded {counter} lines");
+                this.eof = true;
             }
         }
 
-        private IEnumerable<string> SplitIntoColumns(char[] source)
+        private unsafe IEnumerable<string> SplitIntoColumns(char[] source)
         {
+            var result = new List<string>();
+            if (source == null || source.Length == 0)
+            {
+                return result;
+            }
+            fixed (char* line = source)
+            {
+                var index = 0;
+                while (index < source.Length)
+                {
+                    var expected = this.delimiter;
+                    if (line[index] == this.delimiter)
+                    {
+                        index++;
+                        result.Add(null);
+                        continue;
+                    }
+                    int start, end;
+                    if (line[index] == this.qualifier)
+                    {
+                        expected = this.qualifier;
+                        start = index + 1;
+                    }
+                    else
+                    {
+                        start = index;
+                    }
+
+                    end = start;
+                    var done = false;
+                    while (!done)
+                    {
+                        index++;
+                        var idx = index;
+                        while (idx < source.Length && line[idx] != expected) idx++;
+
+                        end = idx - start;
+                        index = idx;
+
+                        if (index < source.Length)
+                        {
+                            if (index < source.Length - 1 && source[index] == this.qualifier)
+                            {
+                                if (source[index + 1] == this.qualifier)
+                                {
+                                    index++;
+                                    continue;
+                                }
+                                else if (source[index + 1] == this.delimiter)
+                                {
+                                    index++;
+                                    index++;
+                                    done = true;
+                                }
+                                else
+                                {
+                                    throw new FormatException("Row in incorrect format");
+                                }
+                            }
+                            else
+                            {
+                                done = true;
+                                index++;
+                            }
+                        }
+                        else
+                        {
+                            done = true;
+                        }
+                    }
+                    
+                    result.Add(new string(line, start, end).Replace(this.qualifierStrDbl, this.qualifierStr));
+                }
+            }
+            return new List<string>();
         }
 
         private void ReadLinesTask(CancellationToken token)
