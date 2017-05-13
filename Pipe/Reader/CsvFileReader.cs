@@ -218,12 +218,13 @@ namespace Importer.Pipe.Reader
                     fixed (char* resultPtr = resultLine)
                     {
                         var idx = 0;
-                        for (var i = start; i < start+len; i++)
+                        var end = start + len;
+                        for (var i = start; i < end; i++)
                         {
                             if (line[i] == this.qualifier)
                             {
                                 i++;
-                                if (i < start+len)
+                                if (i < end)
                                 {
                                     resultPtr[idx++] = line[i];
                                 }

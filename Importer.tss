@@ -2,25 +2,79 @@
 <ArrayOfArrayOfArrayOfString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <ArrayOfArrayOfString>
     <ArrayOfString>
-      <string>C:\temp\Repos\Importer\Pipe\Reader\CsvFileReader.cs</string>
+      <string>c:\source\repos\importer\configurations\apps.json</string>
     </ArrayOfString>
     <ArrayOfString>
-      <string>c:\temp\repos\importer\program.cs</string>
+      <string>c:\source\repos\importer\pipe\parsers\booleanparser.cs</string>
     </ArrayOfString>
     <ArrayOfString>
-      <string>c:\temp\repos\importer\pipe\dataflow.cs</string>
+      <string>c:\source\repos\importer\pipe\values\booleanvalue.cs</string>
     </ArrayOfString>
     <ArrayOfString>
-      <string>c:\temp\repos\importer\configurations\apps.json</string>
+      <string>c:\source\repos\importer\pipe\configuration\column.cs</string>
     </ArrayOfString>
     <ArrayOfString>
-      <string>Source Control Explorer - Disconnected</string>
+      <string>c:\source\repos\importer\implementations\configuration\configuration.cs</string>
     </ArrayOfString>
     <ArrayOfString>
-      <string>C:\temp\Repos\Importer\.tss</string>
+      <string>c:\source\repos\importer\pipe\configuration\csvfileconfiguration.cs</string>
     </ArrayOfString>
     <ArrayOfString>
-      <string>C:\temp\Repos\Importer\.gitignore</string>
+      <string>c:\source\repos\importer\pipe\reader\csvfilereader.cs</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>c:\source\repos\importer\pipe\dataflow.cs</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>c:\source\repos\importer\implementations\datadictionary.cs</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>C:\Source\Repos\Importer\Pipe\DataDictionary.cs</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>c:\source\repos\importer\pipe\parsers\dateparser.cs</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>c:\source\repos\importer\pipe\values\datevalue.cs</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>c:\source\repos\importer\pipe\parsers\decimalparser.cs</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>c:\source\repos\importer\pipe\values\decimalvalue.cs</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>c:\source\repos\importer\pipe\configuration\fileconfiguration.cs</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>c:\source\repos\importer\pipe\parsers\fileparser.cs</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>c:\source\repos\importer\pipe\configuration\importerconfiguration.cs</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>c:\source\repos\importer\pipe\parsers\integerparser.cs</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>c:\source\repos\importer\pipe\values\integervalue.cs</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>c:\source\repos\importer\pipe\parsers\iparser.cs</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>c:\source\repos\importer\pipe\parsers\parser.cs</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>c:\source\repos\importer\pipe\parsers\stringparser.cs</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>c:\source\repos\importer\pipe\values\stringvalue.cs</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>c:\source\repos\importer\pipe\values\value.cs</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>Importer</string>
     </ArrayOfString>
   </ArrayOfArrayOfString>
 </ArrayOfArrayOfArrayOfString>
