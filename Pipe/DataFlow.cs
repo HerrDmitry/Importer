@@ -17,14 +17,13 @@ namespace Importer.Pipe
         {
             Logger.GetLogger().SetLogginLevel(Logger.LogLevel.Debug);
 
-            this.LoadDictionaries(configuration.Files,configuration.Readers);
+            this.LoadDictionaries(configuration.Files,configuration.Readers).Wait();
         }
 
-        private void LoadDictionaries(Dictionary<string,string> files, IEnumerable<FileConfiguration> readers)
+        private async Task LoadDictionaries(Dictionary<string,string> files, IEnumerable<FileConfiguration> readers)
         {
             var dictionaries = new Dictionary<string, string>();
             readers.SelectMany(x => x.GetReferences()).ToList().ForEach(x => dictionaries[x.Key] = x.Value);
-            var tasks=new List<Task>();
             foreach (var reader in readers.Where(x => dictionaries.Keys.Contains(x.Name) && !x.Disabled))
             {
                 if (!files.TryGetValue(reader.Name, out string filePath) || !File.Exists(filePath))
@@ -32,32 +31,32 @@ namespace Importer.Pipe
                     throw new FileNotFoundException($"Data file \"{reader.Name}\" was not found");
                 }
 
-                this.LoadDictionary(filePath, reader, dictionaries[reader.Name]);
-                //tasks.Append(Task.Run(() => ));
 
+                await this.LoadDictionary(filePath, reader, dictionaries[reader.Name]);
             }
-
-            Task.WaitAll(tasks.ToArray());
         }
 
-        private void LoadDictionary(string filePath, FileConfiguration config, string keyFieldName)
+        private async Task LoadDictionary(string filePath, FileConfiguration config, string keyFieldName)
         {
-            using (var fileReader = FileReader.GetFileReader(File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.Read), config))
+            await Task.Run(() =>
             {
-                long counter = 0;
-                var stopWatch = new Stopwatch();
-                stopWatch.Start();
-                var elapsedSeconds = 0D;
-                var reference = config.Name + "." + keyFieldName;
-                foreach (var record in fileReader.ReadData())
+                using (var fileReader = FileReader.GetFileReader(File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.Read), config))
                 {
-                    DataDictionary.Set(reference,keyFieldName,record);
-                    counter++;
+                    long counter = 0;
+                    var stopWatch = new Stopwatch();
+                    stopWatch.Start();
+                    var elapsedSeconds = 0D;
+                    var reference = config.Name + "." + keyFieldName;
+                    foreach (var record in fileReader.ReadData())
+                    {
+                        DataDictionary.Set(reference, keyFieldName, record);
+                        counter++;
+                    }
+                    stopWatch.Stop();
+                    elapsedSeconds = stopWatch.Elapsed.TotalSeconds;
+                    Logger.GetLogger().InfoAsync($"Loaded dictionary {config.Name},  {counter} records in {elapsedSeconds} seconds");
                 }
-                stopWatch.Stop();
-                elapsedSeconds = stopWatch.Elapsed.TotalSeconds;
-                Logger.GetLogger().InfoAsync($"Loaded dictionary {config.Name},  {counter} records in {elapsedSeconds} seconds");
-            }
+            });
         }
     }
 }

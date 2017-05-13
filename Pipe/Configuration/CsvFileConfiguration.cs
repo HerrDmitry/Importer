@@ -26,6 +26,25 @@ namespace Importer.Pipe.Configuration
                 return parts.Length > 1 ? new KeyValuePair<string,string>(parts[0],parts[1]) : new KeyValuePair<string, string>("","");
             }).Where(x => !string.IsNullOrWhiteSpace(x.Key)).Distinct().ToList();
         }
+
+        protected override FileConfiguration NormalizeColumnNames()
+        {
+            var prefix = this.Name + ".";
+            this.Columns?.ForEach(x =>
+            {
+                var name = x.Name.Replace(" ", "");
+                if (!name.StartsWith(prefix))
+                {
+                    name = prefix + name;
+                }
+                if (x.Name != name)
+                {
+                    x.Name = name;
+                }
+            });
+
+            return this;
+        }
     }
 }
  

@@ -23,7 +23,7 @@ namespace Importer.Pipe.Configuration
             var baseConfig = rawConfig.ToObject<FileConfiguration>();
             switch (baseConfig.Type)
             {
-                case "CSV": return rawConfig.ToObject<CsvFileConfiguration>();
+                case "CSV": return rawConfig.ToObject<CsvFileConfiguration>().NormalizeColumnNames();
             }
 
             throw new ArgumentOutOfRangeException($"File of type {baseConfig.Type} is not supported.");
@@ -32,6 +32,11 @@ namespace Importer.Pipe.Configuration
         public virtual List<KeyValuePair<string,string>> GetReferences()
         {
             return new List<KeyValuePair<string,string>>();
+        }
+
+        protected virtual FileConfiguration NormalizeColumnNames()
+        {
+            return this;
         }
     }
 }
