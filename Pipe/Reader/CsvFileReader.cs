@@ -9,30 +9,33 @@ using System.Threading.Tasks;
 
 namespace Importer.Pipe.Reader
 {
+    using Importer.Pipe.Configuration;
+    using Importer.Pipe.Parsers;
+
     public class CsvFileReader : IFileReader
     {
-        public CsvFileReader(Stream source, string qualifier = "\"", string delimiter = ",", int bufferSize = 1000000)
+        public CsvFileReader(Stream source, CsvFileConfiguration config, int bufferSize = 1000000)
         {
-            this.reader=new StreamReader(source);
-            this.qualifier = !string.IsNullOrWhiteSpace(qualifier)?qualifier[0]:'"';
-            this.delimiter = !string.IsNullOrWhiteSpace(delimiter)?delimiter[0]:',';
-            this.qualifierStr = this.qualifier.ToString();
-            this.qualifierStrDbl = this.qualifierStr + this.qualifierStr;
-            this.delimiterStr = this.delimiter.ToString();
+            this.reader = new StreamReader(source);
+            this.qualifier = !string.IsNullOrWhiteSpace(config?.TextQualifier) ? config.TextQualifier[0] : '"';
+            this.delimiter = !string.IsNullOrWhiteSpace(config?.Delimiter) ? config.Delimiter[0] : ',';
             this.bufferSize = bufferSize;
-            this.buffer=new ConcurrentQueue<IEnumerable<string>>();
+            this.buffer = new ConcurrentQueue<IEnumerable<string>>();
+            this.config = config;
         }
 
-        public IEnumerable<IEnumerable<string>> ReadData()
+        public IEnumerable<IEnumerable<IValue>> ReadData()
         {
             this.token=new CancellationTokenSource();
             this.readTask = Task.Run(() => this.FastReadLineTask(this.token.Token));
+
+            var recordParser = new RecordParser(this.config.Columns);
 
             while (!this.eof || this.buffer.Count > 0)
             {
                 if (this.buffer.TryDequeue(out IEnumerable<string> record))
                 {
-                    yield return record;
+                    yield return recordParser.Parse(record);
                 }
                 else
                 {
@@ -67,17 +70,15 @@ namespace Importer.Pipe.Reader
         private unsafe void FastReadLineTask(CancellationToken token)
         {
             var cBuff =new char[MAX_BUFFER_SIZE];
-            int bufferLength = 0;
-            int bufferPosition = 0;
             fixed (char* bPtr = cBuff)
             {
                 long counter = 0;
-                bufferLength = this.reader.ReadBlock(cBuff, 0, MAX_BUFFER_SIZE);
-                bufferPosition = 0;
+                var bufferLength = this.reader.ReadBlock(cBuff, 0, MAX_BUFFER_SIZE);
+                var bufferPosition = 0;
                 var stopwatch=new Stopwatch();
                 stopwatch.Start();
                 var lastelapsed=0d;
-                while (!this.reader.EndOfStream && !token.IsCancellationRequested)
+                while ((!this.reader.EndOfStream || bufferPosition<bufferLength) && !token.IsCancellationRequested )
                 {
                     bool hasLine = false;
                     int qualifierCount = 0;
@@ -111,6 +112,10 @@ namespace Importer.Pipe.Reader
                         if (bufferPosition == bufferLength)
                         {
                             appendToLine();
+                            if (this.reader.EndOfStream)
+                            {
+                                break;
+                            }
                             startPosition = 0;
                             bufferPosition = 0;
                             bufferLength = this.reader.ReadBlock(cBuff, 0, MAX_BUFFER_SIZE);
@@ -248,142 +253,17 @@ namespace Importer.Pipe.Reader
             return result;
         }
 
-        private void ReadLinesTask(CancellationToken token)
-        {
-            long counter = 0;
-            var qualifierCount = 0;
-
-            var sourceLine = new StringBuilder();
-            while (!this.reader.EndOfStream && !token.IsCancellationRequested)
-            {
-                var line = this.reader.ReadLine();
-                if (sourceLine.Length > 0)
-                {
-                    sourceLine.AppendLine();
-                }
-                sourceLine.Append(line);
-                var qualifierIndex = line.IndexOf(this.qualifier);
-                while (qualifierIndex >= 0)
-                {
-                    qualifierCount++;
-                    qualifierIndex++;
-                    if (qualifierIndex >= line.Length)
-                    {
-                        break;
-                    }
-                    qualifierIndex = line.IndexOf(this.qualifier, qualifierIndex);
-                }
-
-                if (qualifierCount == 0 || qualifierCount % 2 == 0)
-                {
-
-                    var columns = this.Split(sourceLine.ToString());
-                    sourceLine.Clear();
-                    while (!token.IsCancellationRequested && this.bufferSize != 0 && this.buffer.Count > this.bufferSize)
-                    {
-                        Thread.Sleep(50);
-                    }
-
-                    this.buffer.Enqueue(columns);
-                    counter++;
-
-                }
-
-            }
-
-            Logger.GetLogger().DebugAsync($"Loaded {counter} records.");
-            this.eof = true;
-        }
-
-        private IEnumerable<string> Split(string source)
-        {
-            var result = new List<string>();
-            if (string.IsNullOrWhiteSpace(source))
-            {
-                return result;
-            }
-            var index = 0;
-            while (index < source.Length)
-            {
-                var expected = this.delimiter;
-                if (source[index] == this.delimiter)
-                {
-                    index++;
-                    result.Add(null);
-                    continue;
-                }
-                int start, end;
-                if (source[index] == this.qualifier)
-                {
-                    expected = this.qualifier;
-                    start = index + 1;
-                }
-                else
-                {
-                    start = index;
-                }
-
-                end = start;
-                var done = false;
-                while (!done)
-                {
-                    index++;
-                    var idx = source.IndexOf(expected, index);
-                    if (idx < 0)
-                    {
-                        idx = source.Length;
-                    }
-                    end = idx - start;
-                    index = idx;
-
-                    if (index < source.Length)
-                    {
-                        if (index < source.Length - 1 && source[index] == this.qualifier)
-                        {
-                            if (source[index + 1] == this.qualifier)
-                            {
-                                index++;
-                                continue;
-                            }
-                            else if (source[index + 1] == this.delimiter)
-                            {
-                                index++;
-                                index++;
-                                done = true;
-                            }
-                            else
-                            {
-                                throw new FormatException("Row in incorrect format");
-                            }
-                        }
-                        else
-                        {
-                            done = true;
-                            index++;
-                        }
-                    }
-                    else
-                    {
-                        done = true;
-                    }
-                }
-                result.Add(source.Substring(start, end).Replace(this.qualifierStrDbl, this.qualifierStr));
-            }
-            return result;
-        }
-
 
         private StreamReader reader;
         private ConcurrentQueue<IEnumerable<string>> buffer;
         private char qualifier;
-        private string qualifierStr;
-        private string qualifierStrDbl;
         private char delimiter;
-        private string delimiterStr;
         private int bufferSize;
         private Task readTask;
         private CancellationTokenSource token;
         private volatile bool eof = false;
+
+        private CsvFileConfiguration config;
 
         private const int MAX_BUFFER_SIZE = 1024*1024;
         private const int MAX_LINE_SIZE = 1024 * 1024*20;

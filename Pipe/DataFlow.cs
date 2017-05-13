@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text;
+
 using Importer.Pipe.Reader;
 
 namespace Importer.Pipe
@@ -25,6 +24,7 @@ namespace Importer.Pipe
         {
             var dictionaries = new Dictionary<string, string>();
             readers.SelectMany(x => x.GetReferences()).ToList().ForEach(x => dictionaries[x.Key] = x.Value);
+            var tasks=new List<Task>();
             foreach (var reader in readers.Where(x => dictionaries.Keys.Contains(x.Name) && !x.Disabled))
             {
                 if (!files.TryGetValue(reader.Name, out string filePath) || !File.Exists(filePath))
@@ -33,7 +33,11 @@ namespace Importer.Pipe
                 }
 
                 this.LoadDictionary(filePath, reader, dictionaries[reader.Name]);
+                //tasks.Append(Task.Run(() => ));
+
             }
+
+            Task.WaitAll(tasks.ToArray());
         }
 
         private void LoadDictionary(string filePath, FileConfiguration config, string keyFieldName)
@@ -44,10 +48,10 @@ namespace Importer.Pipe
                 var stopWatch = new Stopwatch();
                 stopWatch.Start();
                 var elapsedSeconds = 0D;
-
+                var reference = config.Name + "." + keyFieldName;
                 foreach (var record in fileReader.ReadData())
                 {
-                    
+                    DataDictionary.Set(reference,keyFieldName,record);
                     counter++;
                 }
                 stopWatch.Stop();

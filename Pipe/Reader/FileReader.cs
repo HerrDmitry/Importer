@@ -14,7 +14,7 @@ namespace Importer.Pipe.Reader
             {
                 case "CSV":
                     var csvConfig = config as CsvFileConfiguration;
-                    return new CsvFileReader(source,csvConfig?.TextQualifier, csvConfig?.Delimiter);
+                    return new CsvFileReader(source,csvConfig);
                 default:
                     throw new ArgumentOutOfRangeException($"File type \"{config.Type}\" is not supported.");
             }

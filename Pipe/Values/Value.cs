@@ -16,13 +16,28 @@ namespace Importer.Pipe.Values
 
         public static IValue<T> GetValue<T>(T value, bool isNull, bool isFailed, Column column)
         {
-            switch (typeof(T).Name)
+            if (typeof(T) == typeof(bool))
             {
-                case "System.Boolean":
-                    return ((ISetValue<T>) new BooleanValue(column){IsNull = isNull, IsFailed=isFailed}).SetValue(value);
-                default:
-                    throw new ArgumentOutOfRangeException($"Value of type {typeof(T).Name} is not supported.");
+                return ((ISetValue<T>)new BooleanValue(column) { IsNull = isNull, IsFailed = isFailed }).SetValue(value);
             }
+            if(typeof(T) == typeof(int))
+            {
+                return ((ISetValue<T>)new IntegerValue(column) { IsNull = isNull, IsFailed = isFailed }).SetValue(value);
+            }
+            if(typeof(T) == typeof(decimal))
+            {
+                return ((ISetValue<T>)new DecimalValue(column) { IsNull = isNull, IsFailed = isFailed }).SetValue(value);
+            }
+            if(typeof(T) == typeof(DateTime))
+            {
+                return ((ISetValue<T>)new DateValue(column) { IsNull = isNull, IsFailed = isFailed }).SetValue(value);
+            }
+            if(typeof(T) == typeof(string))
+            {
+                return ((ISetValue<T>)new StringValue(column) { IsNull = isNull, IsFailed = isFailed }).SetValue(value);
+            }
+
+            throw new ArgumentOutOfRangeException($"Value of type {typeof(T).Name} is not supported.");
         }
 
         public Value(Column column)
@@ -55,6 +70,10 @@ namespace Importer.Pipe.Values
         }
 
         public bool IsNull { get; protected set; }
+
+        public bool IsFailed { get; protected set; }
+
+        public Column Column => this.column;
 
         private string lastString=null;
         private string lastUsedFormat = null;

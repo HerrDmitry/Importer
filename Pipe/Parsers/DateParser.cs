@@ -15,29 +15,22 @@ namespace Importer.Pipe.Parsers
         {
         }
 
-        public bool Parse(string input, out IValue<DateTime> result)
+        IValue<DateTime> IParser<DateTime>.Parse(string input)
         {
-            var isSuccessful = true;
             if (string.IsNullOrWhiteSpace(input))
             {
-                result = Value.GetValue(DateTime.MinValue, true, this.column);
-            }
-            else
-            {
-                isSuccessful = !string.IsNullOrWhiteSpace(this.inputFormat)
-                    ? DateTime.TryParseExact(input, this.inputFormat, CultureInfo.CurrentCulture, DateTimeStyles.AssumeLocal, out DateTime r)
-                    : DateTime.TryParse(input, out r);
-                result = Value.GetValue(r, false, this.column);
+                return Value.GetValue(DateTime.MinValue, true, false, this.column);
             }
 
-            return isSuccessful;
+            var isSuccessful = !string.IsNullOrWhiteSpace(this.inputFormat)
+                                   ? DateTime.TryParseExact(input, this.inputFormat, CultureInfo.CurrentCulture, DateTimeStyles.AssumeLocal, out DateTime r)
+                                   : DateTime.TryParse(input, out r);
+            return Value.GetValue(r, false, !isSuccessful, this.column);
         }
 
-        public override bool Parse(string input, out IValue result)
+        public override IValue Parse(string input)
         {
-            var isSuccessful = this.Parse(input, out IValue<DateTime> r);
-            result = r;
-            return isSuccessful;
+            return ((IParser<DateTime>)this).Parse(input);
         }
     }
 }

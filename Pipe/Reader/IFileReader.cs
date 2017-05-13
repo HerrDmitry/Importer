@@ -5,8 +5,10 @@ using System.Text;
 
 namespace Importer.Pipe.Reader
 {
+    using Importer.Pipe.Parsers;
+
     public interface IFileReader:IDisposable
     {
-        IEnumerable<IEnumerable<string>> ReadData();
+        IEnumerable<IEnumerable<IValue>> ReadData();
     }
 }

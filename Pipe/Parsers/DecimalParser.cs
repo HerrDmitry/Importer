@@ -14,28 +14,20 @@ namespace Importer.Pipe.Parsers
         {
         }
 
-        public bool Parse(string input, out IValue<decimal> result)
+        IValue<decimal> IParser<decimal>.Parse(string input)
         {
-            var isSuccessful = true;
             if (string.IsNullOrWhiteSpace(input))
             {
-                result = Value.GetValue((decimal)0, true, this.column);
-            }
-            else
-            {
-                isSuccessful = decimal.TryParse(input, out decimal r);
-                result = Value.GetValue(r, false, this.column);
+                return Value.GetValue((decimal)0, true, false, this.column);
             }
 
-            return isSuccessful;
+            var isSuccessful = decimal.TryParse(input, out decimal r);
+            return Value.GetValue(r, false, !isSuccessful, this.column);
         }
 
-        public override bool Parse(string input, out IValue result)
+        public override IValue Parse(string input)
         {
-            var isSuccessful = this.Parse(input, out IValue<decimal> r);
-            result = r;
-
-            return isSuccessful;
+            return ((IParser<decimal>)this).Parse(input);
         }
     }
 }

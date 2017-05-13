@@ -21,20 +21,13 @@ namespace Importer.Pipe.Parsers
 
                 }
             }
-            this.parsers = this.parsers.ToArray();
+            this.parsers = parsers.ToArray();
         }
 
         public List<IValue> Parse(IEnumerable<string> source)
         {
-            var result=new List<IValue>();
             var idx = 0;
-            foreach (var col in source)
-            {
-                this.parsers[idx].Parse(col, out IValue value);
-                result.Add(value);
-            }
-
-            return result;
+            return source.Take(this.parsers.Length).Select(col => this.parsers[idx++].Parse(col)).ToList();
         }
 
         private IParser[] parsers;

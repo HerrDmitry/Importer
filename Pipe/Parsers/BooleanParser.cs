@@ -13,29 +13,20 @@ namespace Importer.Pipe.Parsers
         {
         }
 
-        public IValue<bool> Parse(string input)
+        IValue<bool> IParser<bool>.Parse(string input)
         {
-            var isSuccessful = true;
             if (string.IsNullOrWhiteSpace(input))
             {
-                result = Value.GetValue(false, true, this.column);
-
-            }
-            else
-            {
-                isSuccessful = bool.TryParse(input, out bool r);
-                result = Value.GetValue(r, false, this.column);
+                return Value.GetValue(false, true, false, this.column);
             }
 
-            return isSuccessful;
+            var isSuccessful = bool.TryParse(input, out bool r);
+            return Value.GetValue(r, false, !isSuccessful, this.column);
         }
 
-        public override bool Parse(string input, out IValue result)
+        public override IValue Parse(string input)
         {
-            var isSuccessful = this.Parse(input, out IValue<bool> r);
-            result = r;
-
-            return isSuccessful;
+            return  ((IParser<bool>)this).Parse(input);
         }
     }
 }

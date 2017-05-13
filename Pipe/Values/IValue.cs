@@ -4,6 +4,8 @@ using System.Text;
 
 namespace Importer.Pipe.Parsers
 {
+    using Importer.Pipe.Configuration;
+
     public interface IValue
     {
         void SetFormat(string format);
@@ -11,6 +13,8 @@ namespace Importer.Pipe.Parsers
         string ToString(string format, string nullValue="");
         bool IsNull { get; }
         bool IsFailed { get; }
+
+        Column Column { get; }
     }
 
     public interface IValue<T> : IValue

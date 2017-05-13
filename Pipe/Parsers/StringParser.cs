@@ -14,17 +14,14 @@ namespace Importer.Pipe.Parsers
         {
         }
 
-        public bool Parse(string input, out IValue<string> result)
+        IValue<string> IParser<string>.Parse(string input)
         {
-            result = Value.GetValue(input, input == null, this.column);
-            return true;
+            return Value.GetValue(input, input == null, false, this.column);
         }
 
-        public override bool Parse(string input, out IValue result)
+        public override IValue Parse(string input)
         {
-            this.Parse(input, out IValue<string> r);
-            result = r;
-            return true;
+            return ((IParser<string>)this).Parse(input);
         }
     }
 }

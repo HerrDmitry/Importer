@@ -26,10 +26,13 @@
       <string>c:\source\repos\importer\pipe\dataflow.cs</string>
     </ArrayOfString>
     <ArrayOfString>
-      <string>c:\source\repos\importer\implementations\datadictionary.cs</string>
+      <string>c:\source\repos\importer\pipe\parsers\iparser.cs</string>
     </ArrayOfString>
     <ArrayOfString>
-      <string>C:\Source\Repos\Importer\Pipe\DataDictionary.cs</string>
+      <string>c:\source\repos\importer\pipe\parsers\parser.cs</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>c:\source\repos\importer\pipe\datadictionary.cs</string>
     </ArrayOfString>
     <ArrayOfString>
       <string>c:\source\repos\importer\pipe\parsers\dateparser.cs</string>
@@ -50,6 +53,9 @@
       <string>c:\source\repos\importer\pipe\parsers\fileparser.cs</string>
     </ArrayOfString>
     <ArrayOfString>
+      <string>c:\source\repos\importer\implementations\datadictionary.cs</string>
+    </ArrayOfString>
+    <ArrayOfString>
       <string>c:\source\repos\importer\pipe\configuration\importerconfiguration.cs</string>
     </ArrayOfString>
     <ArrayOfString>
@@ -57,12 +63,6 @@
     </ArrayOfString>
     <ArrayOfString>
       <string>c:\source\repos\importer\pipe\values\integervalue.cs</string>
-    </ArrayOfString>
-    <ArrayOfString>
-      <string>c:\source\repos\importer\pipe\parsers\iparser.cs</string>
-    </ArrayOfString>
-    <ArrayOfString>
-      <string>c:\source\repos\importer\pipe\parsers\parser.cs</string>
     </ArrayOfString>
     <ArrayOfString>
       <string>c:\source\repos\importer\pipe\parsers\stringparser.cs</string>

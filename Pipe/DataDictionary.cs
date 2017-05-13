@@ -6,27 +6,52 @@ namespace Importer.Pipe
 {
     using Importer.Pipe.Parsers;
 
-    public class DataDictionary
+    public static class DataDictionary
     {
-        private DataDictionary()
+
+        private static readonly Dictionary<string, Dictionary<string, Dictionary<string, IValue>>> dictionary = new Dictionary<string, Dictionary<string, Dictionary<string, IValue>>>();
+
+        public static Dictionary<string, IValue> Get(string reference, string keyValue)
         {
+            if (dictionary.TryGetValue(reference, out Dictionary<string, Dictionary<string, IValue>> dict))
+            {
+                if (dict.TryGetValue(keyValue, out Dictionary<string, IValue> value))
+                {
+                    return value;
+                }
+            }
+
+            return null;
         }
 
-        private Dictionary<string, IValue> dictionary;
-
-        public IValue this[string key] => this.dictionary.TryGetValue(key, out IValue value) ? value : null;
-
-        public static void LoadDictionary(string reference, List<IParser> columns, IEnumerable<IEnumerable<string>> data)
+        public static IValue Get(string reference, string keyValue, string field)
         {
-            var dictionary=new DataDictionary();
+            var dict = Get(reference, keyValue);
+            if (dict != null && dict.TryGetValue(field, out IValue value))
+            {
+                return value;
+            }
 
+            return null;
         }
 
-        public static DataDictionary GetDictionary(string reference)
+        public static void Set(string reference, string keyField, IEnumerable<IValue> record)
         {
-            return dataDictionaries.TryGetValue(reference, out DataDictionary dict) ? dict : null;
-        }
+            if (!dictionary.TryGetValue(reference, out Dictionary<string, Dictionary<string, IValue>> dict))
+            {
+                dict = new Dictionary<string, Dictionary<string, IValue>>();
+                dictionary[reference] = dict;
+            }
+            var rDict = new Dictionary<string, IValue>();
+            foreach (var r in record)
+            {
+                rDict[r.Column.Name] = r;
+            }
 
-        private static Dictionary<string, DataDictionary> dataDictionaries = new Dictionary<string, DataDictionary>();
+            if (rDict.TryGetValue(keyField, out IValue keyValue) && !keyValue.IsFailed)
+            {
+                dict[keyValue.ToString()] = rDict;
+            }
+        }
     }
 }
