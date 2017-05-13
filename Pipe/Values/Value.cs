@@ -14,12 +14,12 @@ namespace Importer.Pipe.Values
             IValue<T> SetValue(T value);
         }
 
-        public static IValue<T> GetValue<T>(T value, bool isNull, Column column)
+        public static IValue<T> GetValue<T>(T value, bool isNull, bool isFailed, Column column)
         {
             switch (typeof(T).Name)
             {
                 case "System.Boolean":
-                    return ((ISetValue<T>) new BooleanValue(column){IsNull = isNull}).SetValue(value);
+                    return ((ISetValue<T>) new BooleanValue(column){IsNull = isNull, IsFailed=isFailed}).SetValue(value);
                 default:
                     throw new ArgumentOutOfRangeException($"Value of type {typeof(T).Name} is not supported.");
             }

@@ -26,7 +26,15 @@ namespace Importer.Pipe.Parsers
 
         public List<IValue> Parse(IEnumerable<string> source)
         {
-            
+            var result=new List<IValue>();
+            var idx = 0;
+            foreach (var col in source)
+            {
+                this.parsers[idx].Parse(col, out IValue value);
+                result.Add(value);
+            }
+
+            return result;
         }
 
         private IParser[] parsers;

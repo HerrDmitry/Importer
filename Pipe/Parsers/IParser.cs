@@ -7,10 +7,11 @@ namespace Importer.Pipe.Parsers
     public interface IParser
     {
         void SetInputFormat(string input);
+        IValue Parse(string input);
     }
 
     public interface IParser<T>:IParser
     {
-        bool Parse(string input, out IValue<T> result);
+        IValue<T> Parse(string input);
     }
 }

@@ -8,7 +8,7 @@ namespace Importer.Pipe.Parsers
 
     public abstract class Parser:IParser
     {
-        public Parser(Column column)
+        protected Parser(Column column)
         {
             this.column = column;
         }
@@ -23,7 +23,7 @@ namespace Importer.Pipe.Parsers
             this.outputFormat = output;
         }
 
-        public abstract bool Parse(string input, out IValue result);
+        public abstract IValue Parse(string input);
 
         public static IParser GetParser(Column column)
         {

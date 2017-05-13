@@ -10,6 +10,7 @@ namespace Importer.Pipe.Parsers
         void SetNullValue(string nullValue);
         string ToString(string format, string nullValue="");
         bool IsNull { get; }
+        bool IsFailed { get; }
     }
 
     public interface IValue<T> : IValue

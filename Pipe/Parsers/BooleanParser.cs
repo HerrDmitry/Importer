@@ -13,7 +13,7 @@ namespace Importer.Pipe.Parsers
         {
         }
 
-        public bool Parse(string input, out IValue<bool> result)
+        public IValue<bool> Parse(string input)
         {
             var isSuccessful = true;
             if (string.IsNullOrWhiteSpace(input))
