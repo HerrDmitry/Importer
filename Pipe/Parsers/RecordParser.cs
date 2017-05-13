@@ -8,9 +8,9 @@ namespace Importer.Pipe.Parsers
 
     using Importer.Pipe.Configuration;
 
-    public class FileParser
+    public class RecordParser
     {
-        public FileParser(IEnumerable<Column> columns)
+        public RecordParser(IEnumerable<Column> columns)
         {
             var parsers = new List<IParser>();
             foreach (var column in columns)
@@ -22,6 +22,11 @@ namespace Importer.Pipe.Parsers
                 }
             }
             this.parsers = this.parsers.ToArray();
+        }
+
+        public List<IValue> Parse(IEnumerable<string> source)
+        {
+            
         }
 
         private IParser[] parsers;

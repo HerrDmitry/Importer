@@ -25,7 +25,6 @@ namespace Importer.Pipe
         {
             var dictionaries = new Dictionary<string, string>();
             readers.SelectMany(x => x.GetReferences()).ToList().ForEach(x => dictionaries[x.Key] = x.Value);
-            var tasks=new List<Task>();
             foreach (var reader in readers.Where(x => dictionaries.Keys.Contains(x.Name) && !x.Disabled))
             {
                 if (!files.TryGetValue(reader.Name, out string filePath) || !File.Exists(filePath))
@@ -34,11 +33,7 @@ namespace Importer.Pipe
                 }
 
                 this.LoadDictionary(filePath, reader, dictionaries[reader.Name]);
-                //tasks.Append(Task.Run(() => ));
-
             }
-
-            Task.WaitAll(tasks.ToArray());
         }
 
         private void LoadDictionary(string filePath, FileConfiguration config, string keyFieldName)
@@ -49,17 +44,15 @@ namespace Importer.Pipe
                 var stopWatch = new Stopwatch();
                 stopWatch.Start();
                 var elapsedSeconds = 0D;
-                //DataDictionary.LoadDictionary()
+
                 foreach (var record in fileReader.ReadData())
                 {
+                    
                     counter++;
-                    if (stopWatch.Elapsed.TotalSeconds - elapsedSeconds > 10)
-                    {
-                        elapsedSeconds = stopWatch.Elapsed.TotalSeconds;
-                        Logger.GetLogger().InfoAsync($"loaded {counter} records in {elapsedSeconds} seconds");
-                    }
                 }
-                ;
+                stopWatch.Stop();
+                elapsedSeconds = stopWatch.Elapsed.TotalSeconds;
+                Logger.GetLogger().InfoAsync($"Loaded dictionary {config.Name},  {counter} records in {elapsedSeconds} seconds");
             }
         }
     }

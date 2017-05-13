@@ -128,7 +128,13 @@ namespace Importer.Pipe.Reader
                     }
 
                     counter++;
-                    this.SplitIntoColumns(line);
+                    var columns = this.SplitIntoColumns(line);
+                    while (!token.IsCancellationRequested && this.bufferSize != 0 && this.buffer.Count > this.bufferSize)
+                    {
+                        Thread.Sleep(50);
+                    }
+
+                    this.buffer.Enqueue(columns);
                     line = null;
                     if (stopwatch.Elapsed.TotalSeconds-lastelapsed >= 10)
                     {
@@ -137,7 +143,8 @@ namespace Importer.Pipe.Reader
                     }
                 }
 
-                Logger.GetLogger().DebugAsync($"Loaded {counter} lines");
+                stopwatch.Stop();
+                Logger.GetLogger().DebugAsync($"Loaded {counter} lines, loaded in {stopwatch.Elapsed.TotalSeconds} seconds.");
                 this.eof = true;
             }
         }
