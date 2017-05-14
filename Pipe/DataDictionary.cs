@@ -53,5 +53,10 @@ namespace Importer.Pipe
                 dict[keyValue.ToString()] = rDict;
             }
         }
+
+        public static IEnumerable<string> GetDictionaryNames()
+        {
+            return dictionary.Keys;
+        }
     }
 }

@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-
+using Importer.Interfaces;
 using Importer.Pipe.Reader;
+using Importer.Pipe.Writer;
 
 namespace Importer.Pipe
 {
@@ -18,6 +20,22 @@ namespace Importer.Pipe
             Logger.GetLogger().SetLogginLevel(Logger.LogLevel.Debug);
 
             this.LoadDictionaries(configuration.Files,configuration.Readers).Wait();
+
+            var writers = configuration.Writers.Select(x =>
+            {
+                if (configuration.Files.TryGetValue(x.Name, out string filePath))
+                {
+                    return FileWriter.GetFileWriter(File.Open(filePath, FileMode.Create, FileAccess.Write, FileShare.Read), x);
+                }
+                throw new ArgumentOutOfRangeException($"There is no file path defined for {x.Name}");
+            });
+            foreach (var reader in configuration.Readers.Where(x=>!DataDictionary.GetDictionaryNames().Contains(x.Name)))
+            {
+                if (configuration.Files.TryGetValue(reader.Name, out string readerFilePath))
+                {
+                }
+                using(var fileReader = FileReader.GetFileReader(File.Open()))
+            }
         }
 
         private async Task LoadDictionaries(Dictionary<string,string> files, IEnumerable<FileConfiguration> readers)
