@@ -18,11 +18,11 @@ namespace Importer.Pipe.Parsers
         {
             if (string.IsNullOrWhiteSpace(input))
             {
-                return Value.GetValue(0, true, false, this.column);
+                return Value.GetValue(0, true, false, this.Column);
             }
 
             var isSuccessful = int.TryParse(input, out int r);
-            return Value.GetValue(r, false, !isSuccessful, this.column);
+            return Value.GetValue(r, false, !isSuccessful, this.Column);
         }
 
         public override IValue Parse(string input)

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Importer.Pipe.Configuration;
 
 namespace Importer.Pipe.Parsers
 {
@@ -8,6 +6,7 @@ namespace Importer.Pipe.Parsers
     {
         void SetInputFormat(string input);
         IValue Parse(string input);
+        Column Column { get; }
     }
 
     public interface IParser<T>:IParser

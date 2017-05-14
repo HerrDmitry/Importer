@@ -30,6 +30,11 @@ namespace Importer.Pipe.Parsers
             return source.Take(this.parsers.Length).Select(col => this.parsers[idx++].Parse(col)).ToList();
         }
 
+        public Dictionary<string, IValue> ParseToDictionary(IEnumerable<string> source)
+        {
+            return this.Parse(source).ToDictionary(x => x.Column.Name, x => x);
+        }
+
         private IParser[] parsers;
     }
 }

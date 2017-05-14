@@ -29,6 +29,22 @@ namespace Importer.Pipe.Configuration
         [JsonIgnore]
         public IEnumerable<FileConfiguration> Readers { get; private set; }
 
+        private List<JObject> writersRaw;
+
+        [JsonProperty("writers")]
+        public List<JObject> WritersRaw
+        {
+            get => this.writersRaw;
+            set
+            {
+                this.writersRaw = value;
+                this.Writers = value.Select(x => FileConfiguration.Read(x)).ToArray();
+            }
+        }
+
+        [JsonIgnore]
+        public IEnumerable<FileConfiguration> Writers { get; private set; }
+
         [JsonProperty("files")]
         public JObject FilesRaw
         {

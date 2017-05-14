@@ -16,7 +16,7 @@ namespace Importer.Pipe.Parsers
 
         IValue<string> IParser<string>.Parse(string input)
         {
-            return Value.GetValue(input, input == null, false, this.column);
+            return Value.GetValue(input, input == null, false, this.Column);
         }
 
         public override IValue Parse(string input)

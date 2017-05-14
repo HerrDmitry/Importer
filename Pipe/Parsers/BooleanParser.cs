@@ -17,11 +17,11 @@ namespace Importer.Pipe.Parsers
         {
             if (string.IsNullOrWhiteSpace(input))
             {
-                return Value.GetValue(false, true, false, this.column);
+                return Value.GetValue(false, true, false, this.Column);
             }
 
             var isSuccessful = bool.TryParse(input, out bool r);
-            return Value.GetValue(r, false, !isSuccessful, this.column);
+            return Value.GetValue(r, false, !isSuccessful, this.Column);
         }
 
         public override IValue Parse(string input)

@@ -31,7 +31,6 @@ namespace Importer.Pipe
                     throw new FileNotFoundException($"Data file \"{reader.Name}\" was not found");
                 }
 
-
                 await this.LoadDictionary(filePath, reader, dictionaries[reader.Name]);
             }
         }

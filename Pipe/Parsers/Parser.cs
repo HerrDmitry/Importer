@@ -10,7 +10,7 @@ namespace Importer.Pipe.Parsers
     {
         protected Parser(Column column)
         {
-            this.column = column;
+            this.Column = column;
         }
 
         public void SetInputFormat(string input)
@@ -66,6 +66,6 @@ namespace Importer.Pipe.Parsers
 
         protected string nullStringValue;
 
-        protected Column column;
+        public Column Column { get; }
     }
 }

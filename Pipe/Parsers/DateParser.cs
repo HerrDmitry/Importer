@@ -19,13 +19,13 @@ namespace Importer.Pipe.Parsers
         {
             if (string.IsNullOrWhiteSpace(input))
             {
-                return Value.GetValue(DateTime.MinValue, true, false, this.column);
+                return Value.GetValue(DateTime.MinValue, true, false, this.Column);
             }
 
             var isSuccessful = !string.IsNullOrWhiteSpace(this.inputFormat)
                                    ? DateTime.TryParseExact(input, this.inputFormat, CultureInfo.CurrentCulture, DateTimeStyles.AssumeLocal, out DateTime r)
                                    : DateTime.TryParse(input, out r);
-            return Value.GetValue(r, false, !isSuccessful, this.column);
+            return Value.GetValue(r, false, !isSuccessful, this.Column);
         }
 
         public override IValue Parse(string input)
