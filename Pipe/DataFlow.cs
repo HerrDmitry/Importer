@@ -27,14 +27,27 @@ namespace Importer.Pipe
                 {
                     return FileWriter.GetFileWriter(File.Open(filePath, FileMode.Create, FileAccess.Write, FileShare.Read), x);
                 }
-                throw new ArgumentOutOfRangeException($"There is no file path defined for {x.Name}");
+                throw new ArgumentOutOfRangeException($"There is no file path defined for \"{x.Name}\"");
             });
             foreach (var reader in configuration.Readers.Where(x=>!DataDictionary.GetDictionaryNames().Contains(x.Name)))
             {
                 if (configuration.Files.TryGetValue(reader.Name, out string readerFilePath))
                 {
+                    if (!File.Exists(readerFilePath))
+                    {
+                        throw new FileNotFoundException($"File \"{readerFilePath}\" not found");
+                    }
+                    using (var fileReader = FileReader.GetFileReader(File.Open(readerFilePath, FileMode.Open, FileAccess.Read, FileShare.Read), reader))
+                    {
+                        foreach (var record in fileReader.ReadData())
+                        {
+                            foreach (var writer in writers)
+                            {
+                                writer.WriteLine(record);
+                            }
+                        }
+                    }
                 }
-                using(var fileReader = FileReader.GetFileReader(File.Open()))
             }
         }
 
