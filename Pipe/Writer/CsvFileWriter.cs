@@ -71,25 +71,30 @@ namespace Importer.Pipe.Writer
 
         private void WriteInternal(IEnumerable<IValue> values)
         {
-            var data = (from c in this.config.Columns
-                join v in values on c.Source equals v.Column.Name
-                select v.ToString(c.Format)).ToList();
-            for (var i = 0; i < data.Count; i++)
+            for (var i = 0; i < config.Columns.Count; i++)
             {
-                if (i > 0) this.writer.Write(this.config.Delimiter);
-                var value = data[i];
-                if (value.IndexOf(this.config.TextQualifier) >= 0 || value.IndexOf('\r')>=0 || value.IndexOf('\n')>=0)
+                //if (i > 0) this.writer.Write(this.config.Delimiter);
+                var val = values.FirstOrDefault(x=>x.Column.Name==this.config.Columns[i].Source);
+
+                if (val != null)
                 {
-                    this.writer.Write(this.config.TextQualifier);
-                    this.writer.Write(value.Replace(this.config.TextQualifier, this.config.TextQualifier + this.config.TextQualifier));
-                    this.writer.Write(this.config.TextQualifier);
+                    var value = val.ToString();
+/*
+                    if (value.IndexOf(this.config.TextQualifier) >= 0 || value.IndexOf('\r') >= 0 || value.IndexOf('\n') >= 0)
+                    {
+                        this.writer.Write(this.config.TextQualifier);
+                        this.writer.Write(value.Replace(this.config.TextQualifier, this.config.TextQualifier + this.config.TextQualifier));
+                        this.writer.Write(this.config.TextQualifier);
+                    }
+                    else
+                    {
+                        this.writer.Write(value);
+                    }
+*/
                 }
-                else
-                {
-                    this.writer.Write(value);
-                }
+
             }
-            this.writer.WriteLine();
+            //this.writer.WriteLine();
         }
 
         private CsvFileConfiguration config;
