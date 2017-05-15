@@ -25,5 +25,8 @@ namespace Importer.Pipe.Configuration
 
         [JsonProperty("text")]
         public string Text { get; set; }
+
+        [JsonProperty("source")]
+        public string Source { get; set; }
     }
 }

@@ -32,14 +32,17 @@ namespace Importer.Pipe.Configuration
             var prefix = this.Name + ".";
             this.Columns?.ForEach(x =>
             {
-                var name = x.Name.Replace(" ", "");
-                if (!name.StartsWith(prefix))
+                if (!string.IsNullOrWhiteSpace(x?.Name))
                 {
-                    name = prefix + name;
-                }
-                if (x.Name != name)
-                {
-                    x.Name = name;
+                    var name = x.Name.Replace(" ", "");
+                    if (!name.StartsWith(prefix))
+                    {
+                        name = prefix + name;
+                    }
+                    if (x.Name != name)
+                    {
+                        x.Name = name;
+                    }
                 }
             });
 

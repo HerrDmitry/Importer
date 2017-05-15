@@ -21,6 +21,10 @@ namespace Importer.Pipe.Configuration
         public static FileConfiguration Read(JObject rawConfig)
         {
             var baseConfig = rawConfig.ToObject<FileConfiguration>();
+            if (baseConfig.Disabled)
+            {
+                return baseConfig;
+            }
             switch (baseConfig.Type)
             {
                 case "CSV": return rawConfig.ToObject<CsvFileConfiguration>().NormalizeColumnNames();

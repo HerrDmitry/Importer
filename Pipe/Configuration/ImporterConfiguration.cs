@@ -22,7 +22,7 @@ namespace Importer.Pipe.Configuration
             set
             {
                 this.readersRaw = value;
-                this.Readers = value.Select(x => FileConfiguration.Read(x)).ToArray();
+                this.Readers = value.Select(FileConfiguration.Read).ToArray();
             }
         }
 
@@ -38,7 +38,7 @@ namespace Importer.Pipe.Configuration
             set
             {
                 this.writersRaw = value;
-                this.Writers = value.Select(x => FileConfiguration.Read(x)).ToArray();
+                this.Writers = value.Select(FileConfiguration.Read).ToArray();
             }
         }
 

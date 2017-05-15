@@ -21,7 +21,7 @@ namespace Importer.Pipe
 
             this.LoadDictionaries(configuration.Files,configuration.Readers).Wait();
 
-            var writers = configuration.Writers.Select(x =>
+            var writers = configuration.Writers.Where(x=>!x.Disabled).Select(x =>
             {
                 if (configuration.Files.TryGetValue(x.Name, out string filePath))
                 {
@@ -29,7 +29,7 @@ namespace Importer.Pipe
                 }
                 throw new ArgumentOutOfRangeException($"There is no file path defined for \"{x.Name}\"");
             }).ToList();
-            foreach (var reader in configuration.Readers.Where(x=>!DataDictionary.GetDictionaryNames().Contains(x.Name)))
+            foreach (var reader in configuration.Readers.Where(x=>!x.Disabled && !DataDictionary.GetDictionaryNames().Contains(x.Name)))
             {
                 if (configuration.Files.TryGetValue(reader.Name, out string readerFilePath))
                 {
