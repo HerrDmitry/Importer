@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Text;
-using Importer.Pipe.Values;
+﻿using Importer.Pipe.Values;
 
 namespace Importer.Pipe.Parsers
 {
-    using Importer.Pipe.Configuration;
+    using Configuration;
 
     public class IntegerParser:Parser,IParser<int>
     {
@@ -18,11 +14,11 @@ namespace Importer.Pipe.Parsers
         {
             if (string.IsNullOrWhiteSpace(input))
             {
-                return Value.GetValue(0, true, false, this.Column);
+                return new IntegerValue(0, true, false, this.Column);
             }
 
             var isSuccessful = int.TryParse(input, out int r);
-            return Value.GetValue(r, false, !isSuccessful, this.Column);
+            return new IntegerValue(r, false, !isSuccessful, this.Column);
         }
 
         public override IValue Parse(string input)

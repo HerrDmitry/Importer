@@ -39,13 +39,24 @@ namespace Importer.Pipe
                     }
                     using (var fileReader = FileReader.GetFileReader(File.Open(readerFilePath, FileMode.Open, FileAccess.Read, FileShare.Read), reader))
                     {
+                        long successful = 0;
+                        long exceptions = 0;
                         foreach (var record in fileReader.ReadData())
                         {
-                            foreach (var writer in writers)
+                            if (record.Any(x => x.IsFailed)){
+                                exceptions++;
+                            }
+                            else
                             {
-                                writer.WriteLine(record);
+                                foreach (var writer in writers)
+                                {
+                                    writer.WriteLine(record);
+                                }
+                                successful++;
                             }
                         }
+                        Logger.GetLogger().InfoAsync($"Successfully saved {successful} records");
+                        Logger.GetLogger().InfoAsync($"Failed to process {successful} records");
                     }
                 }
             }

@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Importer.Pipe.Values;
+﻿using Importer.Pipe.Values;
 
 namespace Importer.Pipe.Parsers
 {
-    using Importer.Pipe.Configuration;
+    using Pipe.Configuration;
 
     public class BooleanParser:Parser,IParser<bool>
     {
@@ -17,11 +14,11 @@ namespace Importer.Pipe.Parsers
         {
             if (string.IsNullOrWhiteSpace(input))
             {
-                return Value.GetValue(false, true, false, this.Column);
+                return new BooleanValue(false, true, false, this.Column);
             }
 
             var isSuccessful = bool.TryParse(input, out bool r);
-            return Value.GetValue(r, false, !isSuccessful, this.Column);
+            return new BooleanValue(r, false, !isSuccessful, this.Column);
         }
 
         public override IValue Parse(string input)

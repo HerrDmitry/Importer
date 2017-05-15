@@ -7,23 +7,29 @@ namespace Importer.Pipe.Values
 {
     using Importer.Pipe.Configuration;
 
-    public class StringValue : Value, IValue<string>, Value.ISetValue<string>
+    public class StringValue : IValue<string>
     {
-        public StringValue(Column column)
-            : base(column)
+        public StringValue(string value, bool isNull, bool isFailed, Column column)
         {
+            this.Column = column;
+            this.Value = value;
+            this.IsFailed = isFailed;
+            this.IsNull = isNull;
         }
 
-        protected override string ToStringInternal(string format, string nullValue = "")
+        public string Value { get; }
+
+        public string ToString(string format, string nullValue = "")
         {
             return this.IsNull ? nullValue : this.Value;
         }
 
-        public string Value { get; private set; }
-        IValue<string> ISetValue<string>.SetValue(string value)
+        public override string ToString()
         {
-            this.Value = value;
-            return this;
+            return this.ToString(null);
         }
-    }
+
+        public bool IsNull { get; }
+        public bool IsFailed { get; }
+        public Column Column { get; }    }
 }

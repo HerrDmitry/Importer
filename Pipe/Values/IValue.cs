@@ -4,12 +4,10 @@ using System.Text;
 
 namespace Importer.Pipe.Parsers
 {
-    using Importer.Pipe.Configuration;
+    using Configuration;
 
     public interface IValue
     {
-        void SetFormat(string format);
-        void SetNullValue(string nullValue);
         string ToString(string format, string nullValue="");
         bool IsNull { get; }
         bool IsFailed { get; }
@@ -17,7 +15,7 @@ namespace Importer.Pipe.Parsers
         Column Column { get; }
     }
 
-    public interface IValue<T> : IValue
+    public interface IValue<out T> : IValue
     {
         T Value { get; }
     }

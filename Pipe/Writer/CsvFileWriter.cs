@@ -73,13 +73,13 @@ namespace Importer.Pipe.Writer
         {
             for (var i = 0; i < config.Columns.Count; i++)
             {
-                //if (i > 0) this.writer.Write(this.config.Delimiter);
+                if (i > 0) this.writer.Write(this.config.Delimiter);
                 var val = values.FirstOrDefault(x=>x.Column.Name==this.config.Columns[i].Source);
 
                 if (val != null)
                 {
                     var value = val.ToString();
-/*
+
                     if (value.IndexOf(this.config.TextQualifier) >= 0 || value.IndexOf('\r') >= 0 || value.IndexOf('\n') >= 0)
                     {
                         this.writer.Write(this.config.TextQualifier);
@@ -90,7 +90,7 @@ namespace Importer.Pipe.Writer
                     {
                         this.writer.Write(value);
                     }
-*/
+
                 }
 
             }

@@ -149,7 +149,7 @@ namespace Importer.Pipe.Reader
                 }
 
                 stopwatch.Stop();
-                Logger.GetLogger().DebugAsync($"Loaded {counter} lines, loaded in {stopwatch.Elapsed.TotalSeconds} seconds.");
+                Logger.GetLogger().DebugAsync($"Loaded {counter} lines in {stopwatch.Elapsed.TotalSeconds} seconds.");
                 this.eof = true;
             }
         }

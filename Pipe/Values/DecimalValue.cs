@@ -7,23 +7,29 @@ namespace Importer.Pipe.Values
 {
     using Importer.Pipe.Configuration;
 
-    public class DecimalValue : Value, IValue<Decimal>, Value.ISetValue<Decimal>
+    public class DecimalValue : IValue<Decimal>
     {
-        public DecimalValue(Column column)
-            : base(column)
+        public DecimalValue(decimal value, bool isNull, bool isFailed, Column column)
         {
+            this.Column = column;
+            this.Value = value;
+            this.IsFailed = isFailed;
+            this.IsNull = isNull;
         }
 
-        protected override string ToStringInternal(string format, string nullValue = "")
+        public decimal Value { get; }
+
+        public string ToString(string format, string nullValue = "")
         {
             return this.IsNull ? nullValue : this.Value.ToString(format);
         }
 
-        public decimal Value { get; private set; }
-        IValue<decimal> ISetValue<Decimal>.SetValue(decimal value)
+        public override string ToString()
         {
-            this.Value = value;
-            return this;
+            return this.ToString(null);
         }
-    }
+
+        public bool IsNull { get; }
+        public bool IsFailed { get; }
+        public Column Column { get; }    }
 }

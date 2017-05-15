@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Importer.Pipe.Values;
+﻿using Importer.Pipe.Values;
 
 namespace Importer.Pipe.Parsers
 {
-    using Importer.Pipe.Configuration;
+    using Configuration;
 
     public class StringParser:Parser,IParser<string>
     {
@@ -16,7 +13,7 @@ namespace Importer.Pipe.Parsers
 
         IValue<string> IParser<string>.Parse(string input)
         {
-            return Value.GetValue(input, input == null, false, this.Column);
+            return new StringValue(input, input == null, false, this.Column);
         }
 
         public override IValue Parse(string input)

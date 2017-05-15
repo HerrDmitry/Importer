@@ -1,30 +1,34 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using Importer.Pipe.Parsers;
 
 namespace Importer.Pipe.Values
 {
-    using Importer.Pipe.Configuration;
+    using Configuration;
 
-    public class DateValue : Value, IValue<DateTime>, Value.ISetValue<DateTime>
+    public class DateValue : IValue<DateTime>
     {
-        public DateValue(Column column)
-            : base(column)
+        public DateValue(DateTime value, bool isNull, bool isFailed, Column column)
         {
+            this.Column = column;
+            this.Value = value;
+            this.IsFailed = isFailed;
+            this.IsNull = isNull;
         }
 
-        protected override string ToStringInternal(string format, string nullValue = "")
+        public DateTime Value { get; }
+
+        public string ToString(string format, string nullValue = "")
         {
             return this.IsNull ? nullValue : this.Value.ToString(format);
         }
 
-        public DateTime Value { get; private set; }
-
-        IValue<DateTime> ISetValue<DateTime>.SetValue(DateTime value)
+        public override string ToString()
         {
-            this.Value = value;
-            return this;
+            return this.ToString(null);
         }
+
+        public bool IsNull { get; }
+        public bool IsFailed { get; }
+        public Column Column { get; }
     }
 }

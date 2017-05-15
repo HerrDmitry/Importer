@@ -5,25 +5,32 @@ using Importer.Pipe.Parsers;
 
 namespace Importer.Pipe.Values
 {
-    using Importer.Pipe.Configuration;
+    using Configuration;
 
-    public class IntegerValue : Value, IValue<int>, Value.ISetValue<int>
+    public struct IntegerValue : IValue<int>
     {
-        public IntegerValue(Column column)
-            : base(column)
+        public IntegerValue(int value, bool isNull, bool isFailed, Column column)
         {
+            this.Column = column;
+            this.Value = value;
+            this.IsFailed = isFailed;
+            this.IsNull = isNull;
         }
 
-        protected override string ToStringInternal(string format, string nullValue = "")
+        public int Value { get; }
+
+        public string ToString(string format, string nullValue = "")
         {
             return this.IsNull ? nullValue : this.Value.ToString(format);
         }
 
-        public int Value { get; private set; }
-        IValue<int> ISetValue<int>.SetValue(int value)
+        public override string ToString()
         {
-            this.Value = value;
-            return this;
+            return this.ToString(null);
         }
+
+        public bool IsNull { get; }
+        public bool IsFailed { get; }
+        public Column Column { get; }
     }
 }

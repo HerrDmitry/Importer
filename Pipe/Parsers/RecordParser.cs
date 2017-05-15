@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace Importer.Pipe.Parsers
 {
     using System.Linq;
 
-    using Importer.Pipe.Configuration;
+    using Configuration;
 
     public class RecordParser
     {

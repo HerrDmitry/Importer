@@ -1,29 +1,33 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Importer.Pipe.Parsers;
+﻿using Importer.Pipe.Parsers;
 
 namespace Importer.Pipe.Values
 {
-    using Importer.Pipe.Configuration;
+    using Configuration;
 
-    public class BooleanValue : Value, IValue<bool>, Value.ISetValue<bool>
+    public class BooleanValue : IValue<bool>
     {
-        public BooleanValue(Column column):base(column)
+        public BooleanValue(bool value, bool isNull, bool isFailed, Column column)
         {
-        }
-
-        IValue<bool> ISetValue<bool>.SetValue(bool value)
-        {
+            this.Column = column;
             this.Value = value;
-            return this;
+            this.IsFailed = isFailed;
+            this.IsNull = isNull;
         }
 
-        protected override string ToStringInternal(string format, string nullValue = "")
+        public bool Value { get; }
+
+        public string ToString(string format, string nullValue = "")
         {
             return this.IsNull ? nullValue : this.Value.ToString();
         }
 
-        public bool Value { get; private set; }
+        public override string ToString()
+        {
+            return this.ToString(null);
+        }
+
+        public bool IsNull { get; }
+        public bool IsFailed { get; }
+        public Column Column { get; }
     }
 }

@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Text;
 using Importer.Pipe.Values;
 
 namespace Importer.Pipe.Parsers
 {
-    using Importer.Pipe.Configuration;
+    using Pipe.Configuration;
 
     public class DateParser:Parser,IParser<DateTime>
     {
@@ -19,13 +17,13 @@ namespace Importer.Pipe.Parsers
         {
             if (string.IsNullOrWhiteSpace(input))
             {
-                return Value.GetValue(DateTime.MinValue, true, false, this.Column);
+                return new DateValue(DateTime.MinValue, true, false, this.Column);
             }
 
             var isSuccessful = !string.IsNullOrWhiteSpace(this.inputFormat)
                                    ? DateTime.TryParseExact(input, this.inputFormat, CultureInfo.CurrentCulture, DateTimeStyles.AssumeLocal, out DateTime r)
                                    : DateTime.TryParse(input, out r);
-            return Value.GetValue(r, false, !isSuccessful, this.Column);
+            return new DateValue(r, false, !isSuccessful, this.Column);
         }
 
         public override IValue Parse(string input)
