@@ -28,7 +28,7 @@ namespace Importer.Pipe
                     return FileWriter.GetFileWriter(File.Open(filePath, FileMode.Create, FileAccess.Write, FileShare.Read), x);
                 }
                 throw new ArgumentOutOfRangeException($"There is no file path defined for \"{x.Name}\"");
-            });
+            }).ToList();
             foreach (var reader in configuration.Readers.Where(x=>!DataDictionary.GetDictionaryNames().Contains(x.Name)))
             {
                 if (configuration.Files.TryGetValue(reader.Name, out string readerFilePath))
