@@ -9,6 +9,6 @@ namespace Importer.Pipe.Reader
 
     public interface IFileReader:IDisposable
     {
-        IEnumerable<IEnumerable<IValue>> ReadData();
+        IEnumerable<Dictionary<string,IValue>> ReadData();
     }
 }

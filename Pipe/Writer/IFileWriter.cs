@@ -6,7 +6,8 @@ namespace Importer.Pipe.Writer
 {
     public interface IFileWriter
     {
-        void Write(IEnumerable<IValue> values);
-        void WriteLine(IEnumerable<IValue> values = null);
+        void Write(Dictionary<string, IValue> values);
+
+        void WriteLine(Dictionary<string, IValue> values = null);
     }
 }

@@ -35,22 +35,17 @@ namespace Importer.Pipe
             return null;
         }
 
-        public static void Set(string reference, string keyField, IEnumerable<IValue> record)
+        public static void Set(string reference, string keyField, Dictionary<string, IValue> record)
         {
             if (!dictionary.TryGetValue(reference, out Dictionary<string, Dictionary<string, IValue>> dict))
             {
                 dict = new Dictionary<string, Dictionary<string, IValue>>();
                 dictionary[reference] = dict;
             }
-            var rDict = new Dictionary<string, IValue>();
-            foreach (var r in record)
-            {
-                rDict[r.Column.Name] = r;
-            }
 
-            if (rDict.TryGetValue(keyField, out IValue keyValue) && !keyValue.IsFailed)
+            if (record.TryGetValue(keyField, out IValue keyValue) && !keyValue.IsFailed)
             {
-                dict[keyValue.ToString()] = rDict;
+                dict[keyValue.ToString()] = record;
             }
         }
 

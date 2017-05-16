@@ -7,7 +7,7 @@ namespace Importer.Pipe.Values
 {
     using Importer.Pipe.Configuration;
 
-    public class StringValue : IValue<string>
+    public struct StringValue : IValue<string>
     {
         public StringValue(string value, bool isNull, bool isFailed, Column column)
         {

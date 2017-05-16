@@ -24,7 +24,7 @@ namespace Importer.Pipe.Reader
             this.config = config;
         }
 
-        public IEnumerable<IEnumerable<IValue>> ReadData()
+        public IEnumerable<Dictionary<string,IValue>> ReadData()
         {
             this.token=new CancellationTokenSource();
             this.readTask = Task.Run(() => this.FastReadLineTask(this.token.Token));
@@ -35,7 +35,7 @@ namespace Importer.Pipe.Reader
             {
                 if (this.buffer.TryDequeue(out IEnumerable<string> record))
                 {
-                    yield return recordParser.Parse(record);
+                    yield return recordParser.ParseToDictionary(record);
                 }
                 else
                 {
@@ -136,6 +136,7 @@ namespace Importer.Pipe.Reader
                     var columns = this.SplitIntoColumns(line);
                     while (!token.IsCancellationRequested && this.bufferSize != 0 && this.buffer.Count > this.bufferSize)
                     {
+                        Logger.GetLogger().DebugAsync("Reached reader buffer limit");
                         Thread.Sleep(50);
                     }
 

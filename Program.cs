@@ -16,6 +16,7 @@ namespace Importer
         static int Main(string[] args)
         {
             bool hasError = false;
+            var result = 0;
             try
             {
                 Logger.GetLogger().MessageAsync("Hello world");
@@ -23,17 +24,17 @@ namespace Importer
                 if (string.IsNullOrEmpty(configPath))
                 {
                     PrintUsage();
-                    Logger.GetLogger().Flush(); 
+                    Logger.GetLogger().Flush();
                     return -1;
                 }
 
                 var importerConfig = ImporterConfiguration.ReadConfiguration(configPath);
-                var df =new DataFlow(importerConfig);
+                var df = new DataFlow(importerConfig);
 
-                return 0; 
+                return 0;
 
 
-                var config=new Configuration.Configuration(configPath);
+                var config = new Configuration.Configuration(configPath);
                 var files = new System.Collections.Generic.Dictionary<string, string>(config.Files);
                 foreach (var a in args)
                 {
@@ -65,7 +66,7 @@ namespace Importer
                         hasError = true;
                         break;
                     }
-                    
+
 
                     if (File.Exists(file))
                     {
@@ -80,7 +81,7 @@ namespace Importer
                             File.Delete(errorFile);
                         }
 
-                        errorOutput=new FileWriter();
+                        errorOutput = new FileWriter();
                         errorOutput.SetDataDestination(File.Open(errorFile, FileMode.Create, FileAccess.Write, FileShare.Read));
                     }
 
@@ -95,13 +96,15 @@ namespace Importer
                 Logger.GetLogger().ErrorAsync(ex.Message);
                 hasError = true;
             }
-            var result = 0;
-            if (hasError)
+            finally
             {
-                Logger.GetLogger().ErrorAsync("Execution failed");
-                result = -1;
+                if (hasError)
+                {
+                    Logger.GetLogger().ErrorAsync("Execution failed");
+                    result = -1;
+                }
+                Logger.GetLogger().Flush();
             }
-            Logger.GetLogger().Flush();
             return result;
         }
 

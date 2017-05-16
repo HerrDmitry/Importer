@@ -7,7 +7,7 @@ namespace Importer.Pipe.Values
 {
     using Importer.Pipe.Configuration;
 
-    public class DecimalValue : IValue<Decimal>
+    public struct DecimalValue : IValue<Decimal>
     {
         public DecimalValue(decimal value, bool isNull, bool isFailed, Column column)
         {

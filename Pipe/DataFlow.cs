@@ -9,19 +9,24 @@ using Importer.Pipe.Writer;
 
 namespace Importer.Pipe
 {
+    using System.Collections.Concurrent;
+    using System.Threading;
     using System.Threading.Tasks;
 
     using Importer.Pipe.Configuration;
+    using Importer.Pipe.Parsers;
 
     public class DataFlow
     {
         public DataFlow(ImporterConfiguration configuration)
         {
+            var stopwatch=new Stopwatch();
+            stopwatch.Start();
             Logger.GetLogger().SetLogginLevel(Logger.LogLevel.Debug);
 
             this.LoadDictionaries(configuration.Files,configuration.Readers).Wait();
 
-            var writers = configuration.Writers.Where(x=>!x.Disabled).Select(x =>
+            this.writers = configuration.Writers.Where(x=>!x.Disabled).Select(x =>
             {
                 if (configuration.Files.TryGetValue(x.Name, out string filePath))
                 {
@@ -29,7 +34,9 @@ namespace Importer.Pipe
                 }
                 throw new ArgumentOutOfRangeException($"There is no file path defined for \"{x.Name}\"");
             }).ToList();
-            foreach (var reader in configuration.Readers.Where(x=>!x.Disabled && !DataDictionary.GetDictionaryNames().Contains(x.Name)))
+
+            var reader = configuration.Readers.FirstOrDefault(x => !x.Disabled && !DataDictionary.GetDictionaryNames().Contains(x.Name));
+            if(reader!=null)
             {
                 if (configuration.Files.TryGetValue(reader.Name, out string readerFilePath))
                 {
@@ -39,25 +46,68 @@ namespace Importer.Pipe
                     }
                     using (var fileReader = FileReader.GetFileReader(File.Open(readerFilePath, FileMode.Open, FileAccess.Read, FileShare.Read), reader))
                     {
-                        long successful = 0;
-                        long exceptions = 0;
+                        var cancellationTokenSource=new CancellationTokenSource();
+                        var tasks = new Task[Environment.ProcessorCount];
+                        for (var i = 0; i < Environment.ProcessorCount; i++)
+                        {
+                            tasks[i] = Task.Run(() => this.WriterTask(cancellationTokenSource.Token));
+                        }
+
                         foreach (var record in fileReader.ReadData())
                         {
-                            if (record.Any(x => x.IsFailed)){
-                                exceptions++;
-                            }
-                            else
+                            if (this.buffer.Count > MAX_BUFFER_SIZE)
                             {
-                                foreach (var writer in writers)
-                                {
-                                    writer.WriteLine(record);
-                                }
-                                successful++;
+                                Logger.GetLogger().DebugAsync("Reached record buffer limit");
+                                Thread.Sleep(50);
                             }
+
+                            this.buffer.Add(record);
                         }
-                        Logger.GetLogger().InfoAsync($"Successfully saved {successful} records");
-                        Logger.GetLogger().InfoAsync($"Failed to process {successful} records");
+
+                        cancellationTokenSource.Cancel();
+                        Task.WaitAll(tasks);
+
+                        Logger.GetLogger().InfoAsync($"Successfully saved {this.successfulRecordCount} records");
+                        Logger.GetLogger().InfoAsync($"Failed to process {this.exceptionRecordCount} records");
                     }
+                }
+            }
+
+            stopwatch.Stop();
+            Logger.GetLogger().InfoAsync($"Finished data processing in {stopwatch.Elapsed.Hours}:{stopwatch.Elapsed.Minutes}:{stopwatch.Elapsed.Seconds}.{stopwatch.Elapsed.Milliseconds}");
+        }
+
+        private void WriterTask(CancellationToken token)
+        {
+            while (!token.IsCancellationRequested || this.buffer.Count>0)
+            {
+                if (this.buffer.TryTake(out Dictionary<string, IValue> record))
+                {
+                    if (record.Values.Any(x => x.IsFailed))
+                    {
+                        lock (this.buffer)
+                        {
+                            this.exceptionRecordCount++;
+                        }
+                    }
+                    else
+                    {
+                        foreach (var writer in this.writers)
+                        {
+                            writer.WriteLine(record);
+                        }
+
+                        lock (this.buffer)
+                        {
+                            this.successfulRecordCount++;
+                        }
+                    }
+
+                    record.Clear();
+                }
+                else
+                {
+                    Thread.Sleep(50);
                 }
             }
         }
@@ -99,5 +149,14 @@ namespace Importer.Pipe
                 }
             });
         }
+
+        private List<IFileWriter> writers;
+        private ConcurrentBag<Dictionary<string, IValue>> buffer = new ConcurrentBag<Dictionary<string, IValue>>();
+        private volatile int successfulRecordCount = 0;
+        private volatile int exceptionRecordCount = 0;
+
+        private CancellationTokenSource tokenSource;
+
+        private const int MAX_BUFFER_SIZE = 10000;
     }
 }

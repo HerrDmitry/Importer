@@ -5,7 +5,7 @@ namespace Importer.Pipe.Values
 {
     using Configuration;
 
-    public class DateValue : IValue<DateTime>
+    public struct DateValue : IValue<DateTime>
     {
         public DateValue(DateTime value, bool isNull, bool isFailed, Column column)
         {

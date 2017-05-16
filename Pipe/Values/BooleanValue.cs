@@ -4,7 +4,7 @@ namespace Importer.Pipe.Values
 {
     using Configuration;
 
-    public class BooleanValue : IValue<bool>
+    public struct BooleanValue : IValue<bool>
     {
         public BooleanValue(bool value, bool isNull, bool isFailed, Column column)
         {

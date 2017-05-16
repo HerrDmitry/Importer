@@ -9,6 +9,8 @@ namespace Importer.Pipe.Configuration
 
     public class CsvFileConfiguration : FileConfiguration
     {
+        private string textQualifier;
+
         [JsonProperty("columns")]
         public List<Column> Columns { get; set; }
 
@@ -16,11 +18,22 @@ namespace Importer.Pipe.Configuration
         public string Delimiter { get; set; }
 
         [JsonProperty("textQualifier")]
-        public string TextQualifier { get; set; }
+        public string TextQualifier
+        {
+            get => this.textQualifier;
+            set
+            {
+                this.textQualifier = value;
+                this.TextQualifierChar = !string.IsNullOrWhiteSpace(value) && value.Length > 0 ? value[0] : '\"';
+            }
+        }
+
+        [JsonIgnore]
+        public char TextQualifierChar { get; private set; }
 
         public override List<KeyValuePair<string,string>> GetReferences()
         {
-            return Columns.Where(x => !string.IsNullOrWhiteSpace(x.Reference)).Select(x =>
+            return this.Columns.Where(x => !string.IsNullOrWhiteSpace(x.Reference)).Select(x =>
             {
                 var parts = x.Reference.Split(new[] {'.'}, StringSplitOptions.RemoveEmptyEntries);
                 return parts.Length > 1 ? new KeyValuePair<string,string>(parts[0],parts[1]) : new KeyValuePair<string, string>("","");
