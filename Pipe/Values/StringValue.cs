@@ -31,5 +31,6 @@ namespace Importer.Pipe.Values
 
         public bool IsNull { get; }
         public bool IsFailed { get; }
-        public Column Column { get; }    }
+        public Column Column { get; }
+    }
 }

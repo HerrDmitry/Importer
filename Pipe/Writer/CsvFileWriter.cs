@@ -83,7 +83,7 @@ namespace Importer.Pipe.Writer
         private unsafe void PrepareRecord(List<string> values)
         {
             var qualifier = this.config.TextQualifierChar;
-            var sb=new StringBuilder();
+            var sb=Memory.GetAvailableStringBuilder();
             for (var i = 0; i < values.Count; i++)
             {
                 if (i > 0) sb.Append(this.config.Delimiter);
@@ -134,6 +134,7 @@ namespace Importer.Pipe.Writer
                 Thread.Sleep(50);
             }
             this.buffer.Add(sb.ToString());
+            Memory.StoreStringBuilder(sb);
         }
 
         private void WriteInternalTask(CancellationToken token)

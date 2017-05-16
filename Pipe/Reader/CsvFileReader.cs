@@ -84,21 +84,24 @@ namespace Importer.Pipe.Reader
                     int qualifierCount = 0;
                     char[] line = null;
                     var startPosition = bufferPosition;
+                    var lineLength = 0;
 
                     void appendToLine()
                     {
-                        var lineLength = line?.Length > 0 ? line.Length : 0;
                         if (MAX_LINE_SIZE < lineLength + bufferPosition - startPosition)
                         {
                             throw new FileLoadException("Line is too big");
                         }
-                        var newLine = new char[lineLength + bufferPosition - startPosition];
-                        if (lineLength > 0)
+                        var newLineLength = lineLength + bufferPosition - startPosition;
+                        var newLine = Memory.GetAvailableCharArray(newLineLength);
+                        if (lineLength>0)
                         {
                             Array.Copy(line, newLine, lineLength);
                         }
                         Array.Copy(cBuff, startPosition, newLine, lineLength, bufferPosition - startPosition);
+                        Memory.StoreArray(line);
                         line = newLine;
+                        lineLength = newLineLength;
                     }
 
                     while (!hasLine)
@@ -133,7 +136,8 @@ namespace Importer.Pipe.Reader
                     }
 
                     counter++;
-                    var columns = this.SplitIntoColumns(line);
+                    var columns = this.SplitIntoColumns(line, lineLength);
+                    Memory.StoreArray(line);
                     while (!token.IsCancellationRequested && this.bufferSize != 0 && this.buffer.Count > this.bufferSize)
                     {
                         Logger.GetLogger().DebugAsync("Reached reader buffer limit");
@@ -141,7 +145,6 @@ namespace Importer.Pipe.Reader
                     }
 
                     this.buffer.Enqueue(columns);
-                    line = null;
                     if (stopwatch.Elapsed.TotalSeconds-lastelapsed >= 10)
                     {
                         Logger.GetLogger().DebugAsync($"Loaded {counter} lines in {stopwatch.Elapsed.TotalSeconds} seconds");
@@ -155,17 +158,17 @@ namespace Importer.Pipe.Reader
             }
         }
 
-        private unsafe IEnumerable<string> SplitIntoColumns(char[] source)
+        private unsafe IEnumerable<string> SplitIntoColumns(char[] source, int length)
         {
             var result = new List<string>();
-            if (source == null || source.Length == 0)
+            if (source == null || length == 0)
             {
                 return result;
             }
             fixed (char* line = source)
             {
                 var index = 0;
-                while (index < source.Length)
+                while (index < length)
                 {
                     var expected = this.delimiter;
                     if (line[index] == this.delimiter)
@@ -191,14 +194,14 @@ namespace Importer.Pipe.Reader
                     {
                         index++;
                         var idx = index;
-                        while (idx < source.Length && line[idx] != expected) idx++;
+                        while (idx < length && line[idx] != expected) idx++;
 
                         len = idx - start;
                         index = idx;
 
-                        if (index < source.Length)
+                        if (index < length)
                         {
-                            if (index < source.Length - 1 && source[index] == this.qualifier)
+                            if (index < length - 1 && source[index] == this.qualifier)
                             {
                                 if (source[index + 1] == this.qualifier)
                                 {
