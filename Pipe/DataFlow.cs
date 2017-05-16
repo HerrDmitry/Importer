@@ -102,8 +102,6 @@ namespace Importer.Pipe
                             this.successfulRecordCount++;
                         }
                     }
-
-                    record.Clear();
                 }
                 else
                 {
@@ -154,8 +152,6 @@ namespace Importer.Pipe
         private ConcurrentBag<Dictionary<string, IValue>> buffer = new ConcurrentBag<Dictionary<string, IValue>>();
         private volatile int successfulRecordCount = 0;
         private volatile int exceptionRecordCount = 0;
-
-        private CancellationTokenSource tokenSource;
 
         private const int MAX_BUFFER_SIZE = 10000;
     }

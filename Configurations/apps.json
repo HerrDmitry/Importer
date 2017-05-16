@@ -53,7 +53,7 @@
         { "source": "Application.ProjectDescription" },
         { "source": "Application.LargeProjectDescription" },
         { "source": "Application.SummaryDescription" },
-        { "source": "Application.DateProposedStart", "format": "dd/MMM/yyyy" },
+        { "source": "Application.DateProposedStart", "format": "hh:mm:ss dd/MMM/yyyy" },
         { "source": "Application.DateProposedEnd", "format": "dd/MMM/yyyy" },
         { "source": "Application.IsEligibilityConfirmed" },
         { "source": "Application.EligibilityConfirmationComment" },

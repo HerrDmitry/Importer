@@ -18,9 +18,16 @@ namespace Importer.Pipe.Writer
         {
             this.config = config;
             this.writer=new StreamWriter(target);
-            this.buffer=new ConcurrentBag<List<string>>();
+            this.dictBuffer=new ConcurrentBag<Dictionary<string,IValue>>();
+            this.buffer=new ConcurrentBag<string>();
             this.tokenSource=new CancellationTokenSource();
-            this.writeTask = Task.Run(() => this.WriteTask(tokenSource.Token));
+            var tasks = new List<Task>();
+            for (var i = 0; i < Environment.ProcessorCount; i++)
+            {
+                tasks.Add(Task.Run(() => this.PrepareTask(tokenSource.Token)));
+            }
+            tasks.Add(Task.Run(()=>this.WriteInternalTask(tokenSource.Token)));
+            this.tasks = tasks.ToArray();
         }
 
         public void Write(Dictionary<string,IValue> values)
@@ -30,14 +37,13 @@ namespace Importer.Pipe.Writer
 
         public void WriteLine(Dictionary<string,IValue> values)
         {
-            while (this.buffer.Count > MAX_BUFFER_SIZE)
+            while (this.dictBuffer.Count > MAX_BUFFER_SIZE)
             {
                 Logger.GetLogger().DebugAsync("Reached writer buffer limit");
                 Thread.Sleep(50);
             }
 
-            var strings = this.config.Columns.Select(x => values.TryGetValue(x.Source, out IValue value) ? value.ToString(x.Format) : "").ToList();
-            this.buffer.Add(strings);
+            this.dictBuffer.Add(values);
         }
 
         public void Dispose()
@@ -51,46 +57,47 @@ namespace Importer.Pipe.Writer
             if (disposing)
             {
                 this.tokenSource.Cancel();
-                this.writeTask.Wait();
+                Task.WaitAll(this.tasks);
                 this.writer.Flush();
                 this.writer?.Dispose();
                 this.writer = null;
             }
         }
 
-        private void WriteTask(CancellationToken token)
+        private void PrepareTask(CancellationToken token)
         {
-            while (!token.IsCancellationRequested)
+            while (!token.IsCancellationRequested || this.dictBuffer.Count>0)
             {
-                if (this.buffer.TryTake(out List<string> values))
+                if (this.dictBuffer.TryTake(out Dictionary<string, IValue> values))
                 {
-                    this.WriteInternal(values);
+                    var strings = this.config.Columns.Select(x => values.TryGetValue(x.Source, out IValue value) ? value.ToString(x.Format) : "").ToList();
+                    this.PrepareRecord(strings);
                 }
                 else
                 {
-                    Logger.GetLogger().DebugAsync("Writer buffer is empty");
                     Thread.Sleep(50);
                 }
             }
         }
 
-        private unsafe void WriteInternal(List<string> values)
+        private unsafe void PrepareRecord(List<string> values)
         {
             var qualifier = this.config.TextQualifierChar;
+            var sb=new StringBuilder();
             for (var i = 0; i < values.Count; i++)
             {
-                if (i > 0) this.writer.Write(this.config.Delimiter);
+                if (i > 0) sb.Append(this.config.Delimiter);
 
                 var value = values[i];
 
-                var lineSource = new char[value.Length];
+                var lineSource = Memory.GetAvailableCharArray(value.Length);
                 value.CopyTo(0,lineSource,0,value.Length);
                 var needQualifier = false;
-                var line = new char[value.Length * 2];
+                var line = Memory.GetAvailableCharArray(value.Length * 2);
                 fixed (char* linePtr = line, lineSourcePtr = lineSource)
                 {
                     var ti = 0;
-                    for (var si = 0; si < lineSource.Length; si++)
+                    for (var si = 0; si < value.Length; si++)
                     {
                         if (lineSourcePtr[si] == qualifier)
                         {
@@ -107,28 +114,52 @@ namespace Importer.Pipe.Writer
                     }
                     if (needQualifier)
                     {
-                        this.writer.Write(this.config.TextQualifier);
+                        sb.Append(this.config.TextQualifier);
                     }
-                    this.writer.Write(line,0,ti);
+                    sb.Append(linePtr,ti);
                     if (needQualifier)
                     {
-                        this.writer.Write(this.config.TextQualifier);
+                        sb.Append(this.config.TextQualifier);
                     }
                 }
 
+                Memory.StoreArray(lineSource);
+                Memory.StoreArray(line);
             }
 
-            this.writer.WriteLine();
+            sb.AppendLine();
+            if (this.buffer.Count > MAX_BUFFER_SIZE)
+            {
+                Logger.GetLogger().DebugAsync("File stream buffer reached limit");
+                Thread.Sleep(50);
+            }
+            this.buffer.Add(sb.ToString());
+        }
+
+        private void WriteInternalTask(CancellationToken token)
+        {
+            while (!token.IsCancellationRequested || this.buffer.Count>0)
+            {
+                if (this.buffer.TryTake(out string line))
+                {
+                    this.writer.Write(line);
+                }
+                else
+                {
+                    Thread.Sleep(50);
+                }
+
+            }
         }
 
         private CsvFileConfiguration config;
         private StreamWriter writer;
 
-        private ConcurrentBag<List<string>> buffer;
+        private ConcurrentBag<string> buffer;
+        private ConcurrentBag<Dictionary<string, IValue>> dictBuffer;
 
         private const int MAX_BUFFER_SIZE = 10000;
         private CancellationTokenSource tokenSource;
-        private Task writeTask;
-
+        private Task[] tasks;
     }
 }

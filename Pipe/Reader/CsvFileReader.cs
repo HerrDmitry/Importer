@@ -227,7 +227,7 @@ namespace Importer.Pipe.Reader
                             done = true;
                         }
                     }
-                    var resultLine = new char[len];
+                    var resultLine = Memory.GetAvailableCharArray(len);
                     fixed (char* resultPtr = resultLine)
                     {
                         var idx = 0;
@@ -249,6 +249,7 @@ namespace Importer.Pipe.Reader
                         }
                         result.Add(new string(resultPtr, 0, idx));
                     }
+                    Memory.StoreArray(resultLine);
                 }
             }
             return result;
