@@ -28,6 +28,7 @@ namespace Importer.Pipe.Configuration
             switch (baseConfig.Type)
             {
                 case "CSV": return rawConfig.ToObject<CsvFileConfiguration>().NormalizeColumnNames();
+                case "CSVMultiline": return rawConfig.ToObject<CsvMultilineFileConfiguration>().NormalizeColumnNames();
             }
 
             throw new ArgumentOutOfRangeException($"File of type {baseConfig.Type} is not supported.");

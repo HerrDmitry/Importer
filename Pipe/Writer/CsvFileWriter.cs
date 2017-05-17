@@ -64,7 +64,7 @@ namespace Importer.Pipe.Writer
             }
         }
 
-        private void PrepareTask(CancellationToken token)
+        protected virtual void PrepareTask(CancellationToken token)
         {
             while (!token.IsCancellationRequested || this.dictBuffer.Count>0)
             {
@@ -80,7 +80,7 @@ namespace Importer.Pipe.Writer
             }
         }
 
-        private unsafe void PrepareRecord(List<string> values)
+        protected unsafe void PrepareRecord(List<string> values)
         {
             var qualifier = this.config.TextQualifierChar;
             var sb=Memory.GetAvailableStringBuilder();
@@ -157,7 +157,7 @@ namespace Importer.Pipe.Writer
         private StreamWriter writer;
 
         private ConcurrentBag<string> buffer;
-        private ConcurrentBag<Dictionary<string, IValue>> dictBuffer;
+        protected ConcurrentBag<Dictionary<string, IValue>> dictBuffer;
 
         private const int MAX_BUFFER_SIZE = 10000;
         private CancellationTokenSource tokenSource;
