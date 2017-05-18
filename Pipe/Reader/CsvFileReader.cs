@@ -11,6 +11,7 @@ namespace Importer.Pipe.Reader
 {
     using Importer.Pipe.Configuration;
     using Importer.Pipe.Parsers;
+    using Importer.Pipe.Record;
 
     public class CsvFileReader : IFileReader
     {
@@ -20,11 +21,11 @@ namespace Importer.Pipe.Reader
             this.qualifier = !string.IsNullOrWhiteSpace(config?.TextQualifier) ? config.TextQualifier[0] : '"';
             this.delimiter = !string.IsNullOrWhiteSpace(config?.Delimiter) ? config.Delimiter[0] : ',';
             this.bufferSize = bufferSize;
-            this.buffer = new ConcurrentQueue<IEnumerable<string>>();
+            this.buffer = new ConcurrentQueue<DataRecord>();
             this.config = config;
         }
 
-        public IEnumerable<Dictionary<string,IValue>> ReadData()
+        public IEnumerable<DataRecord> ReadData()
         {
             this.token=new CancellationTokenSource();
             this.readTask = Task.Run(() => this.FastReadLineTask(this.token.Token));
@@ -33,9 +34,10 @@ namespace Importer.Pipe.Reader
 
             while (!this.eof || this.buffer.Count > 0)
             {
-                if (this.buffer.TryDequeue(out IEnumerable<string> record))
+                if (this.buffer.TryDequeue(out DataRecord record))
                 {
-                    yield return recordParser.Parse(record);
+                    record.Parsed = recordParser.Parse(record.Source);
+                    yield return record;
                 }
                 else
                 {
@@ -144,7 +146,7 @@ namespace Importer.Pipe.Reader
                         Thread.Sleep(50);
                     }
 
-                    this.buffer.Enqueue(columns);
+                    this.buffer.Enqueue(new DataRecord { Source = columns, RecordNumber = counter });
                     if (stopwatch.Elapsed.TotalSeconds-lastelapsed >= 10)
                     {
                         Logger.GetLogger().DebugAsync($"Loaded {counter} lines in {stopwatch.Elapsed.TotalSeconds} seconds");
@@ -260,7 +262,7 @@ namespace Importer.Pipe.Reader
 
 
         private StreamReader reader;
-        private ConcurrentQueue<IEnumerable<string>> buffer;
+        private ConcurrentQueue<DataRecord> buffer;
         private char qualifier;
         private char delimiter;
         private int bufferSize;

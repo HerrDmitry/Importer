@@ -9,5 +9,7 @@
         public IEnumerable<string> Source;
 
         public Dictionary<string, IValue> Parsed;
+
+        public long RecordNumber;
     }
 }

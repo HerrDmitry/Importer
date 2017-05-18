@@ -10,8 +10,6 @@ using Importer.Pipe.Parsers;
 
 namespace Importer.Pipe.Writer
 {
-    using System.Text;
-
     public class CsvFileWriter:IDisposable,IFileWriter
     {
         public CsvFileWriter(Stream target, CsvFileConfiguration config)
@@ -24,9 +22,9 @@ namespace Importer.Pipe.Writer
             var tasks = new List<Task>();
             for (var i = 0; i < Environment.ProcessorCount; i++)
             {
-                tasks.Add(Task.Run(() => this.PrepareTask(tokenSource.Token)));
+                tasks.Add(Task.Run(() => this.PrepareTask(this.tokenSource.Token)));
             }
-            tasks.Add(Task.Run(()=>this.WriteInternalTask(tokenSource.Token)));
+            tasks.Add(Task.Run(()=>this.WriteInternalTask(this.tokenSource.Token)));
             this.tasks = tasks.ToArray();
         }
 

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using Importer.Interfaces;
+
 using Importer.Pipe.Reader;
 using Importer.Pipe.Writer;
 
@@ -14,7 +14,7 @@ namespace Importer.Pipe
     using System.Threading.Tasks;
 
     using Importer.Pipe.Configuration;
-    using Importer.Pipe.Parsers;
+    using Importer.Pipe.Record;
 
     public class DataFlow
     {
@@ -74,16 +74,16 @@ namespace Importer.Pipe
             }
 
             stopwatch.Stop();
-            Logger.GetLogger().InfoAsync($"Finished data processing in {stopwatch.Elapsed.Hours}:{stopwatch.Elapsed.Minutes}:{stopwatch.Elapsed.Seconds}.{stopwatch.Elapsed.Milliseconds}");
+            Logger.GetLogger().InfoAsync($"Finished data processing in {stopwatch.Elapsed.Hours:00}:{stopwatch.Elapsed.Minutes:00}:{stopwatch.Elapsed.Seconds:00}.{stopwatch.Elapsed.Milliseconds}");
         }
 
         private void WriterTask(CancellationToken token)
         {
             while (!token.IsCancellationRequested || this.buffer.Count>0)
             {
-                if (this.buffer.TryTake(out Dictionary<string, IValue> record))
+                if (this.buffer.TryTake(out DataRecord record))
                 {
-                    if (record.Values.Any(x => x.IsFailed))
+                    if (record.Parsed.Values.Any(x => x.IsFailed))
                     {
                         lock (this.buffer)
                         {
@@ -94,7 +94,7 @@ namespace Importer.Pipe
                     {
                         foreach (var writer in this.writers)
                         {
-                            writer.WriteLine(record);
+                            writer.WriteLine(record.Parsed);
                         }
 
                         lock (this.buffer)
@@ -138,7 +138,7 @@ namespace Importer.Pipe
                     var reference = config.Name + "." + keyFieldName;
                     foreach (var record in fileReader.ReadData())
                     {
-                        DataDictionary.Set(reference, reference, record);
+                        DataDictionary.Set(reference, reference, record.Parsed);
                         counter++;
                     }
                     stopWatch.Stop();
@@ -149,7 +149,7 @@ namespace Importer.Pipe
         }
 
         private List<IFileWriter> writers;
-        private ConcurrentBag<Dictionary<string, IValue>> buffer = new ConcurrentBag<Dictionary<string, IValue>>();
+        private ConcurrentBag<DataRecord> buffer = new ConcurrentBag<DataRecord>();
         private volatile int successfulRecordCount = 0;
         private volatile int exceptionRecordCount = 0;
 
