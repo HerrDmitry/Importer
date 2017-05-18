@@ -11,17 +11,20 @@ namespace Importer.Pipe
 
         private static readonly Dictionary<string, Dictionary<string, Dictionary<string, IValue>>> dictionary = new Dictionary<string, Dictionary<string, Dictionary<string, IValue>>>();
 
-        public static Dictionary<string, IValue> Get(string reference, string keyValue)
+        public static Dictionary<string, Dictionary<string, IValue>> Get(string reference)
         {
             if (dictionary.TryGetValue(reference, out Dictionary<string, Dictionary<string, IValue>> dict))
             {
-                if (dict.TryGetValue(keyValue, out Dictionary<string, IValue> value))
-                {
-                    return value;
-                }
+                return dict;
             }
 
-            return null;
+            return new Dictionary<string, Dictionary<string, IValue>>();
+        }
+
+        public static Dictionary<string, IValue> Get(string reference, string keyValue)
+        {
+            var dict=Get(reference);
+            return dict.TryGetValue(keyValue, out Dictionary<string, IValue> value) ? value : null;
         }
 
         public static IValue Get(string reference, string keyValue, string field)

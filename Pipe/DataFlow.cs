@@ -138,7 +138,7 @@ namespace Importer.Pipe
                     var reference = config.Name + "." + keyFieldName;
                     foreach (var record in fileReader.ReadData())
                     {
-                        DataDictionary.Set(reference, keyFieldName, record);
+                        DataDictionary.Set(reference, reference, record);
                         counter++;
                     }
                     stopWatch.Stop();

@@ -35,7 +35,7 @@ namespace Importer.Pipe.Reader
             {
                 if (this.buffer.TryDequeue(out IEnumerable<string> record))
                 {
-                    yield return recordParser.ParseToDictionary(record);
+                    yield return recordParser.Parse(record);
                 }
                 else
                 {
