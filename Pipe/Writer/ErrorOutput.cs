@@ -11,13 +11,18 @@
 
         public static void Write(string line)
         {
-            writer.Write(line);
+            writer?.Write(line);
         }
 
         public static void WriteLine(string line)
         {
             Write(line);
-            writer.WriteLine();
+            writer?.WriteLine();
+        }
+
+        public static void Flush()
+        {
+            writer?.Flush();
         }
 
         private static StreamWriter writer;

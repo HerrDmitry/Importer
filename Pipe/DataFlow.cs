@@ -20,61 +20,77 @@ namespace Importer.Pipe
     {
         public DataFlow(ImporterConfiguration configuration)
         {
-            var stopwatch=new Stopwatch();
-            stopwatch.Start();
-            Logger.GetLogger().SetLogginLevel(Logger.LogLevel.Debug);
-
-            this.LoadDictionaries(configuration.Files,configuration.Readers).Wait();
-
-            this.writers = configuration.Writers.Where(x=>!x.Disabled).Select(x =>
+            try
             {
-                if (configuration.Files.TryGetValue(x.Name, out string filePath))
+                var stopwatch = new Stopwatch();
+                stopwatch.Start();
+                Logger.GetLogger().SetLogginLevel(Logger.LogLevel.Debug);
+
+                if (configuration.Files.TryGetValue("Error_Output", out string errorPath))
                 {
-                    return FileWriter.GetFileWriter(File.Open(filePath, FileMode.Create, FileAccess.Write, FileShare.Read), x);
+                    ErrorOutput.SetOutputTarget(File.Open(errorPath, FileMode.Create, FileAccess.Write, FileShare.Read));
                 }
-                throw new ArgumentOutOfRangeException($"There is no file path defined for \"{x.Name}\"");
-            }).ToList();
 
-            var reader = configuration.Readers.FirstOrDefault(x => !x.Disabled && !DataDictionary.GetDictionaryNames().Contains(x.Name));
-            if(reader!=null)
-            {
-                if (configuration.Files.TryGetValue(reader.Name, out string readerFilePath))
-                {
-                    if (!File.Exists(readerFilePath))
-                    {
-                        throw new FileNotFoundException($"File \"{readerFilePath}\" not found");
-                    }
-                    using (var fileReader = FileReader.GetFileReader(File.Open(readerFilePath, FileMode.Open, FileAccess.Read, FileShare.Read), reader))
-                    {
-                        var cancellationTokenSource=new CancellationTokenSource();
-                        var tasks = new Task[Environment.ProcessorCount];
-                        for (var i = 0; i < Environment.ProcessorCount; i++)
-                        {
-                            tasks[i] = Task.Run(() => this.WriterTask(cancellationTokenSource.Token));
-                        }
+                this.LoadDictionaries(configuration.Files, configuration.Readers).Wait();
 
-                        foreach (var record in fileReader.ReadData())
-                        {
-                            if (this.buffer.Count > MAX_BUFFER_SIZE)
+                this.writers = configuration.Writers.Where(x => !x.Disabled)
+                    .Select(
+                        x =>
                             {
-                                Logger.GetLogger().DebugAsync("Reached record buffer limit");
-                                Thread.Sleep(50);
+                                if (configuration.Files.TryGetValue(x.Name, out string filePath))
+                                {
+                                    return FileWriter.GetFileWriter(File.Open(filePath, FileMode.Create, FileAccess.Write, FileShare.Read), x);
+                                }
+                                throw new ArgumentOutOfRangeException($"There is no file path defined for \"{x.Name}\"");
+                            })
+                    .ToList();
+
+                var reader = configuration.Readers.FirstOrDefault(x => !x.Disabled && !DataDictionary.GetDictionaryNames().Contains(x.Name));
+                if (reader != null)
+                {
+                    if (configuration.Files.TryGetValue(reader.Name, out string readerFilePath))
+                    {
+                        if (!File.Exists(readerFilePath))
+                        {
+                            throw new FileNotFoundException($"File \"{readerFilePath}\" not found");
+                        }
+                        using (var fileReader = FileReader.GetFileReader(File.Open(readerFilePath, FileMode.Open, FileAccess.Read, FileShare.Read), reader))
+                        {
+                            var cancellationTokenSource = new CancellationTokenSource();
+                            var tasks = new Task[Environment.ProcessorCount];
+                            for (var i = 0; i < Environment.ProcessorCount; i++)
+                            {
+                                tasks[i] = Task.Run(() => this.WriterTask(cancellationTokenSource.Token));
                             }
 
-                            this.buffer.Add(record);
+                            foreach (var record in fileReader.ReadData())
+                            {
+                                if (this.buffer.Count > MAX_BUFFER_SIZE)
+                                {
+                                    Logger.GetLogger().DebugAsync("Reached record buffer limit");
+                                    Thread.Sleep(50);
+                                }
+
+                                this.buffer.Add(record);
+                            }
+
+                            cancellationTokenSource.Cancel();
+                            Task.WaitAll(tasks);
+
+                            Logger.GetLogger().InfoAsync($"Successfully saved {this.successfulRecordCount} records");
+                            Logger.GetLogger().InfoAsync($"Failed to process {this.exceptionRecordCount} records");
                         }
-
-                        cancellationTokenSource.Cancel();
-                        Task.WaitAll(tasks);
-
-                        Logger.GetLogger().InfoAsync($"Successfully saved {this.successfulRecordCount} records");
-                        Logger.GetLogger().InfoAsync($"Failed to process {this.exceptionRecordCount} records");
                     }
                 }
-            }
 
-            stopwatch.Stop();
-            Logger.GetLogger().InfoAsync($"Finished data processing in {stopwatch.Elapsed.Hours:00}:{stopwatch.Elapsed.Minutes:00}:{stopwatch.Elapsed.Seconds:00}.{stopwatch.Elapsed.Milliseconds}");
+                stopwatch.Stop();
+                Logger.GetLogger()
+                    .InfoAsync($"Finished data processing in {stopwatch.Elapsed.Hours:00}:{stopwatch.Elapsed.Minutes:00}:{stopwatch.Elapsed.Seconds:00}.{stopwatch.Elapsed.Milliseconds}");
+            }
+            finally
+            {
+                ErrorOutput.Flush();
+            }
         }
 
         private void WriterTask(CancellationToken token)
@@ -83,11 +99,14 @@ namespace Importer.Pipe
             {
                 if (this.buffer.TryTake(out DataRecord record))
                 {
-                    if (record.Parsed.Values.Any(x => x.IsFailed))
+                    var failed = record.Parsed.Values.First(x => x.IsFailed);
+                    if (failed!=null)
                     {
                         lock (this.buffer)
                         {
                             this.exceptionRecordCount++;
+                            ErrorOutput.Write($"Line {record.RecordNumber} - Column {failed.Column.Name} - ");
+                            ErrorOutput.WriteLine(string.Join(", ", record.Source));
                         }
                     }
                     else
