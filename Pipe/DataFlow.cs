@@ -13,8 +13,8 @@ namespace Importer.Pipe
     using System.Threading;
     using System.Threading.Tasks;
 
-    using Importer.Pipe.Configuration;
-    using Importer.Pipe.Record;
+    using Configuration;
+    using Record;
 
     public class DataFlow
     {

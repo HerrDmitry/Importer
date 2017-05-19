@@ -28,13 +28,13 @@
           "columns": [
             { "name": "txt1", "text": "HDR", "type": "text" },
             { "name": "SymbolId", "type": "integer" },
-            { "name": "TickSizeId", "type": "integer" },
+            { "name": "TickSizeId", "type": "integer" }
           ]
         }, {
           "columns": [
             { "name": "txt2", "text": "LT", "type": "text" },
             { "name": "Timestamp", "format": "hh:mm dd MMMM yyyy", "type": "date" },
-            { "name": "Index", "type": "integer" },
+            { "name": "Index", "type": "integer" }
           ]
         }, {
           "columns": [
@@ -58,7 +58,7 @@
   },
   "files": {
     "Tick": "../data/Ticks.csv",
-    "TickOutput": "../data/TicksOutput.csv",
+    "TickOutput": "../data/TicksOutput.csv"
     //"Tick": "../data/TicksOutput1.csv"
   },
   "writers": [
@@ -85,13 +85,13 @@
           "columns": [
             {"text":"HDR"},
             {"source": "Tick.SymbolId"},
-            {"source": "Tick.TickSizeId"},
+            {"source": "Tick.TickSizeId"}
           ]
         }, {
           "columns": [
             {"text":"LT"},
             {"source": "Tick.Timestamp", "format": "hh:mm dd MMMM yyyy" },
-            {"source": "Tick.Index"},
+            {"source": "Tick.Index"}
           ]
         }, {
           "columns": [
@@ -99,7 +99,7 @@
             {"source": "Tick.PriceOpen"},
             {"source": "Tick.PriceClose" },
             {"source": "Tick.PriceLow"},
-            {"source": "Tick.PriceHigh"},
+            {"source": "Tick.PriceHigh"}
           ]
         }, {
           "columns": [
