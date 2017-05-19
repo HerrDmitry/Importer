@@ -16,7 +16,7 @@
         { "name": "DateProposedStart", "type": "date", "format": "yyyy-MM-dd" },
         { "name": "DateProposedEnd", "type": "date", "format": "yyyy-MM-dd" },
         { "name": "IsEligibilityConfirmed", "type": "boolean" },
-        { "name": "EligibilityConfirmationComment", "type": "boolean" },
+        { "name": "EligibilityConfirmationComment", "type": "string" },
         { "name": "ResourcesAndSkillUsed", "type": "string" },
         { "name": "BmpId", "type": "integer" },
         { "name": "BmpOtherDescription", "type": "string" },
