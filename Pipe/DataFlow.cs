@@ -99,7 +99,7 @@ namespace Importer.Pipe
             {
                 if (this.buffer.TryTake(out DataRecord record))
                 {
-                    var failed = record.Parsed.Values.First(x => x.IsFailed);
+                    var failed = record.Parsed.Values.FirstOrDefault(x => x.IsFailed);
                     if (failed!=null)
                     {
                         lock (this.buffer)
