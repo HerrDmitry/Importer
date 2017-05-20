@@ -4,6 +4,11 @@
     using Importer.Pipe.Parsers;
     public struct NotFoundValue:IValue
     {
+        public NotFoundValue(bool value, bool isNull, bool isFailed, Column column)
+        {
+            this.Column = column;
+        }
+        
         public string ToString(string format, string nullValue = "")
         {
             return nullValue;

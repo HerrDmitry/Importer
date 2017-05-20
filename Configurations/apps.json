@@ -43,6 +43,7 @@
     {
       "name": "ApplicationOutput",
       "type": "CSV",
+      "disabled": true,
       "columns": [
         { "source": "Application.ApplicationId" },
         { "source": "Application.OperationId" },
@@ -71,7 +72,7 @@
     {
       "name": "ApplicationOutput1",
       "type": "CSVMultiline",
-      "disabled": true,
+      "disabled": false,
       "rows": [
         {
           "columns": [

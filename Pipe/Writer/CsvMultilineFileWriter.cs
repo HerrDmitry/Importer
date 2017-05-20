@@ -33,10 +33,17 @@ namespace Importer.Pipe.Writer
                 {
                     foreach (var configRow in this.config.Rows)
                     {
-                        
+                        var strings = configRow.Columns.Select(x =>
+                        {
+                            if (x.Type == "Text")
+                            {
+                                return x.Text;
+                            }
+                            
+                            return values.TryGetValue(x.Source, out IValue value) ? value.ToString(x.Format) : "";
+                        }).ToList();
+                        this.PrepareRecord(strings);
                     }
-                    var strings = this.config.Columns.Select(x => values.TryGetValue(x.Source, out IValue value) ? value.ToString(x.Format) : "").ToList();
-                    this.PrepareRecord(strings);
                 }
                 else
                 {
